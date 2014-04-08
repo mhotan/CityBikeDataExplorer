@@ -1,0 +1,12 @@
+rootProject.name = 'CityBikeDataExplorer'
+
+include 'core'
+
+include 'st-db-driver'
+
+include 'graph-db-driver'
+
+include 'server'
+
+include 'client'
+
