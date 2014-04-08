@@ -7,9 +7,8 @@ CityBikeDataExplorer
 Current Process was used to 
 
 <p>
-#### Install Java SE 8
+#### Install [Java SE 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 
-* Go to Oracle's Java SE Developement Kit download page [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 * Make sure you Accept there Liscence agreement via the check box
 * Pick the appropiate Operating system and continue to download
 * Run the installer package
