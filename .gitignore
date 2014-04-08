@@ -1,0 +1,9 @@
+*/gradle.xml
+*.iws
+*/workspace.xml
+*/tasks.xml
+.idea/libraries/*
+*/build/*
+build/*
+out/*
+.gradle/*
