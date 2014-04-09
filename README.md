@@ -74,8 +74,10 @@ Interactive IDE that integrates gradle build system. Caveat, any modern IDE shou
 ####Running specific classes
 <p>
 Within intellij right clicking on any class with the Java main function will run that specific class.
+
+####Running the RESTful web service
 <p>
-To run the web server type "./gradlew clean build && java -jar server/build/libs/gs-rest-service-0.1.0.jar" in the command terminal.  This will run an embedded tomcat server.
-<br>Now the you can connect to http://localhost port: 8080.  Try http://localhost:8080/greeting?name=Your_Name to make a rest call and get a response.
+* To run the web server. Execute "./gradlew clean build && java -jar server/build/libs/gs-rest-service-0.1.0.jar" while in the root directory of the project in your terminal.  This will rebuild the project and run an embedded tomcat server.
+* Now the you can connect to http://localhost port: 8080.  Try http://localhost:8080/greeting?name=Your_Name to make a rest call and get a response.
 
 
