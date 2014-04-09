@@ -24,3 +24,12 @@ apt-get install -y oracle-java8-installer oracle-java8-set-default \
 
 # Add a PostgreSQL superuser
 su - postgres -c "createuser -drs vagrant"
+su - postgres -c "echo \"ALTER ROLE vagrant ENCRYPTED PASSWORD 'vagrant';\" | psql"
+
+# Allow access to databases from outside
+echo "org.neo4j.server.webserver.address=0.0.0.0" >> /etc/neo4j/neo4j-server.properties
+echo "listen_addresses = '*'" >> /etc/postgresql/9.3/main/postgresql.conf
+echo "host all all 10.0.0.0/8 md5" >> /etc/postgresql/9.3/main/pg_hba.conf
+
+service neo4j-service restart
+service postgresql restart
