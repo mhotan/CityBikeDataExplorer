@@ -27,8 +27,9 @@ Interactive IDE that integrates gradle build system. Caveat, any modern IDE shou
 
 ### Setup - Checking out from Github
 <p>
-#### Via Intellij
-*This requires you to have Collaborator access to this project*
+#### Via Intellij 
+*NOTE: This requires you to have Collaborator access to this project*
+
 1. Open Intellij application.  You will be directed to **Welcome to Intellihj IDEA** welcome screen.
 2. Select **Check out from Version Control**
 3. A drop down will appear, select **Github**.
