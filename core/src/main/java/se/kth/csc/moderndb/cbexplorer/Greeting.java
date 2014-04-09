@@ -1,4 +1,4 @@
-package hello;
+package se.kth.csc.moderndb.cbexplorer;
 
 /**
  * This is a simple POJO class that represents a simple greeting class.  It is POJO because

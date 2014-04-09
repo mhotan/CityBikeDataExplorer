@@ -47,6 +47,9 @@
     <orderEntry type="library" exported="" name="Gradle: jackson-core-2.3.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: spring-web-4.0.3.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: spring-webmvc-4.0.3.RELEASE" level="project" />
+    <orderEntry type="module" module-name="core" exported="" />
+    <orderEntry type="module" module-name="graph-db-driver" exported="" />
+    <orderEntry type="module" module-name="st-db-driver" exported="" />
   </component>
 </module>
 
