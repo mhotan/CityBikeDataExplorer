@@ -1,10 +1,80 @@
 CityBikeDataExplorer
 ====================
 
-Modern Database Team Project
+*Team Project for Modern Databases and Their Application's Class*
 
-#Setup
+###Setup - Installing Software
+Current Process was used to 
 
-## Install Java SE 8
+<p>
+#### Install [Java SE 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 
-Go to Oracle download page [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+* Make sure you Accept there Liscence agreement via the check box
+* Pick the appropiate Operating system and continue to download
+* Run the installer package
+
+<p>
+#### Install [Git](http://git-scm.com/downloads)
+for version control
+
+<p>
+#### Install [SourceTree](http://www.sourcetreeapp.com/download/) (Optional for Windows and Mac) 
+Provides easy to use and understand Git UI. Suggested this for new Gitters :thumbsup:
+
+<p>
+#### Install [Intellij](http://www.jetbrains.com/idea/download/) (Optional)
+Interactive IDE that integrates gradle build system. Caveat, any modern IDE should work.
+
+### Setup - Checking out from Github
+<p>
+#### Via Intellij
+*This requires you to have Collaborator access to this project*
+1. Open Intellij application.  You will be directed to **Welcome to Intellihj IDEA** welcome screen.
+2. Select **Check out from Version Control**
+3. A drop down will appear, select **Github**.
+4. You may be asked for your credentials.  Provide your Github credentials.
+5. Under **Vcs Repository URL:** select *https::github.com/mhotan/CityBikeDataExplorer.git*
+6. Under **Parent Directory:** Use the directory where you store your local checked out version of your repositories
+7. Leave **Directory Name:** as the default if you can.  If not rename to whatever
+
+#### Via Source Tree
+1. Select the **Add Repository** Button
+2. Select **Clone Repository** Tab
+3. Under **Source Path / URL:** paste https://github.com/mhotan/CityBikeDataExplorer.git
+4. hit *enter* fource Source Tree to validate the repository
+5. Set **Destination Path:** to be the empty directory you wish to check out the repository into
+6. Hit **Clone**
+7. In Intellij select **Open Project** and select the path you used for **Destination Path:**
+
+#### Via Command Line
+1. Create a new directory where ever you want to place the project.
+2. type > git clone https://github.com/mhotan/CityBikeDataExplorer.git
+3. In Intellij select **Open Project** and select the path stored the repository at.
+
+###Building
+
+<p>
+#### Building in Intellij
+
+* Build -> Rebuild Project
+
+#### Fixing Build Issues
+
+<p>
+#####Might have to setup your JDK
+* Set your JDK.  File -> Configure Project SDK to point to your Java 8 Home directory
+
+#####Might have to refresh 
+* Refresh Gradle Dependencies. View -> Tool Windows -> Gradle.  Select the Refresh button.  The two arrows in a circle.
+
+###Executing
+
+<p>
+####Running specific classes
+<p>
+Within intellij right clicking on any class with the Java main function will run that specific class.
+<p>
+To run the web server type "./gradlew clean build && java -jar server/build/libs/gs-rest-service-0.1.0.jar" in the command terminal.  This will run an embedded tomcat server.
+<br>Now the you can connect to http://localhost port: 8080.  Try http://localhost:8080/greeting?name=Your_Name to make a rest call and get a response.
+
+
