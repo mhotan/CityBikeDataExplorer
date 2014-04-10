@@ -25,6 +25,10 @@ Provides easy to use and understand Git UI. Suggested this for new Gitters :thum
 #### Install [Intellij](http://www.jetbrains.com/idea/download/) (Optional)
 Interactive IDE that integrates gradle build system. Caveat, any modern IDE should work.
 
+<p>
+#### Install [Vagrant](http://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/)
+Provides a consistent virtual machine development environment.
+
 ### Setup - Checking out from Github
 <p>
 #### Via Intellij 
@@ -80,4 +84,9 @@ Within intellij right clicking on any class with the Java main function will run
 * To run the web server. Execute "./gradlew clean build && java -jar server/build/libs/gs-rest-service-0.1.0.jar" while in the root directory of the project in your terminal.  This will rebuild the project and run an embedded tomcat server.
 * Now the you can connect to http://localhost port: 8080.  Try http://localhost:8080/greeting?name=Your_Name to make a rest call and get a response.
 
+#### Running under Vagrant
+* To start the VM, run `vagrant up` in the project directory. The first time, this will initialize the VM, which might take 10-30 minutes and ~500MB bandwidth.
+* To open an SSH session into the VM, run `vagrant ssh`. The project directory is available as `/vagrant/` in the VM.
+* Ports 5432 (PostgreSQL), 7474 (Neo4j), and 8080 (web server) are forwarded from the host machine to the VM. For PostgreSQL, use the username/password `vagrant`/`vagrant`.
+* Stop the VM using `vagrant halt`.
 
