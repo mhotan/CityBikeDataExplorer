@@ -90,3 +90,9 @@ Within intellij right clicking on any class with the Java main function will run
 * Ports 5432 (PostgreSQL), 7474 (Neo4j), and 8080 (web server) are forwarded from the host machine to the VM. For PostgreSQL, use the username/password `vagrant`/`vagrant`.
 * Stop the VM using `vagrant halt`.
 
+### Parsing Data
+
+* Place zip/gzip/csv data files in core/src/main/resources.
+* Create a class that implements CitiBikeReader
+* Create an instance of DefaultCitiBikeParser passing in your instance CitiBikeReader.  
+* Call DefaultCitiBikeParser.parse() and the tripdata will be forwarded to your Reader.
