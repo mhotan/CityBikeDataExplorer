@@ -9,5 +9,6 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile 'org.springframework.data:spring-data-neo4j:3.0.1.RELEASE'
     compile project(':core')
 }
