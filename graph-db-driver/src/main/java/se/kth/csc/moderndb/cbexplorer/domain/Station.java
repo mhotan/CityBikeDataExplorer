@@ -24,7 +24,7 @@ public class Station {
     // Actual station ID.
     // TODO Verify if these indexes are correct.
     @Indexed(numeric = true, unique = true)
-    private Short stationId;
+    private Long stationId;
 
     // The readable name of the Station.
     String name;
@@ -48,7 +48,7 @@ public class Station {
      * @param longitude Longitude pertaining to the location of this station
      * @param latitude Latitude pertaining to the location of this station
      */
-    public Station(Short stationId, String name, double longitude, double latitude) {
+    public Station(long stationId, String name, double longitude, double latitude) {
         this.stationId = stationId;
         this.name = name;
         setLocation(longitude, latitude);
