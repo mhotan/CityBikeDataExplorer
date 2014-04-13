@@ -92,7 +92,7 @@ Within intellij right clicking on any class with the Java main function will run
 
 ### Parsing Data
 
-* Place zip/gzip/csv data files in core/src/main/resources.
+* Place zip/gzip/csv data files in core/src/main/resources/data.
 * Create a class that implements CitiBikeReader
 * Create an instance of DefaultCitiBikeParser passing in your instance CitiBikeReader.  
 * Call DefaultCitiBikeParser.parse() and the tripdata will be forwarded to your Reader.
