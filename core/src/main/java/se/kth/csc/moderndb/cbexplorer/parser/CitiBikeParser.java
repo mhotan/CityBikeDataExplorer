@@ -124,6 +124,13 @@ public class CitiBikeParser {
             StationData endData = new StationData(Long.valueOf(row[END_STATION_ID_INDEX]), row[END_STATION_NAME_INDEX],
                     Double.valueOf(row[END_STATION_LONGITUDE_INDEX]), Double.valueOf(row[END_STATION_LATITUDE_INDEX]));
 
+            // Parse birth year, which may be a numeric string or "\N".
+            Short birthYear = null;
+            try {
+                birthYear = Short.valueOf(row[BIRTH_YEAR_INDEX]);
+            } catch (NumberFormatException e) {
+            }
+
             // Parse the data objects.
             Date startTime = format.parse(row[START_TIME_INDEX]);
             Date endTime = format.parse(row[END_TIME_INDEX]);
@@ -134,8 +141,8 @@ public class CitiBikeParser {
                     startTime,
                     endTime,
                     row[USER_TYPE_INDEX],
-                    row[BIRTH_YEAR_INDEX],
-                    Integer.valueOf(row[GENDER_INDEX]));
+                    birthYear,
+                    Short.valueOf(row[GENDER_INDEX]));
             tripBuffer.add(tripData);
 
             // Check if the buffer is full
