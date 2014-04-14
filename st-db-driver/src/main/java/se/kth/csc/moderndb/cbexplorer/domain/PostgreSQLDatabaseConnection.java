@@ -3,6 +3,7 @@ package se.kth.csc.moderndb.cbexplorer.domain;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.Date;
 
 /**
  * This class is for opening a connection to a postgreSQL database specified by the static variables in the class.
@@ -12,15 +13,15 @@ import java.sql.Statement;
  */
 public class PostgreSQLDatabaseConnection {
 
-    private final static String DATABASE_NAME = "cityBikeST";
-    private final static String USERNAME = "vagrant";
-    private final static String PASSWORD = "vagrant";
+    private final String DATABASE_NAME = "cityBikeST";
+    private final String USERNAME = "vagrant";
+    private final String PASSWORD = "vagrant";
 
     // names of the tables that will be created
-    private final String STATION = "STATION";
-    private final String TRIPTIME = "TRIP_TIME";
-    private final String TRIPROUTE = "TRIP_ROUTE";
-    private final String TRIPSETTS = "TRIP_SETTINGS";
+    public static final String STATION = "STATION";
+    public static final String TRIPTIME = "TRIP_TIME";
+    public static final String TRIPROUTE = "TRIP_ROUTE";
+    public static final String TRIPSETTS = "TRIP_SETTINGS";
 
     // names of the attributes in the tables
     private final String ID = "ID";
@@ -42,7 +43,7 @@ public class PostgreSQLDatabaseConnection {
      *
      * @return the connection to the opened database or null if opening was not successful
      */
-    public static Connection openDB() {
+    public Connection openDB() {
         Connection c = null;
         try {
             Class.forName("org.postgresql.Driver");
@@ -65,7 +66,7 @@ public class PostgreSQLDatabaseConnection {
      *
      * @param c connection to the database
      */
-    private void createSTATIONTable(Connection c) {
+    public void createSTATIONTable(Connection c) {
         try {
             Statement stmt = c.createStatement();
             String sql = "CREATE TABLE " + STATION + " " +
@@ -88,13 +89,13 @@ public class PostgreSQLDatabaseConnection {
      *
      * @param c connection to the database
      */
-    private void createTRIPTIMETable(Connection c) {
+    public void createTRIPTIMETable(Connection c) {
         try {
             Statement stmt = c.createStatement();
             String sql = "CREATE TABLE " + TRIPTIME + " " +
                     "(" + ID + " INT PRIMARY KEY     NOT NULL," +
-                    " " + STARTTIME + "           INT    NOT NULL, " +
-                    " " + ENDTIME + "       INT     NOT NULL)";
+                    " " + STARTTIME + "           DATE    NOT NULL, " +
+                    " " + ENDTIME + "       DATE     NOT NULL)";
             stmt.executeUpdate(sql);
             stmt.close();
             c.close();
@@ -110,7 +111,7 @@ public class PostgreSQLDatabaseConnection {
      *
      * @param c connection to the database
      */
-    private void createTRIPROUTETable(Connection c) {
+    public void createTRIPROUTETable(Connection c) {
         try {
             Statement stmt = c.createStatement();
             String sql = "CREATE TABLE " + TRIPROUTE + " " +
@@ -132,7 +133,7 @@ public class PostgreSQLDatabaseConnection {
      *
      * @param c connection to the database
      */
-    private void createTRIPSETTINGSTable(Connection c) {
+    public void createTRIPSETTINGSTable(Connection c) {
         try {
             Statement stmt = c.createStatement();
             String sql = "CREATE TABLE " + TRIPSETTS + " " +
@@ -168,12 +169,12 @@ public class PostgreSQLDatabaseConnection {
      * Inserts an entry into the table STATION {@link #createSTATIONTable(java.sql.Connection)}.
      *
      * @param c         connection to the database
-     * @param id        station id
+     * @param id        station id = {latitude, longitude}
      * @param name      station name
      * @param longitude longitude of the station's pos
      * @param latitude  latitude of the station's pos
      */
-    public void insertIntoSTATION(Connection c, int id, String name, int longitude, int latitude) {
+    public void insertIntoSTATION(Connection c, int id, String name, double longitude, double latitude) {
         try {
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + STATION + " (" + ID + "," + NAME + "," + LONGITUDE + "," + LATITUDE + ") "
@@ -192,11 +193,11 @@ public class PostgreSQLDatabaseConnection {
      * Inserts an entry into the table TRIP_TIME {@link #createTRIPTIMETable(java.sql.Connection)}.
      *
      * @param c         connection to the database
-     * @param id        trip id
+     * @param id        trip id = {bikeid + start time}
      * @param startTime start time of the trip
      * @param endTime   end time of the trip
      */
-    public void insertIntoTRIPTIME(Connection c, int id, int startTime, int endTime) {
+    public void insertIntoTRIPTIME(Connection c, int id, Date startTime, Date endTime) {
         try {
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + TRIPTIME + " (" + ID + "," + STARTTIME + "," + ENDTIME + ") "
@@ -216,7 +217,7 @@ public class PostgreSQLDatabaseConnection {
      * Inserts an entry into the table TRIP_ROUTE {@link #createTRIPROUTETable(java.sql.Connection)}.
      *
      * @param c              connection to the database
-     * @param id             trip id
+     * @param id             trip id = {bikeid + start time}
      * @param startStationID id of the trip's start station
      * @param endStationID   id of the trip's end station
      */
@@ -239,12 +240,12 @@ public class PostgreSQLDatabaseConnection {
      * Inserts an entry into the table TRIP_SETTINGS {@link #createTRIPSETTINGSTable(java.sql.Connection)}
      *
      * @param c        connection to the database
-     * @param id       trip id
+     * @param id       trip id = {bikeid + start time}
      * @param bikeID   bike id
      * @param usertype type of the user
      * @param gender   gender of the user
      */
-    public void insertIntoTRIPSETTINGS(Connection c, int id, int bikeID, String usertype, int gender) {
+    public void insertIntoTRIPSETTINGS(Connection c, int id, long bikeID, String usertype, int gender) {
         try {
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + TRIPSETTS + " (" + ID + "," + BIKEID + "," + USERTYPE + "," + GENDER + ") "
