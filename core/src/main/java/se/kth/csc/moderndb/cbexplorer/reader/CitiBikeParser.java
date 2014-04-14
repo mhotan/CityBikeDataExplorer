@@ -1,10 +1,10 @@
-package se.kth.csc.moderndb.cbexplorer.parser;
+package se.kth.csc.moderndb.cbexplorer.reader;
 
 import au.com.bytecode.opencsv.CSVReader;
 import org.apache.commons.lang3.StringUtils;
-import se.kth.csc.moderndb.cbexplorer.parser.data.BikeData;
-import se.kth.csc.moderndb.cbexplorer.parser.data.StationData;
-import se.kth.csc.moderndb.cbexplorer.parser.data.TripData;
+import se.kth.csc.moderndb.cbexplorer.reader.data.BikeData;
+import se.kth.csc.moderndb.cbexplorer.reader.data.StationData;
+import se.kth.csc.moderndb.cbexplorer.reader.data.TripData;
 
 import java.io.*;
 import java.text.DateFormat;

@@ -1,4 +1,4 @@
-package se.kth.csc.moderndb.cbexplorer.parser;
+package se.kth.csc.moderndb.cbexplorer.reader;
 
 /**
  * Created by mhotan on 4/13/14.
