@@ -1,4 +1,4 @@
-package se.kth.csc.moderndb.cbexplorer.parser;
+package se.kth.csc.moderndb.cbexplorer.reader;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +7,7 @@ import java.net.URL;
 import java.text.ParseException;
 
 /**
- * Default parser that reads data in from the resource directory.  This by default will
+ * Default reader that reads data in from the resource directory.  This by default will
  * read all the trip files.
  *
  * Created by mhotan on 4/13/14.

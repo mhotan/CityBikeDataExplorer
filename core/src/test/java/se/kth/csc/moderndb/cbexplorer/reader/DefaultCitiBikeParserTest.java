@@ -1,8 +1,8 @@
-package se.kth.csc.moderndb.cbexplorer.parser;
+package se.kth.csc.moderndb.cbexplorer.reader;
 
 import org.junit.Assert;
 import org.junit.Test;
-import se.kth.csc.moderndb.cbexplorer.parser.data.TripData;
+import se.kth.csc.moderndb.cbexplorer.reader.data.TripData;
 
 import java.util.Collection;
 
