@@ -29,28 +29,30 @@ public class Application extends Neo4jConfiguration implements CommandLineRunner
     /**
      * The name of the database.
      */
-    private static final String DATABASE_NAME = "citibike.db";
+    protected static final String DATABASE_NAME = "citibike.db";
 
     @Autowired
-    BikeRepository bikeRepository;
+    protected BikeRepository bikeRepository;
 
     @Autowired
-    StationRepository stationRepository;
+    protected StationRepository stationRepository;
 
     @Autowired
-    TripRepository tripRepository;
+    protected TripRepository tripRepository;
 
     @Autowired
-    GraphDatabase graphDatabase;
+    protected GraphDatabase graphDatabase;
 
     @Bean
-    EmbeddedGraphDatabase graphDatabaseService() {
-
+    protected EmbeddedGraphDatabase graphDatabaseService() {
         return new EmbeddedGraphDatabase(DATABASE_NAME);
     }
 
+    private int count;
+
     @Override
     public void run(String... args) throws Exception {
+        count = 0;
         DefaultCitiBikeParser parser = new DefaultCitiBikeParser(this);
         if (args.length == 0)
             parser.parse();
@@ -71,7 +73,6 @@ public class Application extends Neo4jConfiguration implements CommandLineRunner
 
     public Station createStation(StationData data) {
         Station s = new Station(data.getStationId(), data.getName(), data.getLongitude(), data.getLatitude());
-        System.out.println("Created Station " + s);
         return stationRepository.save(s);
     }
 
@@ -79,7 +80,6 @@ public class Application extends Neo4jConfiguration implements CommandLineRunner
     public Trip createTrip(Bike bike, Station startStation, Station endStation, TripData data) {
         Trip t = new Trip(startStation, bike, data.getStartTime());
         t = tripRepository.save(t);
-        System.out.println("Created Trip " + t.getId());
 
         // Pull the trip repository.
         t = tripRepository.findOne(t.getId());
@@ -95,20 +95,20 @@ public class Application extends Neo4jConfiguration implements CommandLineRunner
 
     public Bike createBike(BikeData data) {
         Bike b = new Bike(data.getId());
-        System.out.println("Created Bike " + b);
         return bikeRepository.save(b);
     }
 
     @Override
     public void addTrips(Collection<TripData> trips) {
-        System.out.println("Adding " + trips.size() + " trips");
-
         for (TripData tripData : trips) {
             Bike bike = obtainBike(tripData.getBikeData());
             Station startStation = obtainStation(tripData.getStartStationData());
             Station endStation = obtainStation(tripData.getEndStationData());
             createTrip(bike, startStation, endStation, tripData);
         }
+
+        count += trips.size();
+        System.out.println(count + " trips processed");
     }
 
     /**

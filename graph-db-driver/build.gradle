@@ -14,7 +14,7 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot'
 
 jar {
-    baseName = 'gs-accessing-neo4j-data-rest'
+    baseName = 'citibike-graph-driver'
     version = '0.1.0'
 }
 
@@ -28,7 +28,6 @@ dependencies {
     compile("org.springframework.data:spring-data-neo4j:3.0.2.RELEASE")
     compile("org.hibernate:hibernate-validator")
     compile("org.springframework.data:spring-data-rest-webmvc")
-    compile project(':graph-base')
 }
 
 task wrapper(type: Wrapper) {

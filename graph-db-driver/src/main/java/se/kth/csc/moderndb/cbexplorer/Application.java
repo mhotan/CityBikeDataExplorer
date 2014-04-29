@@ -1,4 +1,4 @@
-package se.kth.csc.moderndb.cbexplorer.domain;
+package se.kth.csc.moderndb.cbexplorer;
 
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
@@ -20,13 +20,18 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguratio
 @EnableAutoConfiguration
 public class Application extends Neo4jConfiguration {
 
+    /**
+     * The name of the database.
+     */
+    protected static final String DATABASE_NAME = "citibike.db";
+
     public Application() {
-        setBasePackage("se.kth.csc.moderndb.cbexplorer.domain");
+        setBasePackage("se.kth.csc.moderndb.cbexplorer");
     }
 
     @Bean(destroyMethod = "shutdown")
     public GraphDatabaseService graphDatabaseService() {
-        return new GraphDatabaseFactory().newEmbeddedDatabase("target/citibike.db");
+        return new GraphDatabaseFactory().newEmbeddedDatabase(DATABASE_NAME);
     }
 
     public static void main(String[] args) {

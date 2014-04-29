@@ -60,6 +60,8 @@
     <orderEntry type="library" exported="" name="Gradle: spring-plugin-core-1.0.0.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: evo-inflector-1.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: spring-data-rest-core-2.0.2.RELEASE" level="project" />
+    <orderEntry type="module" module-name="graph-load-db" exported="" />
+    <orderEntry type="library" exported="" name="Gradle: spring-tx-3.2.8.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: spring-data-neo4j-3.0.2.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: spring-data-commons-1.7.2.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: neo4j-kernel-2.0.1" level="project" />
@@ -73,8 +75,6 @@
     <orderEntry type="library" exported="" name="Gradle: neo4j-udc-2.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: neo4j-jmx-2.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: neo4j-2.0.1" level="project" />
-    <orderEntry type="module" module-name="graph-base" exported="" />
-    <orderEntry type="library" exported="" name="Gradle: spring-tx-3.2.8.RELEASE" level="project" />
   </component>
 </module>
 
