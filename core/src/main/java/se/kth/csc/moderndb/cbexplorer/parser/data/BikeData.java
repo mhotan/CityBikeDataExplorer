@@ -1,4 +1,4 @@
-package se.kth.csc.moderndb.cbexplorer.reader.data;
+package se.kth.csc.moderndb.cbexplorer.parser.data;
 
 /**
  * Raw data read that represents Bike Data.

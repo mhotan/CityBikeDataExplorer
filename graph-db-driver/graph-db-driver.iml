@@ -47,7 +47,7 @@
     <orderEntry type="library" exported="" name="Gradle: neo4j-udc-2.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: neo4j-jmx-2.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: neo4j-2.0.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: unresolved_dependency___org_neo4j_neo4j_cypher_dsl_2_0_1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: neo4j-cypher-dsl-2.0.1" level="project" />
   </component>
 </module>
 

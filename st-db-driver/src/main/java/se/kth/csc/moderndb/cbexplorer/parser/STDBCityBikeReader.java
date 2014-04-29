@@ -1,8 +1,8 @@
-package se.kth.csc.moderndb.cbexplorer.reader;
+package se.kth.csc.moderndb.cbexplorer.parser;
 
 import se.kth.csc.moderndb.cbexplorer.domain.PostgreSQLDatabaseConnection;
-import se.kth.csc.moderndb.cbexplorer.reader.data.StationData;
-import se.kth.csc.moderndb.cbexplorer.reader.data.TripData;
+import se.kth.csc.moderndb.cbexplorer.parser.data.StationData;
+import se.kth.csc.moderndb.cbexplorer.parser.data.TripData;
 
 import java.sql.Connection;
 import java.util.Collection;
@@ -24,11 +24,7 @@ public class STDBCityBikeReader implements CitiBikeReader {
         // init database connection
         this.postgreSQLDatabaseConnection = new PostgreSQLDatabaseConnection();
         c = this.postgreSQLDatabaseConnection.openDB();
-        // TODO: are tables already there or must they be created with
-        /*createSTATIONTable(c);
-        createTRIPROUTETable(c);
-        createTRIPTIMETable(c);
-        createTRIPSETTINGSTable(c);*/
+        this.postgreSQLDatabaseConnection.createAllNecessaryTables(c);
     }
 
     @Override
@@ -41,7 +37,7 @@ public class STDBCityBikeReader implements CitiBikeReader {
 
     /**
      * Adds the given TripData collection to the STATION Table {@see se.kth.csc.moderndb.cbexplorer.domain.PostgreSQLDatabaseConnection#createSTATIONTable(java.sql.Connection)}.
-     * It calculates the StationID with {@link #calculateStationIDString(se.kth.csc.moderndb.cbexplorer.reader.data.StationData)}.
+     * It calculates the StationID with {@link #calculateStationIDString(se.kth.csc.moderndb.cbexplorer.parser.data.StationData)}.
      *
      * @param trips parsed trip data
      */
@@ -73,7 +69,7 @@ public class STDBCityBikeReader implements CitiBikeReader {
 
     /**
      * Adds the given TripData collection to the TRIPTIME Table {@see se.kth.csc.moderndb.cbexplorer.domain.PostgreSQLDatabaseConnection#createTRIPTIMETable(java.sql.Connection)}.
-     * It calculates the StationID with {@link #calculateTripID(se.kth.csc.moderndb.cbexplorer.reader.data.TripData)}.
+     * It calculates the StationID with {@link #calculateTripID(se.kth.csc.moderndb.cbexplorer.parser.data.TripData)}.
      *
      * @param trips parsed trip data
      */
@@ -86,7 +82,7 @@ public class STDBCityBikeReader implements CitiBikeReader {
 
     /**
      * Adds the given TripData collection to the TRIPROUTE Table {@see se.kth.csc.moderndb.cbexplorer.domain.PostgreSQLDatabaseConnection#createTRIPROUTETable(java.sql.Connection)}.
-     * It calculates the StationID with {@link #calculateTripID(se.kth.csc.moderndb.cbexplorer.reader.data.TripData)}.
+     * It calculates the StationID with {@link #calculateTripID(se.kth.csc.moderndb.cbexplorer.parser.data.TripData)}.
      *
      * @param trips parsed trip data
      */
@@ -101,7 +97,7 @@ public class STDBCityBikeReader implements CitiBikeReader {
 
     /**
      * Adds the given TripData collection to the TRIPSETTINGS Table {@see se.kth.csc.moderndb.cbexplorer.domain.PostgreSQLDatabaseConnection#createTRIPSETTINGSTable(java.sql.Connection)}.
-     * It calculates the StationID with {@link #calculateTripID(se.kth.csc.moderndb.cbexplorer.reader.data.TripData)}.
+     * It calculates the StationID with {@link #calculateTripID(se.kth.csc.moderndb.cbexplorer.parser.data.TripData)}.
      *
      * @param trips parsed trip data
      */

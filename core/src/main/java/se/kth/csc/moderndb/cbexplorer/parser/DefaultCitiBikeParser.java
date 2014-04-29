@@ -1,4 +1,4 @@
-package se.kth.csc.moderndb.cbexplorer.reader;
+package se.kth.csc.moderndb.cbexplorer.parser;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +7,7 @@ import java.net.URL;
 import java.text.ParseException;
 
 /**
- * Default reader that reads data in from the resource directory.  This by default will
+ * Default parser that reads data in from the resource directory.  This by default will
  * read all the trip files.
  *
  * Created by mhotan on 4/13/14.
@@ -19,7 +19,7 @@ public class DefaultCitiBikeParser extends CitiBikeParser {
             getClassLoader().getResource("data/");
 
     /**
-     * Creates a Parser that is capable of forwarding parsed data back to the reader.
+     * Creates a Parser that is capable of forwarding parsed data back to the parser.
      *
      * @param reader CitiBike Reader class that handles the forwarding of trip data.
      */
@@ -28,7 +28,7 @@ public class DefaultCitiBikeParser extends CitiBikeParser {
     }
 
     /**
-     * Creates a Parser that is capable of forwarding parsed data back to the reader.
+     * Creates a Parser that is capable of forwarding parsed data back to the parser.
      *
      * @param reader CitiBike Reader class that handles the forwarding of trip data.
      * @param tripBufferSize Buffersize of tripdata stored in memory.  In units of TripData.

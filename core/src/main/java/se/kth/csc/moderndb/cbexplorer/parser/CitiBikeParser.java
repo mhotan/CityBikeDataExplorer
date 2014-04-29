@@ -1,10 +1,10 @@
-package se.kth.csc.moderndb.cbexplorer.reader;
+package se.kth.csc.moderndb.cbexplorer.parser;
 
 import au.com.bytecode.opencsv.CSVReader;
 import org.apache.commons.lang3.StringUtils;
-import se.kth.csc.moderndb.cbexplorer.reader.data.BikeData;
-import se.kth.csc.moderndb.cbexplorer.reader.data.StationData;
-import se.kth.csc.moderndb.cbexplorer.reader.data.TripData;
+import se.kth.csc.moderndb.cbexplorer.parser.data.BikeData;
+import se.kth.csc.moderndb.cbexplorer.parser.data.StationData;
+import se.kth.csc.moderndb.cbexplorer.parser.data.TripData;
 
 import java.io.*;
 import java.text.DateFormat;
@@ -95,7 +95,7 @@ public class CitiBikeParser {
 
     /**
      * Parse a single BufferedReader for CitiBike Data.
-     * @param reader The reader to process for data.
+     * @param reader The parser to process for data.
      * @return Number of lines read.
      */
     private long parse(Reader reader) throws IOException, ParseException {
@@ -146,7 +146,7 @@ public class CitiBikeParser {
             tripBuffer.add(tripData);
 
             // Check if the buffer is full
-            // If so notify the citibike reader
+            // If so notify the citibike parser
             if (tripBuffer.size() >= this.maxNumberOfTrips) {
                 numberOfSuccesses += tripBuffer.size();
                 this.reader.addTrips(tripBuffer);
@@ -160,7 +160,7 @@ public class CitiBikeParser {
             this.reader.addTrips(tripBuffer);
         }
 
-        // Close teh CSV reader.
+        // Close teh CSV parser.
         csvReader.close();
 
         return numberOfSuccesses;
@@ -172,7 +172,7 @@ public class CitiBikeParser {
      * parse the file as a single file for data.  If file is not a directory then
      *  the collection returned will be an element of one.
      *
-     * @param file File to recursively search or create reader around.
+     * @param file File to recursively search or create parser around.
      * @return Collection of all the Buffered Readers
      * @throws IOException There was an error accessing one of the files.
      */
@@ -191,10 +191,10 @@ public class CitiBikeParser {
     }
 
     /**
-     * Return the file reader for a single file.
+     * Return the file parser for a single file.
      *
      * @param file Single file to create Buffered Reader with.
-     * @return The buffered reader for this file.  Or null if this file is a directory or compressed directory that is empty
+     * @return The buffered parser for this file.  Or null if this file is a directory or compressed directory that is empty
      * @throws IOException Unable to read the single file.
      */
     private Reader getFileReader(File file) throws IOException {

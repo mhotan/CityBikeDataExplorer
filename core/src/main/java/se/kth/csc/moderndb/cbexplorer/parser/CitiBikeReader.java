@@ -1,13 +1,13 @@
-package se.kth.csc.moderndb.cbexplorer.reader;
+package se.kth.csc.moderndb.cbexplorer.parser;
 
-import se.kth.csc.moderndb.cbexplorer.reader.data.TripData;
+import se.kth.csc.moderndb.cbexplorer.parser.data.TripData;
 
 import java.util.Collection;
 
 /**
- * Reads Citibike data from the {@link se.kth.csc.moderndb.cbexplorer.reader.CitiBikeParser}.
+ * Reads Citibike data from the {@link se.kth.csc.moderndb.cbexplorer.parser.CitiBikeParser}.
  * If you want to read data from some sort of data source implement this interface and use a
- * trip data reader or provider like {@link se.kth.csc.moderndb.cbexplorer.reader.CitiBikeParser}.
+ * trip data parser or provider like {@link se.kth.csc.moderndb.cbexplorer.parser.CitiBikeParser}.
  *
  * Created by mhotan on 4/13/14.
  */
