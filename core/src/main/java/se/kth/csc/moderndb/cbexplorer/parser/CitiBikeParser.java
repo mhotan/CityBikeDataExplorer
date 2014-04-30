@@ -47,7 +47,7 @@ public class CitiBikeParser {
 
     // The default number of
     // TODO Validate this quantity to work on all systems.
-    private static final int DEFAULT_TRIPDATA_BUFFERSIZE = 200;
+    private static final int DEFAULT_TRIPDATA_BUFFERSIZE = 500;
 
     /**
      * Reader that reads and interprets raw data.
@@ -124,6 +124,13 @@ public class CitiBikeParser {
             StationData endData = new StationData(Long.valueOf(row[END_STATION_ID_INDEX]), row[END_STATION_NAME_INDEX],
                     Double.valueOf(row[END_STATION_LONGITUDE_INDEX]), Double.valueOf(row[END_STATION_LATITUDE_INDEX]));
 
+            // Parse birth year, which may be a numeric string or "\N".
+            Short birthYear = null;
+            try {
+                birthYear = Short.valueOf(row[BIRTH_YEAR_INDEX]);
+            } catch (NumberFormatException e) {
+            }
+
             // Parse the data objects.
             Date startTime = format.parse(row[START_TIME_INDEX]);
             Date endTime = format.parse(row[END_TIME_INDEX]);
@@ -134,8 +141,8 @@ public class CitiBikeParser {
                     startTime,
                     endTime,
                     row[USER_TYPE_INDEX],
-                    row[BIRTH_YEAR_INDEX],
-                    Integer.valueOf(row[GENDER_INDEX]));
+                    birthYear,
+                    Short.valueOf(row[GENDER_INDEX]));
             tripBuffer.add(tripData);
 
             // Check if the buffer is full
@@ -177,8 +184,9 @@ public class CitiBikeParser {
                 files.addAll(getFileReaders(childFile));
             }
         } else {
-            //
-            files.add(getFileReader(file));
+            // Check if file is of correct type.
+            if (file.getPath().endsWith(".gz") || file.getPath().endsWith(".zip") || file.getPath().endsWith(".csv"))
+                files.add(getFileReader(file));
         }
         return files;
     }
@@ -215,7 +223,7 @@ public class CitiBikeParser {
         } else if (file.getPath().endsWith(".csv")) {
             fileReader = new BufferedReader(new FileReader(file));
         } else {
-            throw new IllegalArgumentException("Illegal file format to read");
+            throw new IllegalArgumentException("Illegal file format to read for file " + file.getName());
         }
         return fileReader;
     }

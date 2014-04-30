@@ -17,9 +17,9 @@ public class TripData {
 
     private final Date startTime, endTime;
 
-    private final String userType, userBirthYear;
+    private final String userType;
 
-    private final Integer userGender;
+    private final Short userBirthYear, userGender;
 
     /**
      * Creates a wrapper for Trip data.
@@ -39,8 +39,8 @@ public class TripData {
                     Date startTime,
                     Date endTime,
                     String userType,
-                    String userBirthYear,
-                    Integer userGender) {
+                    Short userBirthYear,
+                    Short userGender) {
         this.bikeData = bikeData;
         this.startStationData = startStationData;
         this.endStationData = endStationData;
@@ -98,15 +98,22 @@ public class TripData {
     /**
      * @return The Birth year of the user if it exists
      */
-    public String getUserBirthYear() {
+    public Short getUserBirthYear() {
         return userBirthYear;
     }
 
     /**
      * @return Gender identifier of the user if it available.
      */
-    public Integer getUserGender() {
+    public Short getUserGender() {
         return userGender;
+    }
+
+    /**
+     * @return String representation of user gender ("M", "F", or "").
+     */
+    public String getUserGenderAsString() {
+        return userGender == 1 ? "M" : userGender == 2 ? "F" : "";
     }
 
     private void checkRep() {
