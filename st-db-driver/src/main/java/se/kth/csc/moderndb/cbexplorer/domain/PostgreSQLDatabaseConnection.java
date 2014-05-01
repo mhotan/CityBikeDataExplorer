@@ -116,8 +116,8 @@ public class PostgreSQLDatabaseConnection {
             Statement stmt = c.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS " + TRIPROUTE + " " +
                     "(" + ID + " DOUBLE PRECISION PRIMARY KEY     NOT NULL," +
-                    " " + STARTSTATION + " INT  NOT NULL, " +
-                    " " + ENDSTATION + " INT    NOT NULL)";
+                    " " + STARTSTATION + " DOUBLE PRECISION  NOT NULL, " +
+                    " " + ENDSTATION + " DOUBLE PRECISION    NOT NULL)";
             stmt.executeUpdate(sql);
             stmt.close();
             //c.close();
@@ -178,7 +178,7 @@ public class PostgreSQLDatabaseConnection {
         try {
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + STATION + " (" + ID + "," + NAME + "," + LONGITUDE + "," + LATITUDE + ") "
-                    + "VALUES (" + id + ", " + name + ", " + longitude + ", " + latitude + ");";
+                    + "VALUES (" + id + ", '" + name + "', " + longitude + ", " + latitude + ");";
             stmt.executeUpdate(sql);
             stmt.close();
             c.commit();
@@ -221,7 +221,7 @@ public class PostgreSQLDatabaseConnection {
      * @param startStationID id of the trip's start station
      * @param endStationID   id of the trip's end station
      */
-    public void insertIntoTRIPROUTE(Connection c, double id, int startStationID, int endStationID) {
+    public void insertIntoTRIPROUTE(Connection c, double id, double startStationID, double endStationID) {
         try {
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + TRIPROUTE + " (" + ID + "," + STARTSTATION + "," + ENDSTATION + ") "
@@ -249,7 +249,7 @@ public class PostgreSQLDatabaseConnection {
         try {
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + TRIPSETTS + " (" + ID + "," + BIKEID + "," + USERTYPE + "," + GENDER + ") "
-                    + "VALUES (" + id + ", " + bikeID + ", " + usertype + ", " + gender + ");";
+                    + "VALUES (" + id + ", " + bikeID + ", '" + usertype + "', " + gender + ");";
             stmt.executeUpdate(sql);
             stmt.close();
             c.commit();
