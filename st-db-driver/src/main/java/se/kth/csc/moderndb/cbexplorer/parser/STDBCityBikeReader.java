@@ -100,8 +100,8 @@ public class STDBCityBikeReader implements CitiBikeReader {
     private void addTripsToTRIPROUTE(Collection<TripData> trips) {
         for (TripData trip : trips) {
             double tripID = calculateTripID(trip);
-            int startStation = Integer.parseInt(calculateStationIDString(trip.getStartStationData()));
-            int endStation = Integer.parseInt(calculateStationIDString(trip.getEndStationData()));
+            double startStation = Double.parseDouble(calculateStationIDString(trip.getStartStationData()));
+            double endStation = Double.parseDouble(calculateStationIDString(trip.getEndStationData()));
             this.postgreSQLDatabaseConnection.insertIntoTRIPROUTE(this.c, tripID, startStation, endStation);
         }
     }
