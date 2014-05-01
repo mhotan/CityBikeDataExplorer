@@ -5,6 +5,7 @@ import se.kth.csc.moderndb.cbexplorer.parser.data.StationData;
 import se.kth.csc.moderndb.cbexplorer.parser.data.TripData;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -16,8 +17,12 @@ import java.util.HashMap;
  */
 public class STDBCityBikeReader implements CitiBikeReader {
 
+    // longitude and latitude of the stations will be multiplied with this constant to get the correspondent decimal places for building the STATION_ID in the STATION table {@link #PostgreSQLDatabaseConnection.createSTATIONTable()}.
+    private final int DECIMAL_PLACE_FOR_ID = 100000;
+
     private PostgreSQLDatabaseConnection postgreSQLDatabaseConnection;
     private Connection c;
+    // TODO: database creation via code!?
 
 
     public STDBCityBikeReader() {
@@ -33,6 +38,12 @@ public class STDBCityBikeReader implements CitiBikeReader {
         addTripsToTRIPROUTE(trips);
         addTripsToTRIPTIME(trips);
         addTripsToTRIPSETTINGS(trips);
+        // after adding all data the connection to the database must be closed
+        try {
+            this.c.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -63,7 +74,7 @@ public class STDBCityBikeReader implements CitiBikeReader {
 
         // add to database
         for (String stationID : stationName.keySet()) {
-            this.postgreSQLDatabaseConnection.insertIntoSTATION(this.c, Integer.parseInt(stationID), stationName.get(stationID), stationLong.get(stationID), stationLat.get(stationID));
+            this.postgreSQLDatabaseConnection.insertIntoSTATION(this.c, Double.parseDouble(stationID), stationName.get(stationID), stationLong.get(stationID), stationLat.get(stationID));
         }
     }
 
@@ -75,7 +86,7 @@ public class STDBCityBikeReader implements CitiBikeReader {
      */
     private void addTripsToTRIPTIME(Collection<TripData> trips) {
         for (TripData trip : trips) {
-            int tripID = calculateTripID(trip);
+            double tripID = calculateTripID(trip);
             this.postgreSQLDatabaseConnection.insertIntoTRIPTIME(this.c, tripID, trip.getStartTime(), trip.getEndTime());
         }
     }
@@ -88,7 +99,7 @@ public class STDBCityBikeReader implements CitiBikeReader {
      */
     private void addTripsToTRIPROUTE(Collection<TripData> trips) {
         for (TripData trip : trips) {
-            int tripID = calculateTripID(trip);
+            double tripID = calculateTripID(trip);
             int startStation = Integer.parseInt(calculateStationIDString(trip.getStartStationData()));
             int endStation = Integer.parseInt(calculateStationIDString(trip.getEndStationData()));
             this.postgreSQLDatabaseConnection.insertIntoTRIPROUTE(this.c, tripID, startStation, endStation);
@@ -103,7 +114,7 @@ public class STDBCityBikeReader implements CitiBikeReader {
      */
     private void addTripsToTRIPSETTINGS(Collection<TripData> trips) {
         for (TripData trip : trips) {
-            int tripID = calculateTripID(trip);
+            double tripID = calculateTripID(trip);
             this.postgreSQLDatabaseConnection.insertIntoTRIPSETTINGS(this.c, tripID, trip.getBikeData().getId(), trip.getUserType(), trip.getUserGender());
         }
     }
@@ -116,7 +127,10 @@ public class STDBCityBikeReader implements CitiBikeReader {
      * @return stationID
      */
     private String calculateStationIDString(StationData station) {
-        return Double.toString(station.getLatitude()).concat(Double.toString(station.getLongitude()));
+        int lat = (int) Math.abs(station.getLatitude()* DECIMAL_PLACE_FOR_ID);
+        int lon = (int) Math.abs(station.getLongitude()* DECIMAL_PLACE_FOR_ID);
+        String res = String.valueOf(lat).concat(String.valueOf(lon));
+        return String.valueOf(lat).concat(String.valueOf(lon));
     }
 
     /**
@@ -125,9 +139,10 @@ public class STDBCityBikeReader implements CitiBikeReader {
      * @param trip trip for which the ID should be calculated
      * @return tripID
      */
-    private int calculateTripID(TripData trip) {
+    private double calculateTripID(TripData trip) {
         String bikeID = Long.toString(trip.getBikeData().getId());
-        return Integer.parseInt(bikeID.concat(trip.getStartTime().toString()));
+        double start = (double) trip.getStartTime().getTime();
+        return Double.parseDouble(bikeID.concat(Double.toString(start)));
     }
 }
 

@@ -1,11 +1,9 @@
 package se.kth.csc.moderndb.cbexplorer;
 
-import se.kth.csc.moderndb.cbexplorer.reader.CitiBikeParser;
-import se.kth.csc.moderndb.cbexplorer.reader.STDBCityBikeReader;
+import se.kth.csc.moderndb.cbexplorer.parser.CitiBikeParser;
+import se.kth.csc.moderndb.cbexplorer.parser.STDBCityBikeReader;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
 
 /**
  * Created by Jeannine on 28.04.14.

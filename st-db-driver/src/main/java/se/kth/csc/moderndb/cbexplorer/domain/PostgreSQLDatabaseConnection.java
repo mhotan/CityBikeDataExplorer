@@ -70,10 +70,10 @@ public class PostgreSQLDatabaseConnection {
         try {
             Statement stmt = c.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS " + STATION + " " +
-                    "(" + ID + " INT PRIMARY KEY     NOT NULL," +
-                    " " + NAME + "          TEXT    NOT NULL, " +
-                    " " + LONGITUDE + "       INT     NOT NULL, " +
-                    " " + LATITUDE + "        INT   NOT NULL)";
+                    "(" + ID + " DOUBLE PRECISION PRIMARY KEY NOT NULL," +
+                    " " + NAME + " TEXT NOT NULL, " +
+                    " " + LONGITUDE + " DOUBLE PRECISION    NOT NULL, " +
+                    " " + LATITUDE + " DOUBLE PRECISION NOT NULL)";
             stmt.executeUpdate(sql);
             stmt.close();
             //c.close();
@@ -93,9 +93,9 @@ public class PostgreSQLDatabaseConnection {
         try {
             Statement stmt = c.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS " + TRIPTIME + " " +
-                    "(" + ID + " INT PRIMARY KEY     NOT NULL," +
-                    " " + STARTTIME + "           DATE    NOT NULL, " +
-                    " " + ENDTIME + "       DATE     NOT NULL)";
+                    "(" + ID + " DOUBLE PRECISION PRIMARY KEY    NOT NULL," +
+                    " " + STARTTIME + " DATE    NOT NULL, " +
+                    " " + ENDTIME + " DATE  NOT NULL)";
             stmt.executeUpdate(sql);
             stmt.close();
             //c.close();
@@ -115,9 +115,9 @@ public class PostgreSQLDatabaseConnection {
         try {
             Statement stmt = c.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS " + TRIPROUTE + " " +
-                    "(" + ID + " INT PRIMARY KEY     NOT NULL," +
-                    " " + STARTSTATION + "           INT    NOT NULL, " +
-                    " " + ENDSTATION + "       INT     NOT NULL)";
+                    "(" + ID + " DOUBLE PRECISION PRIMARY KEY     NOT NULL," +
+                    " " + STARTSTATION + " INT  NOT NULL, " +
+                    " " + ENDSTATION + " INT    NOT NULL)";
             stmt.executeUpdate(sql);
             stmt.close();
             //c.close();
@@ -137,10 +137,10 @@ public class PostgreSQLDatabaseConnection {
         try {
             Statement stmt = c.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS " + TRIPSETTS + " " +
-                    "(" + ID + "INT PRIMARY KEY     NOT NULL," +
-                    " " + BIKEID + "           INT    NOT NULL, " +
-                    " " + USERTYPE + "       TEXT     NOT NULL, " +
-                    " " + GENDER + "       INT     NOT NULL)";
+                    "(" + ID + " DOUBLE PRECISION PRIMARY KEY    NOT NULL," +
+                    " " + BIKEID + " DOUBLE PRECISION    NOT NULL, " +
+                    " " + USERTYPE + " TEXT NOT NULL, " +
+                    " " + GENDER + " INT    NOT NULL)";
             stmt.executeUpdate(sql);
             stmt.close();
             //c.close();
@@ -174,7 +174,7 @@ public class PostgreSQLDatabaseConnection {
      * @param longitude longitude of the station's pos
      * @param latitude  latitude of the station's pos
      */
-    public void insertIntoSTATION(Connection c, int id, String name, double longitude, double latitude) {
+    public void insertIntoSTATION(Connection c, double id, String name, double longitude, double latitude) {
         try {
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + STATION + " (" + ID + "," + NAME + "," + LONGITUDE + "," + LATITUDE + ") "
@@ -197,7 +197,7 @@ public class PostgreSQLDatabaseConnection {
      * @param startTime start time of the trip
      * @param endTime   end time of the trip
      */
-    public void insertIntoTRIPTIME(Connection c, int id, Date startTime, Date endTime) {
+    public void insertIntoTRIPTIME(Connection c, double id, Date startTime, Date endTime) {
         try {
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + TRIPTIME + " (" + ID + "," + STARTTIME + "," + ENDTIME + ") "
@@ -221,7 +221,7 @@ public class PostgreSQLDatabaseConnection {
      * @param startStationID id of the trip's start station
      * @param endStationID   id of the trip's end station
      */
-    public void insertIntoTRIPROUTE(Connection c, int id, int startStationID, int endStationID) {
+    public void insertIntoTRIPROUTE(Connection c, double id, int startStationID, int endStationID) {
         try {
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + TRIPROUTE + " (" + ID + "," + STARTSTATION + "," + ENDSTATION + ") "
@@ -245,7 +245,7 @@ public class PostgreSQLDatabaseConnection {
      * @param usertype type of the user
      * @param gender   gender of the user
      */
-    public void insertIntoTRIPSETTINGS(Connection c, int id, long bikeID, String usertype, int gender) {
+    public void insertIntoTRIPSETTINGS(Connection c, double id, long bikeID, String usertype, int gender) {
         try {
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + TRIPSETTS + " (" + ID + "," + BIKEID + "," + USERTYPE + "," + GENDER + ") "
