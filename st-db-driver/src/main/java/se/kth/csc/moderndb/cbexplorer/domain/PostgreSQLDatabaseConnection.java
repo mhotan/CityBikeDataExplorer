@@ -69,14 +69,14 @@ public class PostgreSQLDatabaseConnection {
     public void createSTATIONTable(Connection c) {
         try {
             Statement stmt = c.createStatement();
-            String sql = "CREATE TABLE " + STATION + " " +
+            String sql = "CREATE TABLE IF NOT EXISTS " + STATION + " " +
                     "(" + ID + " INT PRIMARY KEY     NOT NULL," +
                     " " + NAME + "          TEXT    NOT NULL, " +
                     " " + LONGITUDE + "       INT     NOT NULL, " +
                     " " + LATITUDE + "        INT   NOT NULL)";
             stmt.executeUpdate(sql);
             stmt.close();
-            c.close();
+            //c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -92,13 +92,13 @@ public class PostgreSQLDatabaseConnection {
     public void createTRIPTIMETable(Connection c) {
         try {
             Statement stmt = c.createStatement();
-            String sql = "CREATE TABLE " + TRIPTIME + " " +
+            String sql = "CREATE TABLE IF NOT EXISTS " + TRIPTIME + " " +
                     "(" + ID + " INT PRIMARY KEY     NOT NULL," +
                     " " + STARTTIME + "           DATE    NOT NULL, " +
                     " " + ENDTIME + "       DATE     NOT NULL)";
             stmt.executeUpdate(sql);
             stmt.close();
-            c.close();
+            //c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -114,13 +114,13 @@ public class PostgreSQLDatabaseConnection {
     public void createTRIPROUTETable(Connection c) {
         try {
             Statement stmt = c.createStatement();
-            String sql = "CREATE TABLE " + TRIPROUTE + " " +
-                    "(" + ID + "INT PRIMARY KEY     NOT NULL," +
+            String sql = "CREATE TABLE IF NOT EXISTS " + TRIPROUTE + " " +
+                    "(" + ID + " INT PRIMARY KEY     NOT NULL," +
                     " " + STARTSTATION + "           INT    NOT NULL, " +
                     " " + ENDSTATION + "       INT     NOT NULL)";
             stmt.executeUpdate(sql);
             stmt.close();
-            c.close();
+            //c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -136,14 +136,14 @@ public class PostgreSQLDatabaseConnection {
     public void createTRIPSETTINGSTable(Connection c) {
         try {
             Statement stmt = c.createStatement();
-            String sql = "CREATE TABLE " + TRIPSETTS + " " +
+            String sql = "CREATE TABLE IF NOT EXISTS " + TRIPSETTS + " " +
                     "(" + ID + "INT PRIMARY KEY     NOT NULL," +
                     " " + BIKEID + "           INT    NOT NULL, " +
                     " " + USERTYPE + "       TEXT     NOT NULL, " +
                     " " + GENDER + "       INT     NOT NULL)";
             stmt.executeUpdate(sql);
             stmt.close();
-            c.close();
+            //c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -182,7 +182,7 @@ public class PostgreSQLDatabaseConnection {
             stmt.executeUpdate(sql);
             stmt.close();
             c.commit();
-            c.close();
+            //c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -205,7 +205,7 @@ public class PostgreSQLDatabaseConnection {
             stmt.executeUpdate(sql);
             stmt.close();
             c.commit();
-            c.close();
+           // c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -229,7 +229,7 @@ public class PostgreSQLDatabaseConnection {
             stmt.executeUpdate(sql);
             stmt.close();
             c.commit();
-            c.close();
+            //c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -253,7 +253,7 @@ public class PostgreSQLDatabaseConnection {
             stmt.executeUpdate(sql);
             stmt.close();
             c.commit();
-            c.close();
+           // c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
