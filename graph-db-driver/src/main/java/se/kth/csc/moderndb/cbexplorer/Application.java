@@ -20,6 +20,10 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguratio
 @EnableAutoConfiguration
 public class Application extends Neo4jConfiguration {
 
+    public Application() {
+        setBasePackage("se.kth.csc.moderndb.cbexplorer");
+    }
+
     /**
      * The name of the database.
      */
