@@ -50,7 +50,7 @@ public class PostgreSQLDatabaseConnection {
             c = DriverManager
                     .getConnection("jdbc:postgresql://localhost:5432/" + DATABASE_NAME,
                             USERNAME, PASSWORD);
-
+            //c.setAutoCommit(false);
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -181,7 +181,7 @@ public class PostgreSQLDatabaseConnection {
                     + "VALUES (" + id + ", '" + name + "', " + longitude + ", " + latitude + ");";
             stmt.executeUpdate(sql);
             stmt.close();
-            c.commit();
+            //c.commit();
             //c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -201,10 +201,10 @@ public class PostgreSQLDatabaseConnection {
         try {
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + TRIPTIME + " (" + ID + "," + STARTTIME + "," + ENDTIME + ") "
-                    + "VALUES (" + id + ", " + startTime + ", " + endTime + ");";
+                    + "VALUES (" + id + ", '" + startTime + "', '" + endTime + "');";
             stmt.executeUpdate(sql);
             stmt.close();
-            c.commit();
+            //c.commit();
            // c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -228,7 +228,7 @@ public class PostgreSQLDatabaseConnection {
                     + "VALUES (" + id + ", " + startStationID + ", " + endStationID + ");";
             stmt.executeUpdate(sql);
             stmt.close();
-            c.commit();
+            //c.commit();
             //c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -252,7 +252,7 @@ public class PostgreSQLDatabaseConnection {
                     + "VALUES (" + id + ", " + bikeID + ", '" + usertype + "', " + gender + ");";
             stmt.executeUpdate(sql);
             stmt.close();
-            c.commit();
+            //c.commit();
            // c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
