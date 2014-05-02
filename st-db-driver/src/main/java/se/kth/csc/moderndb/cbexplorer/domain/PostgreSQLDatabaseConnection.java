@@ -18,10 +18,10 @@ public class PostgreSQLDatabaseConnection {
     private final String PASSWORD = "vagrant";
 
     // names of the tables that will be created
-    public static final String STATION = "STATION";
-    public static final String TRIPTIME = "TRIP_TIME";
-    public static final String TRIPROUTE = "TRIP_ROUTE";
-    public static final String TRIPSETTS = "TRIP_SETTINGS";
+    public static final String STATION = "station";
+    public static final String TRIPTIME = "trip_time";
+    public static final String TRIPROUTE = "trip_route";
+    public static final String TRIPSETTS = "trip_settings";
 
     // names of the attributes in the tables
     private final String ID = "ID";
@@ -50,7 +50,10 @@ public class PostgreSQLDatabaseConnection {
             c = DriverManager
                     .getConnection("jdbc:postgresql://localhost:5432/" + DATABASE_NAME,
                             USERNAME, PASSWORD);
-            //c.setAutoCommit(false);
+            /*Statement stmt = c.createStatement();
+            String sql = "CREATE DATABASE "+DATABASE_NAME;
+            stmt.executeUpdate(sql);
+            stmt.close();*/
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -63,6 +66,7 @@ public class PostgreSQLDatabaseConnection {
     /**
      * Creates the database table STATION having the following structure:
      * ID (int, primary key), NAME (text), LONGITUDE (int), LATITUDE (int).
+     * It also adds a rule to ignore duplicated entries in the database.
      *
      * @param c connection to the database
      */
@@ -75,6 +79,8 @@ public class PostgreSQLDatabaseConnection {
                     " " + LONGITUDE + " DOUBLE PRECISION    NOT NULL, " +
                     " " + LATITUDE + " DOUBLE PRECISION NOT NULL)";
             stmt.executeUpdate(sql);
+            String rule = "CREATE OR REPLACE RULE \"station_on_duplicate_ignore\" AS ON INSERT TO \""+STATION+"\" WHERE EXISTS(SELECT 1 FROM "+ STATION + " WHERE ("+ID +")=(NEW."+ ID + ")) DO INSTEAD NOTHING;";
+            stmt.execute(rule);
             stmt.close();
             //c.close();
         } catch (Exception e) {
@@ -86,6 +92,7 @@ public class PostgreSQLDatabaseConnection {
     /**
      * Creates the database table TRIP_TIME having the following structure:
      * ID (int, primary key), START_TIME (int), END_TIME (int).
+     * It also adds a rule to ignore duplicated entries in the database.
      *
      * @param c connection to the database
      */
@@ -97,6 +104,8 @@ public class PostgreSQLDatabaseConnection {
                     " " + STARTTIME + " DATE    NOT NULL, " +
                     " " + ENDTIME + " DATE  NOT NULL)";
             stmt.executeUpdate(sql);
+            String rule = "CREATE OR REPLACE RULE \"trip_time_on_duplicate_ignore\" AS ON INSERT TO \""+TRIPTIME+"\" WHERE EXISTS(SELECT 1 FROM "+ TRIPTIME + " WHERE ("+ID +")=(NEW."+ ID + ")) DO INSTEAD NOTHING;";
+            stmt.execute(rule);
             stmt.close();
             //c.close();
         } catch (Exception e) {
@@ -108,6 +117,7 @@ public class PostgreSQLDatabaseConnection {
     /**
      * Creates the database table TRIP_ROUTE having the following structure:
      * ID (int, primary key), START_STATION_ID (int), END_STATION_ID (int).
+     * It also adds a rule to ignore duplicated entries in the database.
      *
      * @param c connection to the database
      */
@@ -119,6 +129,9 @@ public class PostgreSQLDatabaseConnection {
                     " " + STARTSTATION + " DOUBLE PRECISION  NOT NULL, " +
                     " " + ENDSTATION + " DOUBLE PRECISION    NOT NULL)";
             stmt.executeUpdate(sql);
+            String rule = "CREATE OR REPLACE RULE \"trip_route_on_duplicate_ignore\" AS ON INSERT TO \""+TRIPROUTE+"\" WHERE EXISTS(SELECT 1 FROM "+ TRIPROUTE + " WHERE ("+ID +")=(NEW."+ ID + ")) DO INSTEAD NOTHING;";
+            stmt.execute(rule);
+
             stmt.close();
             //c.close();
         } catch (Exception e) {
@@ -130,6 +143,7 @@ public class PostgreSQLDatabaseConnection {
     /**
      * Creates the database table TRIP_SETTINGS having the following structure:
      * ID (int, primary key), BIKE_ID (int), USER_TYPE (text), GENDER (int).
+     * It also adds a rule to ignore duplicated entries in the database.
      *
      * @param c connection to the database
      */
@@ -142,6 +156,8 @@ public class PostgreSQLDatabaseConnection {
                     " " + USERTYPE + " TEXT NOT NULL, " +
                     " " + GENDER + " INT    NOT NULL)";
             stmt.executeUpdate(sql);
+            String rule = "CREATE OR REPLACE RULE \"trip_setts_on_duplicate_ignore\" AS ON INSERT TO \""+TRIPSETTS+"\" WHERE EXISTS(SELECT 1 FROM "+ TRIPSETTS + " WHERE ("+ID +")=(NEW."+ ID + ")) DO INSTEAD NOTHING;";
+            stmt.execute(rule);
             stmt.close();
             //c.close();
         } catch (Exception e) {
@@ -178,7 +194,7 @@ public class PostgreSQLDatabaseConnection {
         try {
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + STATION + " (" + ID + "," + NAME + "," + LONGITUDE + "," + LATITUDE + ") "
-                    + "VALUES (" + id + ", '" + name + "', " + longitude + ", " + latitude + ");";
+                    + "VALUES (" + id + ", '" + name + "', " + longitude + ", " + latitude + ")";
             stmt.executeUpdate(sql);
             stmt.close();
             //c.commit();
