@@ -20,8 +20,11 @@ import java.util.Map;
 public class CitiBikeBatchReader implements CitiBikeReader {
 
     public static final Label BIKE_LABEL = DynamicLabel.label(DatabaseConstants.BIKE_LABEL);
+    public static final Label BIKE_PRIMARY_LABEL = DynamicLabel.label("_" + DatabaseConstants.BIKE_LABEL);
     public static final Label STATION_LABEL = DynamicLabel.label(DatabaseConstants.STATION_LABEL);
+    public static final Label STATION_PRIMARY_LABEL = DynamicLabel.label("_" + DatabaseConstants.STATION_LABEL);
     public static final Label TRIP_LABEL = DynamicLabel.label(DatabaseConstants.TRIP_LABEL);
+    public static final Label TRIP_PRIMARY_LABEL = DynamicLabel.label("_" + DatabaseConstants.TRIP_LABEL);
 
     // Relations
     public static final RelationshipType startedFrom = DynamicRelationshipType.withName(DatabaseConstants.STARTED_FROM_RELATION);
@@ -95,7 +98,7 @@ public class CitiBikeBatchReader implements CitiBikeReader {
         properties.put(DatabaseConstants.TRIP_USER_TYPE, data.getUserType());
         properties.put(DatabaseConstants.TRIP_USER_BIRTH_YEAR, data.getUserBirthYear());
         properties.put(DatabaseConstants.TRIP_USER_GENDER, data.getUserGender());
-        return inserter.createNode(properties, TRIP_LABEL);
+        return inserter.createNode(properties, TRIP_LABEL, TRIP_PRIMARY_LABEL);
     }
 
     /**
@@ -114,7 +117,7 @@ public class CitiBikeBatchReader implements CitiBikeReader {
             properties.put(DatabaseConstants.BIKE_ID, citiBikeID);
 
             // Insert into the database
-            long bikeGraphID = inserter.createNode(properties, BIKE_LABEL);
+            long bikeGraphID = inserter.createNode(properties, BIKE_LABEL, BIKE_PRIMARY_LABEL);
 
             // Update the mapping
             bikeIDs.put(citiBikeID, bikeGraphID);
@@ -145,7 +148,7 @@ public class CitiBikeBatchReader implements CitiBikeReader {
             properties.put(DatabaseConstants.STATION_ID, stationID);
 
             // Insert into the database
-            long stationGraphID = inserter.createNode(properties, STATION_LABEL);
+            long stationGraphID = inserter.createNode(properties, STATION_LABEL, STATION_PRIMARY_LABEL);
 
             // Update the mapping
             stationIDs.put(stationID, stationGraphID);

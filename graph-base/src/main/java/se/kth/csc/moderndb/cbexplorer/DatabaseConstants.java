@@ -9,9 +9,9 @@ public class DatabaseConstants {
     public static final String DATABASE_PATH = "target/test.db";
 
     // Labels
-    public static final String BIKE_LABEL = "_Bike";
-    public static final String STATION_LABEL = "_Station";
-    public static final String TRIP_LABEL = "_Trip";
+    public static final String BIKE_LABEL = "Bike";
+    public static final String STATION_LABEL = "Station";
+    public static final String TRIP_LABEL = "Trip";
 
     // Relations
     public static final String USES_RELATION = "USES";
