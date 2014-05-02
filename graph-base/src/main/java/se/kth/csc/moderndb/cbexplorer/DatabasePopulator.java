@@ -14,8 +14,6 @@ import java.text.ParseException;
  */
 public class DatabasePopulator {
 
-    private static final String DB_PATH = "target/test.db";
-
     private DatabasePopulator() {
 //        Cannot Instantiate
     }
@@ -35,12 +33,12 @@ public class DatabasePopulator {
         }
 
         // Delete the old database
-        File db = new File(DB_PATH);
+        File db = new File(DatabaseConstants.DATABASE_PATH);
         if (db.exists()) {
             db.delete();
         }
 
-        BatchInserter inserter = BatchInserters.inserter(DB_PATH);
+        BatchInserter inserter = BatchInserters.inserter(DatabaseConstants.DATABASE_PATH);
         CitiBikeReader reader = new CitiBikeBatchReader(inserter);
         DefaultCitiBikeParser parser = new DefaultCitiBikeParser(reader);
         if (f == null) {

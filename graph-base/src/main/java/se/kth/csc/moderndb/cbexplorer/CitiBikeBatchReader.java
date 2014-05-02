@@ -19,32 +19,26 @@ import java.util.Map;
  */
 public class CitiBikeBatchReader implements CitiBikeReader {
 
-    public static final Label BIKE_LABEL = DynamicLabel.label("Bike");
-    public static final Label STATION_LABEL = DynamicLabel.label("Station");
-    public static final Label TRIP_LABEL = DynamicLabel.label("Trip");
+    public static final Label BIKE_LABEL = DynamicLabel.label(DatabaseConstants.BIKE_LABEL);
+    public static final Label STATION_LABEL = DynamicLabel.label(DatabaseConstants.STATION_LABEL);
+    public static final Label TRIP_LABEL = DynamicLabel.label(DatabaseConstants.TRIP_LABEL);
 
-    // Station
-    public static final String STATION_NAME = "name";
-    public static final String STATION_LOCATION = "location";
-
-    // Trip
-    public static final String TRIP_STARTTIME = "startTime";
-    public static final String TRIP_ENDTIME = "endTime";
-    public static final String TRIP_USERTYPE = "userType";
-    public static final String TRIP_USERBIRTHYEAR = "userBirthYear";
-    public static final String TRIP_USERGENDER = "userGender";
-
-    // Relation
-    public static final RelationshipType startedFrom = DynamicRelationshipType.withName("STARTED_FROM");
-    public static final RelationshipType endedAt = DynamicRelationshipType.withName("ENDED_AT");
-    public static final RelationshipType uses = DynamicRelationshipType.withName("USES");
+    // Relations
+    public static final RelationshipType startedFrom = DynamicRelationshipType.withName(DatabaseConstants.STARTED_FROM_RELATION);
+    public static final RelationshipType endedAt = DynamicRelationshipType.withName(DatabaseConstants.ENDED_AT_RELATION);
+    public static final RelationshipType uses = DynamicRelationshipType.withName(DatabaseConstants.USES_RELATION);
 
     private final BatchInserter inserter;
 
     private long tripCount;
 
     /**
-     *
+     * Mappings Citibike IDs -> Neo4j Graph IDs
+     */
+    private final Map<Long, Long> bikeIDs, stationIDs;
+
+    /**
+     * Creates a reader
      *
      * @param inserter The Batch inserter that handles the inserting nodes into the database.
      */
@@ -56,6 +50,8 @@ public class CitiBikeBatchReader implements CitiBikeReader {
 
         // Initialize the tripCount of objects
         tripCount = 0;
+        bikeIDs = new HashMap<Long, Long>();
+        stationIDs = new HashMap<Long, Long>();
     }
 
     private static void populateIndexes(BatchInserter inserter) {
@@ -71,48 +67,93 @@ public class CitiBikeBatchReader implements CitiBikeReader {
             StationData startStationData = tripData.getStartStationData();
             StationData endStationData = tripData.getEndStationData();
 
-            // Check if the bike exists in the database
-            if (!inserter.nodeExists(bikeData.getId())) {
-                Map<String, Object> properties = new HashMap<String, Object>();
-                inserter.createNode(bikeData.getId(), properties, BIKE_LABEL);
-            }
-
-            // Add the start station if it does not exists already.
-            if (!inserter.nodeExists(startStationData.getStationId())) {
-                Map<String, Object> properties = new HashMap<String, Object>();
-                properties.put(STATION_NAME, startStationData.getName());
-                String location = String.format("POINT(%f %f)",
-                        startStationData.getLongitude(), startStationData.getLatitude()).replace(",", ".");
-                properties.put(STATION_LOCATION, location);
-                inserter.createNode(startStationData.getStationId(), properties, STATION_LABEL);
-            }
-
-            // Add the end station if it does not exists already.
-            if (!inserter.nodeExists(endStationData.getStationId())) {
-                Map<String, Object> properties = new HashMap<String, Object>();
-                properties.put(STATION_NAME, endStationData.getStationId());
-                String location = String.format("POINT(%f %f)",
-                        endStationData.getLongitude(), endStationData.getLatitude()).replace(",", ".");
-                properties.put(STATION_LOCATION, location);
-                inserter.createNode(endStationData.getStationId(), properties, STATION_LABEL);
-            }
-
-            // Add the trip.
-            Map<String, Object> properties = new HashMap<String, Object>();
-            properties.put(TRIP_STARTTIME, tripData.getStartTime().getTime());
-            properties.put(TRIP_ENDTIME, tripData.getEndTime().getTime());
-            properties.put(TRIP_USERTYPE, tripData.getUserType());
-            properties.put(TRIP_USERBIRTHYEAR, tripData.getUserBirthYear());
-            properties.put(TRIP_USERGENDER, tripData.getUserGender());
-            long tripId = inserter.createNode(properties, TRIP_LABEL);
+            // Add all the elements to the database
+            long bikeGraphID = addBike(bikeData);
+            long startStationGraphID = addStation(startStationData);
+            long endStationGraphID = addStation(endStationData);
+            long tripId = addTrip(tripData);
 
             // Add all the relations.
-            inserter.createRelationship(tripId, startStationData.getStationId(), startedFrom, null);
-            inserter.createRelationship(tripId, endStationData.getStationId(), endedAt, null);
-            inserter.createRelationship(tripId, bikeData.getId(), uses, null);
+            inserter.createRelationship(tripId, startStationGraphID, startedFrom, null);
+            inserter.createRelationship(tripId, endStationGraphID, endedAt, null);
+            inserter.createRelationship(tripId, bikeGraphID, uses, null);
 
         }
         tripCount += trips.size();
         System.out.println(tripCount + " Total trips processed");
+    }
+
+    /**
+     *
+     * @param data
+     * @return The Neo4J Graph ID of the newly added Trip
+     */
+    private long addTrip(TripData data) {
+        Map<String, Object> properties = new HashMap<String, Object>();
+        properties.put(DatabaseConstants.TRIP_START_TIME, data.getStartTime().getTime());
+        properties.put(DatabaseConstants.TRIP_END_TIME, data.getEndTime().getTime());
+        properties.put(DatabaseConstants.TRIP_USER_TYPE, data.getUserType());
+        properties.put(DatabaseConstants.TRIP_USER_BIRTH_YEAR, data.getUserBirthYear());
+        properties.put(DatabaseConstants.TRIP_USER_GENDER, data.getUserGender());
+        return inserter.createNode(properties, TRIP_LABEL);
+    }
+
+    /**
+     * Adds a Bike to the database if it does not exists already.
+     *
+     * @param data The Bike data to add to the Database
+     * @return The Neo4J Graph ID of the newly added  Bike
+     */
+    private long addBike(BikeData data) {
+        // Check if the bike exists in the database
+        long citiBikeID = data.getId();
+        if (!bikeIDs.containsKey(citiBikeID)) {
+
+            // Populate the properties
+            Map<String, Object> properties = new HashMap<String, Object>();
+            properties.put(DatabaseConstants.BIKE_ID, citiBikeID);
+
+            // Insert into the database
+            long bikeGraphID = inserter.createNode(properties, BIKE_LABEL);
+
+            // Update the mapping
+            bikeIDs.put(citiBikeID, bikeGraphID);
+
+            return bikeGraphID;
+        } else
+            return bikeIDs.get(citiBikeID);
+    }
+
+    /**
+     * Adds a station if it does not already exists.
+     *
+     * @param data Station data to add to the graph.
+     * @return The Neo4J Graph ID of the newly added Station
+     */
+    private long addStation(StationData data) {
+        assert inserter != null: "Inserter is null";
+        // Add the start station if it does not exists already.
+        long stationID = data.getStationId();
+        if (!stationIDs.containsKey(stationID)) {
+
+            // Populate the properties
+            Map<String, Object> properties = new HashMap<String, Object>();
+            properties.put(DatabaseConstants.STATION_NAME, data.getName());
+            String location = String.format("POINT(%f %f)",
+                    data.getLongitude(), data.getLatitude()).replace(",", ".");
+            properties.put(DatabaseConstants.STATION_LOCATION, location);
+            properties.put(DatabaseConstants.STATION_ID, stationID);
+
+            // Insert into the database
+            long stationGraphID = inserter.createNode(properties, STATION_LABEL);
+
+            // Update the mapping
+            stationIDs.put(stationID, stationGraphID);
+
+            // Update the mapping
+            return stationGraphID;
+        } else {
+            return stationIDs.get(stationID);
+        }
     }
 }
