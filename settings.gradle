@@ -12,3 +12,5 @@ include 'client'
 
 include 'graph-load-db'
 
+include 'graph-base'
+

@@ -29,7 +29,7 @@ public class Application extends Neo4jConfiguration implements CommandLineRunner
     /**
      * The name of the database.
      */
-    protected static final String DATABASE_NAME = "citibike.db";
+    protected static final String DATABASE_NAME = "cbexplorer.db";
 
     @Autowired
     protected BikeRepository bikeRepository;

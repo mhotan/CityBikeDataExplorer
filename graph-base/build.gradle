@@ -1,0 +1,20 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.5
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    maven { url "http://repo.spring.io/libs-snapshot" }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile("org.springframework.data:spring-data-neo4j:3.0.2.RELEASE")
+    compile project(":core")
+}
+
+jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest { attributes 'Main-Class': 'se.kth.csc.moderndb.cbexplorer.DatabasePopulator' }
+}

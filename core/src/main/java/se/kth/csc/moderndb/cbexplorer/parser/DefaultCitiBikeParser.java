@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Default parser that reads data in from the resource directory.  This by default will
@@ -42,11 +44,25 @@ public class DefaultCitiBikeParser extends CitiBikeParser {
      * @return The number of successful reads.
      */
     public long parse() throws IOException, ParseException {
+        long startTime = Calendar.getInstance().getTime().getTime();
+
+        long reads;
         try {
-            return parse(new File(dataDirectoryURL.toURI()));
+            reads = parse(new File(dataDirectoryURL.toURI()));
         } catch (URISyntaxException e) {
             // The url should always be valid an exists.
             throw new RuntimeException(e);
         }
+        long endTime = Calendar.getInstance().getTime().getTime();
+        long millis = endTime - startTime;
+        String duration = String.format("%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(millis),
+                TimeUnit.MILLISECONDS.toMinutes(millis) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), // The change is in this line
+                TimeUnit.MILLISECONDS.toSeconds(millis) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+
+        System.out.println(reads + " Number of total reads in " + duration);
+        return reads;
     }
 }

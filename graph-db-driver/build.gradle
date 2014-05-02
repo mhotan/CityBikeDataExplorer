@@ -14,7 +14,7 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot'
 
 jar {
-    baseName = 'citibike-graph-driver'
+    baseName = 'cbexplorer-graph-driver'
     version = '0.1.0'
 }
 
