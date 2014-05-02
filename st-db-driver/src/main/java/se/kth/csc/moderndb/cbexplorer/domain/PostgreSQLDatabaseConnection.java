@@ -2,6 +2,7 @@ package se.kth.csc.moderndb.cbexplorer.domain;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Date;
 
@@ -13,16 +14,17 @@ import java.util.Date;
  */
 public class PostgreSQLDatabaseConnection {
 
-    private final String DATABASE_NAME = "cityBikeST";
-    private final String USERNAME = "vagrant";
-    private final String PASSWORD = "vagrant";
-
     // names of the tables that will be created
     public static final String STATION = "station";
     public static final String TRIPTIME = "trip_time";
     public static final String TRIPROUTE = "trip_route";
     public static final String TRIPSETTS = "trip_settings";
 
+    private final String URL = "jdbc:postgresql://localhost:5432/";
+    private final String URLPROGRES = "jdbc:postgresql://localhost:5432/postgres";
+    private final String DATABASE_NAME = "citybike";
+    private final String USERNAME = "vagrant";
+    private final String PASSWORD = "vagrant";
     // names of the attributes in the tables
     private final String ID = "ID";
     private final String NAME = "NAME";
@@ -45,15 +47,23 @@ public class PostgreSQLDatabaseConnection {
      */
     public Connection openDB() {
         Connection c = null;
+        Statement stmt = null;
         try {
-            Class.forName("org.postgresql.Driver");
+            Class.forName("org.postgresql.Driver").newInstance();
             c = DriverManager
-                    .getConnection("jdbc:postgresql://localhost:5432/" + DATABASE_NAME,
-                            USERNAME, PASSWORD);
-            /*Statement stmt = c.createStatement();
-            String sql = "CREATE DATABASE "+DATABASE_NAME;
-            stmt.executeUpdate(sql);
-            stmt.close();*/
+                    .getConnection(URLPROGRES, USERNAME, PASSWORD);
+
+            stmt = c.createStatement();
+            ResultSet res = stmt.executeQuery("select count(*) from pg_catalog.pg_database where datname = '"+ DATABASE_NAME +"'");
+            res.next();
+            int count = res.getInt("count");
+            System.out.println("Count : " + count);
+            if(count == 0) {
+                creatingInitDatabase();
+            }
+            Class.forName("org.postgresql.Driver").newInstance();
+            c = DriverManager
+                    .getConnection(URL + DATABASE_NAME, USERNAME, PASSWORD);
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -61,6 +71,7 @@ public class PostgreSQLDatabaseConnection {
         }
         System.out.println("Opened database successfully");
         return c;
+
     }
 
     /**
@@ -79,7 +90,7 @@ public class PostgreSQLDatabaseConnection {
                     " " + LONGITUDE + " DOUBLE PRECISION    NOT NULL, " +
                     " " + LATITUDE + " DOUBLE PRECISION NOT NULL)";
             stmt.executeUpdate(sql);
-            String rule = "CREATE OR REPLACE RULE \"station_on_duplicate_ignore\" AS ON INSERT TO \""+STATION+"\" WHERE EXISTS(SELECT 1 FROM "+ STATION + " WHERE ("+ID +")=(NEW."+ ID + ")) DO INSTEAD NOTHING;";
+            String rule = "CREATE OR REPLACE RULE \"station_on_duplicate_ignore\" AS ON INSERT TO \"" + STATION + "\" WHERE EXISTS(SELECT 1 FROM " + STATION + " WHERE (" + ID + ")=(NEW." + ID + ")) DO INSTEAD NOTHING;";
             stmt.execute(rule);
             stmt.close();
             //c.close();
@@ -104,7 +115,7 @@ public class PostgreSQLDatabaseConnection {
                     " " + STARTTIME + " DATE    NOT NULL, " +
                     " " + ENDTIME + " DATE  NOT NULL)";
             stmt.executeUpdate(sql);
-            String rule = "CREATE OR REPLACE RULE \"trip_time_on_duplicate_ignore\" AS ON INSERT TO \""+TRIPTIME+"\" WHERE EXISTS(SELECT 1 FROM "+ TRIPTIME + " WHERE ("+ID +")=(NEW."+ ID + ")) DO INSTEAD NOTHING;";
+            String rule = "CREATE OR REPLACE RULE \"trip_time_on_duplicate_ignore\" AS ON INSERT TO \"" + TRIPTIME + "\" WHERE EXISTS(SELECT 1 FROM " + TRIPTIME + " WHERE (" + ID + ")=(NEW." + ID + ")) DO INSTEAD NOTHING;";
             stmt.execute(rule);
             stmt.close();
             //c.close();
@@ -129,7 +140,7 @@ public class PostgreSQLDatabaseConnection {
                     " " + STARTSTATION + " DOUBLE PRECISION  NOT NULL, " +
                     " " + ENDSTATION + " DOUBLE PRECISION    NOT NULL)";
             stmt.executeUpdate(sql);
-            String rule = "CREATE OR REPLACE RULE \"trip_route_on_duplicate_ignore\" AS ON INSERT TO \""+TRIPROUTE+"\" WHERE EXISTS(SELECT 1 FROM "+ TRIPROUTE + " WHERE ("+ID +")=(NEW."+ ID + ")) DO INSTEAD NOTHING;";
+            String rule = "CREATE OR REPLACE RULE \"trip_route_on_duplicate_ignore\" AS ON INSERT TO \"" + TRIPROUTE + "\" WHERE EXISTS(SELECT 1 FROM " + TRIPROUTE + " WHERE (" + ID + ")=(NEW." + ID + ")) DO INSTEAD NOTHING;";
             stmt.execute(rule);
 
             stmt.close();
@@ -156,7 +167,7 @@ public class PostgreSQLDatabaseConnection {
                     " " + USERTYPE + " TEXT NOT NULL, " +
                     " " + GENDER + " INT    NOT NULL)";
             stmt.executeUpdate(sql);
-            String rule = "CREATE OR REPLACE RULE \"trip_setts_on_duplicate_ignore\" AS ON INSERT TO \""+TRIPSETTS+"\" WHERE EXISTS(SELECT 1 FROM "+ TRIPSETTS + " WHERE ("+ID +")=(NEW."+ ID + ")) DO INSTEAD NOTHING;";
+            String rule = "CREATE OR REPLACE RULE \"trip_setts_on_duplicate_ignore\" AS ON INSERT TO \"" + TRIPSETTS + "\" WHERE EXISTS(SELECT 1 FROM " + TRIPSETTS + " WHERE (" + ID + ")=(NEW." + ID + ")) DO INSTEAD NOTHING;";
             stmt.execute(rule);
             stmt.close();
             //c.close();
@@ -192,13 +203,14 @@ public class PostgreSQLDatabaseConnection {
      */
     public void insertIntoSTATION(Connection c, double id, String name, double longitude, double latitude) {
         try {
+            c = openDB();
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + STATION + " (" + ID + "," + NAME + "," + LONGITUDE + "," + LATITUDE + ") "
                     + "VALUES (" + id + ", '" + name + "', " + longitude + ", " + latitude + ")";
             stmt.executeUpdate(sql);
             stmt.close();
             //c.commit();
-            //c.close();
+            c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -215,13 +227,14 @@ public class PostgreSQLDatabaseConnection {
      */
     public void insertIntoTRIPTIME(Connection c, double id, Date startTime, Date endTime) {
         try {
+            c = openDB();
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + TRIPTIME + " (" + ID + "," + STARTTIME + "," + ENDTIME + ") "
                     + "VALUES (" + id + ", '" + startTime + "', '" + endTime + "');";
             stmt.executeUpdate(sql);
             stmt.close();
             //c.commit();
-           // c.close();
+            c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -239,13 +252,14 @@ public class PostgreSQLDatabaseConnection {
      */
     public void insertIntoTRIPROUTE(Connection c, double id, double startStationID, double endStationID) {
         try {
+            c = openDB();
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + TRIPROUTE + " (" + ID + "," + STARTSTATION + "," + ENDSTATION + ") "
                     + "VALUES (" + id + ", " + startStationID + ", " + endStationID + ");";
             stmt.executeUpdate(sql);
             stmt.close();
             //c.commit();
-            //c.close();
+            c.close();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -263,14 +277,34 @@ public class PostgreSQLDatabaseConnection {
      */
     public void insertIntoTRIPSETTINGS(Connection c, double id, long bikeID, String usertype, int gender) {
         try {
+            c = openDB();
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + TRIPSETTS + " (" + ID + "," + BIKEID + "," + USERTYPE + "," + GENDER + ") "
                     + "VALUES (" + id + ", " + bikeID + ", '" + usertype + "', " + gender + ");";
             stmt.executeUpdate(sql);
             stmt.close();
             //c.commit();
-           // c.close();
+            c.close();
         } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+    }
+
+
+    private void creatingInitDatabase() {
+        Connection c = null;
+        Statement stmt = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            c = DriverManager
+                    .getConnection(URLPROGRES, USERNAME, PASSWORD);
+            stmt = c.createStatement();
+            String sql = "CREATE DATABASE " + DATABASE_NAME;
+            stmt.executeUpdate(sql);
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
