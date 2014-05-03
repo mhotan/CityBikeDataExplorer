@@ -74,7 +74,7 @@ public class PostgreSQLDatabaseConnection {
             String sql = "CREATE TABLE IF NOT EXISTS " + STATION + " " +
                     "(" + ID + " DOUBLE PRECISION PRIMARY KEY NOT NULL," +
                     " " + NAME + " TEXT NOT NULL, " +
-                    " " + POINT + " GEOMETRY    NOT NULL)";
+                    " " + POINT + " POINT    NOT NULL)";
             stmt.executeUpdate(sql);
             String rule = "CREATE OR REPLACE RULE \"station_on_duplicate_ignore\" AS ON INSERT TO \"" + STATION + "\" WHERE EXISTS(SELECT 1 FROM " + STATION + " WHERE (" + ID + ")=(NEW." + ID + ")) DO INSTEAD NOTHING;";
             stmt.execute(rule);
