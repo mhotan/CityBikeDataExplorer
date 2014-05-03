@@ -30,6 +30,12 @@ public class STDBCityBikeReader implements CitiBikeReader {
         this.postgreSQLDatabaseConnection = new PostgreSQLDatabaseConnection();
         c = this.postgreSQLDatabaseConnection.openDB();
         this.postgreSQLDatabaseConnection.createAllNecessaryTables(c);
+        // after creating the tables close the connection
+        try {
+            this.c.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -38,12 +44,6 @@ public class STDBCityBikeReader implements CitiBikeReader {
         addTripsToTRIPROUTE(trips);
         addTripsToTRIPTIME(trips);
         addTripsToTRIPSETTINGS(trips);
-        // after adding all data the connection to the database must be closed
-        try {
-            this.c.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -53,6 +53,7 @@ public class STDBCityBikeReader implements CitiBikeReader {
      * @param trips parsed trip data
      */
     private void addTripsToSTATION(Collection<TripData> trips) {
+        this.c = this.postgreSQLDatabaseConnection.openDB();
         HashMap<String, String> stationName = new HashMap<String, String>();
         // find fitting latitude and longitude
         HashMap<String, Double> stationLat = new HashMap<String, Double>();
@@ -74,7 +75,12 @@ public class STDBCityBikeReader implements CitiBikeReader {
 
         // add to database
         for (String stationID : stationName.keySet()) {
-            this.postgreSQLDatabaseConnection.insertIntoSTATION(this.c, Double.parseDouble(stationID), stationName.get(stationID), stationLong.get(stationID), stationLat.get(stationID));
+            this.postgreSQLDatabaseConnection.insertIntoSTATION(this.c, Long.parseLong(stationID), stationName.get(stationID), stationLong.get(stationID), stationLat.get(stationID));
+        }
+        try {
+            this.c.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -85,9 +91,15 @@ public class STDBCityBikeReader implements CitiBikeReader {
      * @param trips parsed trip data
      */
     private void addTripsToTRIPTIME(Collection<TripData> trips) {
+        this.c = this.postgreSQLDatabaseConnection.openDB();
         for (TripData trip : trips) {
             double tripID = calculateTripID(trip);
             this.postgreSQLDatabaseConnection.insertIntoTRIPTIME(this.c, tripID, trip.getStartTime(), trip.getEndTime());
+        }
+        try {
+            this.c.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -98,11 +110,17 @@ public class STDBCityBikeReader implements CitiBikeReader {
      * @param trips parsed trip data
      */
     private void addTripsToTRIPROUTE(Collection<TripData> trips) {
+        this.c = this.postgreSQLDatabaseConnection.openDB();
         for (TripData trip : trips) {
             double tripID = calculateTripID(trip);
-            double startStation = Double.parseDouble(calculateStationIDString(trip.getStartStationData()));
-            double endStation = Double.parseDouble(calculateStationIDString(trip.getEndStationData()));
+            double startStation = Long.parseLong(calculateStationIDString(trip.getStartStationData()));
+            double endStation = Long.parseLong(calculateStationIDString(trip.getEndStationData()));
             this.postgreSQLDatabaseConnection.insertIntoTRIPROUTE(this.c, tripID, startStation, endStation);
+        }
+        try {
+            this.c.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -113,9 +131,15 @@ public class STDBCityBikeReader implements CitiBikeReader {
      * @param trips parsed trip data
      */
     private void addTripsToTRIPSETTINGS(Collection<TripData> trips) {
+        this.c = this.postgreSQLDatabaseConnection.openDB();
         for (TripData trip : trips) {
             double tripID = calculateTripID(trip);
             this.postgreSQLDatabaseConnection.insertIntoTRIPSETTINGS(this.c, tripID, trip.getBikeData().getId(), trip.getUserType(), trip.getUserGender());
+        }
+        try {
+            this.c.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

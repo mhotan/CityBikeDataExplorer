@@ -2,7 +2,7 @@ package se.kth.csc.moderndb.cbexplorer.domain;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.Date;
 
@@ -21,15 +21,14 @@ public class PostgreSQLDatabaseConnection {
     public static final String TRIPSETTS = "trip_settings";
 
     private final String URL = "jdbc:postgresql://localhost:5432/";
-    private final String URLPROGRES = "jdbc:postgresql://localhost:5432/postgres";
+
     private final String DATABASE_NAME = "citybike";
     private final String USERNAME = "vagrant";
     private final String PASSWORD = "vagrant";
     // names of the attributes in the tables
     private final String ID = "ID";
     private final String NAME = "NAME";
-    private final String LONGITUDE = "LONGITUDE";
-    private final String LATITUDE = "LATITUDE";
+    private final String POINT = "POINT";
     private final String STARTTIME = "START_TIME";
     private final String ENDTIME = "END_TIME";
     private final String STARTSTATION = "START_STATION_ID";
@@ -51,18 +50,6 @@ public class PostgreSQLDatabaseConnection {
         try {
             Class.forName("org.postgresql.Driver").newInstance();
             c = DriverManager
-                    .getConnection(URLPROGRES, USERNAME, PASSWORD);
-
-            stmt = c.createStatement();
-            ResultSet res = stmt.executeQuery("select count(*) from pg_catalog.pg_database where datname = '"+ DATABASE_NAME +"'");
-            res.next();
-            int count = res.getInt("count");
-            System.out.println("Count : " + count);
-            if(count == 0) {
-                creatingInitDatabase();
-            }
-            Class.forName("org.postgresql.Driver").newInstance();
-            c = DriverManager
                     .getConnection(URL + DATABASE_NAME, USERNAME, PASSWORD);
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,7 +63,7 @@ public class PostgreSQLDatabaseConnection {
 
     /**
      * Creates the database table STATION having the following structure:
-     * ID (int, primary key), NAME (text), LONGITUDE (int), LATITUDE (int).
+     * ID (int, primary key), NAME (text), POINT (int), LATITUDE (int).
      * It also adds a rule to ignore duplicated entries in the database.
      *
      * @param c connection to the database
@@ -87,8 +74,7 @@ public class PostgreSQLDatabaseConnection {
             String sql = "CREATE TABLE IF NOT EXISTS " + STATION + " " +
                     "(" + ID + " DOUBLE PRECISION PRIMARY KEY NOT NULL," +
                     " " + NAME + " TEXT NOT NULL, " +
-                    " " + LONGITUDE + " DOUBLE PRECISION    NOT NULL, " +
-                    " " + LATITUDE + " DOUBLE PRECISION NOT NULL)";
+                    " " + POINT + " GEOMETRY    NOT NULL)";
             stmt.executeUpdate(sql);
             String rule = "CREATE OR REPLACE RULE \"station_on_duplicate_ignore\" AS ON INSERT TO \"" + STATION + "\" WHERE EXISTS(SELECT 1 FROM " + STATION + " WHERE (" + ID + ")=(NEW." + ID + ")) DO INSTEAD NOTHING;";
             stmt.execute(rule);
@@ -111,7 +97,7 @@ public class PostgreSQLDatabaseConnection {
         try {
             Statement stmt = c.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS " + TRIPTIME + " " +
-                    "(" + ID + " DOUBLE PRECISION PRIMARY KEY    NOT NULL," +
+                    "(" + ID + " BIGINT PRIMARY KEY    NOT NULL," +
                     " " + STARTTIME + " DATE    NOT NULL, " +
                     " " + ENDTIME + " DATE  NOT NULL)";
             stmt.executeUpdate(sql);
@@ -136,9 +122,9 @@ public class PostgreSQLDatabaseConnection {
         try {
             Statement stmt = c.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS " + TRIPROUTE + " " +
-                    "(" + ID + " DOUBLE PRECISION PRIMARY KEY     NOT NULL," +
-                    " " + STARTSTATION + " DOUBLE PRECISION  NOT NULL, " +
-                    " " + ENDSTATION + " DOUBLE PRECISION    NOT NULL)";
+                    "(" + ID + " BIGINT PRIMARY KEY     NOT NULL," +
+                    " " + STARTSTATION + " BIGINT  NOT NULL, " +
+                    " " + ENDSTATION + " BIGINT    NOT NULL)";
             stmt.executeUpdate(sql);
             String rule = "CREATE OR REPLACE RULE \"trip_route_on_duplicate_ignore\" AS ON INSERT TO \"" + TRIPROUTE + "\" WHERE EXISTS(SELECT 1 FROM " + TRIPROUTE + " WHERE (" + ID + ")=(NEW." + ID + ")) DO INSTEAD NOTHING;";
             stmt.execute(rule);
@@ -162,8 +148,8 @@ public class PostgreSQLDatabaseConnection {
         try {
             Statement stmt = c.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS " + TRIPSETTS + " " +
-                    "(" + ID + " DOUBLE PRECISION PRIMARY KEY    NOT NULL," +
-                    " " + BIKEID + " DOUBLE PRECISION    NOT NULL, " +
+                    "(" + ID + " BIGINT PRIMARY KEY    NOT NULL," +
+                    " " + BIKEID + " BIGINT    NOT NULL, " +
                     " " + USERTYPE + " TEXT NOT NULL, " +
                     " " + GENDER + " INT    NOT NULL)";
             stmt.executeUpdate(sql);
@@ -201,16 +187,23 @@ public class PostgreSQLDatabaseConnection {
      * @param longitude longitude of the station's pos
      * @param latitude  latitude of the station's pos
      */
-    public void insertIntoSTATION(Connection c, double id, String name, double longitude, double latitude) {
+    public void insertIntoSTATION(Connection c, long id, String name, double longitude, double latitude) {
         try {
-            c = openDB();
             Statement stmt = c.createStatement();
-            String sql = "INSERT INTO " + STATION + " (" + ID + "," + NAME + "," + LONGITUDE + "," + LATITUDE + ") "
-                    + "VALUES (" + id + ", '" + name + "', " + longitude + ", " + latitude + ")";
+            //((org.postgresql.Connection)c).addDataType("geometry","org.postgis.PGgeometry");
+            String sql = "INSERT INTO " + STATION + " (" + ID + "," + NAME + "," + POINT + ") "
+                    + "VALUES (?, ?, ST_GeographyFromText('SRID=4326;POINT(' || ? || ' ' || ? || ')')"; //+ id + ", '" + name + "', ST_GeomFromText(\"POINT(" + longitude + ", " + latitude + ")\", 4326))";
+            PreparedStatement preparedStatement = c.prepareStatement(sql);
+            preparedStatement.setLong(1, id);
+            preparedStatement.setString(2, name);
+            //preparedStatement.setString(3, "POINT(" + longitude + ", " + latitude + ")");
+            preparedStatement.setDouble(3, longitude);
+            preparedStatement.setDouble(4, latitude);
+            preparedStatement.executeUpdate();
             stmt.executeUpdate(sql);
             stmt.close();
             //c.commit();
-            c.close();
+
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -227,14 +220,14 @@ public class PostgreSQLDatabaseConnection {
      */
     public void insertIntoTRIPTIME(Connection c, double id, Date startTime, Date endTime) {
         try {
-            c = openDB();
+
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + TRIPTIME + " (" + ID + "," + STARTTIME + "," + ENDTIME + ") "
                     + "VALUES (" + id + ", '" + startTime + "', '" + endTime + "');";
             stmt.executeUpdate(sql);
             stmt.close();
             //c.commit();
-            c.close();
+
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -252,14 +245,14 @@ public class PostgreSQLDatabaseConnection {
      */
     public void insertIntoTRIPROUTE(Connection c, double id, double startStationID, double endStationID) {
         try {
-            c = openDB();
+
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + TRIPROUTE + " (" + ID + "," + STARTSTATION + "," + ENDSTATION + ") "
                     + "VALUES (" + id + ", " + startStationID + ", " + endStationID + ");";
             stmt.executeUpdate(sql);
             stmt.close();
             //c.commit();
-            c.close();
+
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -270,21 +263,21 @@ public class PostgreSQLDatabaseConnection {
      * Inserts an entry into the table TRIP_SETTINGS {@link #createTRIPSETTINGSTable(java.sql.Connection)}
      *
      * @param c        connection to the database
-     * @param id       trip id = {bikeid + start time}
+     * @param id       trip id = {bikeid concat start time}
      * @param bikeID   bike id
      * @param usertype type of the user
      * @param gender   gender of the user
      */
     public void insertIntoTRIPSETTINGS(Connection c, double id, long bikeID, String usertype, int gender) {
         try {
-            c = openDB();
+
             Statement stmt = c.createStatement();
             String sql = "INSERT INTO " + TRIPSETTS + " (" + ID + "," + BIKEID + "," + USERTYPE + "," + GENDER + ") "
                     + "VALUES (" + id + ", " + bikeID + ", '" + usertype + "', " + gender + ");";
             stmt.executeUpdate(sql);
             stmt.close();
             //c.commit();
-            c.close();
+
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -292,7 +285,7 @@ public class PostgreSQLDatabaseConnection {
     }
 
 
-    private void creatingInitDatabase() {
+    /*private void creatingInitDatabase() {
         Connection c = null;
         Statement stmt = null;
         try {
@@ -308,6 +301,6 @@ public class PostgreSQLDatabaseConnection {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-    }
+    }*/
 }
 
