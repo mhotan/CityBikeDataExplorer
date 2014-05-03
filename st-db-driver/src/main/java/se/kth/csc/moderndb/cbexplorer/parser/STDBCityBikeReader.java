@@ -22,6 +22,7 @@ public class STDBCityBikeReader implements CitiBikeReader {
 
     private PostgreSQLDatabaseConnection postgreSQLDatabaseConnection;
     private Connection c;
+    private int tripCount = 0;
     // TODO: database creation via code!?
 
 
@@ -44,6 +45,8 @@ public class STDBCityBikeReader implements CitiBikeReader {
         addTripsToTRIPROUTE(trips);
         addTripsToTRIPTIME(trips);
         addTripsToTRIPSETTINGS(trips);
+        tripCount += trips.size();
+        System.out.println(tripCount + " total trips processed");
     }
 
     /**
