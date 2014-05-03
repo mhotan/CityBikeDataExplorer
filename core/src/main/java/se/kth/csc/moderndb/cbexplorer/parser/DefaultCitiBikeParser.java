@@ -19,7 +19,7 @@ public class DefaultCitiBikeParser extends CitiBikeParser {
             getClassLoader().getResource("data/");
 
     /**
-     * Creates a Parser that is capable of forwarding parsed data back to the parser.
+     * Creates a Parser that is capable of forwarding parsed data back to the reader.
      *
      * @param reader CitiBike Reader class that handles the forwarding of trip data.
      */
@@ -28,7 +28,7 @@ public class DefaultCitiBikeParser extends CitiBikeParser {
     }
 
     /**
-     * Creates a Parser that is capable of forwarding parsed data back to the parser.
+     * Creates a Parser that is capable of forwarding parsed data back to the reader.
      *
      * @param reader CitiBike Reader class that handles the forwarding of trip data.
      * @param tripBufferSize Buffersize of tripdata stored in memory.  In units of TripData.
