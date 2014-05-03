@@ -74,7 +74,7 @@ public class PostgreSQLDatabaseConnection {
             String sql = "CREATE TABLE IF NOT EXISTS " + STATION + " " +
                     "(" + ID + " DOUBLE PRECISION PRIMARY KEY NOT NULL," +
                     " " + NAME + " TEXT NOT NULL, " +
-                    " " + POINT + " POINT    NOT NULL)";
+                    " " + POINT + " geography(POINT,4326)    NOT NULL)";
             stmt.executeUpdate(sql);
             String rule = "CREATE OR REPLACE RULE \"station_on_duplicate_ignore\" AS ON INSERT TO \"" + STATION + "\" WHERE EXISTS(SELECT 1 FROM " + STATION + " WHERE (" + ID + ")=(NEW." + ID + ")) DO INSTEAD NOTHING;";
             stmt.execute(rule);
@@ -189,10 +189,10 @@ public class PostgreSQLDatabaseConnection {
      */
     public void insertIntoSTATION(Connection c, long id, String name, double longitude, double latitude) {
         try {
-            Statement stmt = c.createStatement();
+            //Statement stmt = c.createStatement();
             //((org.postgresql.Connection)c).addDataType("geometry","org.postgis.PGgeometry");
             String sql = "INSERT INTO " + STATION + " (" + ID + "," + NAME + "," + POINT + ") "
-                    + "VALUES (?, ?, ST_GeographyFromText('SRID=4326;POINT(' || ? || ' ' || ? || ')')"; //+ id + ", '" + name + "', ST_GeomFromText(\"POINT(" + longitude + ", " + latitude + ")\", 4326))";
+                    + "VALUES (?, ?, ST_GeographyFromText('SRID=4326;POINT(' || ? || ' ' || ? || ')'))"; //+ id + ", '" + name + "', ST_GeomFromText(\"POINT(" + longitude + ", " + latitude + ")\", 4326))";
             PreparedStatement preparedStatement = c.prepareStatement(sql);
             preparedStatement.setLong(1, id);
             preparedStatement.setString(2, name);
@@ -200,8 +200,8 @@ public class PostgreSQLDatabaseConnection {
             preparedStatement.setDouble(3, longitude);
             preparedStatement.setDouble(4, latitude);
             preparedStatement.executeUpdate();
-            stmt.executeUpdate(sql);
-            stmt.close();
+            //stmt.executeUpdate(sql);
+            //stmt.close();
             //c.commit();
 
         } catch (Exception e) {
