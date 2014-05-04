@@ -47,7 +47,7 @@ public class CitiBikeParser {
 
     // The default number of
     // TODO Validate this quantity to work on all systems.
-    private static final int DEFAULT_TRIPDATA_BUFFERSIZE = 200;
+    private static final int DEFAULT_TRIPDATA_BUFFERSIZE = 500;
 
     /**
      * Reader that reads and interprets raw data.
@@ -184,8 +184,9 @@ public class CitiBikeParser {
                 files.addAll(getFileReaders(childFile));
             }
         } else {
-            //
-            files.add(getFileReader(file));
+            // Check if file is of correct type.
+            if (file.getPath().endsWith(".gz") || file.getPath().endsWith(".zip") || file.getPath().endsWith(".csv"))
+                files.add(getFileReader(file));
         }
         return files;
     }
@@ -222,7 +223,7 @@ public class CitiBikeParser {
         } else if (file.getPath().endsWith(".csv")) {
             fileReader = new BufferedReader(new FileReader(file));
         } else {
-            throw new IllegalArgumentException("Illegal file format to read");
+            throw new IllegalArgumentException("Illegal file format to read for file " + file.getName());
         }
         return fileReader;
     }

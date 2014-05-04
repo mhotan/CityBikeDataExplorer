@@ -9,3 +9,4 @@ out/*
 .vagrant/
 *.csv
 *.zip
+*.db
