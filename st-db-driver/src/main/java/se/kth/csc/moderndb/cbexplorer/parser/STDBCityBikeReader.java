@@ -1,5 +1,6 @@
 package se.kth.csc.moderndb.cbexplorer.parser;
 
+import se.kth.csc.moderndb.cbexplorer.data.TripDataObject;
 import se.kth.csc.moderndb.cbexplorer.domain.PostgreSQLDatabaseConnection;
 import se.kth.csc.moderndb.cbexplorer.parser.data.StationData;
 import se.kth.csc.moderndb.cbexplorer.parser.data.TripData;
@@ -7,7 +8,7 @@ import se.kth.csc.moderndb.cbexplorer.parser.data.TripData;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Handles the data parsed from the data files and writes it into the appropriate tables.
@@ -17,6 +18,7 @@ import java.util.HashMap;
  */
 public class STDBCityBikeReader implements CitiBikeReader {
 
+    // TODO Documentation
     // longitude and latitude of the stations will be multiplied with this constant to get the correspondent decimal places for building the STATION_ID in the STATION table {@link #PostgreSQLDatabaseConnection.createSTATIONTable()}.
     private final int DECIMAL_PLACE_FOR_ID = 100000;
 
@@ -25,7 +27,10 @@ public class STDBCityBikeReader implements CitiBikeReader {
     private int tripCount = 0;
     // TODO: database creation via code!?
 
-
+    /**
+     * Constructor.
+     * Creates all necessary tables adding the trips.
+     */
     public STDBCityBikeReader() {
         // init database connection
         this.postgreSQLDatabaseConnection = new PostgreSQLDatabaseConnection();
@@ -41,10 +46,18 @@ public class STDBCityBikeReader implements CitiBikeReader {
 
     @Override
     public void addTrips(Collection<TripData> trips) {
+        this.c = this.postgreSQLDatabaseConnection.openDB();
         addTripsToSTATION(trips);
-        addTripsToTRIPROUTE(trips);
-        addTripsToTRIPTIME(trips);
-        addTripsToTRIPSETTINGS(trips);
+        HashSet<TripDataObject> tripObjects = createTripDataObjectsFromTrips(trips);
+        addTripsToTRIPROUTE(tripObjects);
+        addTripsToTRIPTIME(tripObjects);
+        addTripsToTRIPSETTINGS(tripObjects);
+        try {
+            this.c.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         tripCount += trips.size();
         System.out.println(tripCount + " total trips processed");
     }
@@ -56,35 +69,19 @@ public class STDBCityBikeReader implements CitiBikeReader {
      * @param trips parsed trip data
      */
     private void addTripsToSTATION(Collection<TripData> trips) {
-        this.c = this.postgreSQLDatabaseConnection.openDB();
-        HashMap<String, String> stationName = new HashMap<String, String>();
-        // find fitting latitude and longitude
-        HashMap<String, Double> stationLat = new HashMap<String, Double>();
-        HashMap<String, Double> stationLong = new HashMap<String, Double>();
+        HashSet<StationData> stations = new HashSet<StationData>();
         for (TripData trip : trips) {
             // id for Station consists of id = {latitude, longitude}
-            String id_startStation = calculateStationIDString(trip.getStartStationData());
-            String id_endStation = calculateStationIDString(trip.getEndStationData());
+            long id_startStation = calculateStationIDString(trip.getStartStationData());
+            long id_endStation = calculateStationIDString(trip.getEndStationData());
 
-            stationName.put(id_startStation, trip.getStartStationData().getName());
-            stationLat.put(id_startStation, trip.getStartStationData().getLatitude());
-            stationLong.put(id_startStation, trip.getStartStationData().getLongitude());
+            StationData startStation = new StationData(id_startStation, trip.getStartStationData().getName(), trip.getStartStationData().getLongitude(), trip.getStartStationData().getLatitude());
+            StationData endStation = new StationData(id_endStation, trip.getEndStationData().getName(), trip.getEndStationData().getLongitude(), trip.getEndStationData().getLatitude());
 
-            stationName.put(id_endStation, trip.getEndStationData().getName());
-            stationLat.put(id_endStation, trip.getEndStationData().getLatitude());
-            stationLong.put(id_endStation, trip.getEndStationData().getLongitude());
-
+            stations.add(startStation);
+            stations.add(endStation);
         }
-
-        // add to database
-        for (String stationID : stationName.keySet()) {
-            this.postgreSQLDatabaseConnection.insertIntoSTATION(this.c, Long.parseLong(stationID), stationName.get(stationID), stationLong.get(stationID), stationLat.get(stationID));
-        }
-        try {
-            this.c.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        this.postgreSQLDatabaseConnection.insertIntoSTATION(this.c, stations);
     }
 
     /**
@@ -93,17 +90,8 @@ public class STDBCityBikeReader implements CitiBikeReader {
      *
      * @param trips parsed trip data
      */
-    private void addTripsToTRIPTIME(Collection<TripData> trips) {
-        this.c = this.postgreSQLDatabaseConnection.openDB();
-        for (TripData trip : trips) {
-            double tripID = calculateTripID(trip);
-            this.postgreSQLDatabaseConnection.insertIntoTRIPTIME(this.c, tripID, trip.getStartTime(), trip.getEndTime());
-        }
-        try {
-            this.c.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    private void addTripsToTRIPTIME(HashSet<TripDataObject> trips) {
+        this.postgreSQLDatabaseConnection.insertIntoTRIPTIME(this.c, trips);
     }
 
     /**
@@ -112,19 +100,8 @@ public class STDBCityBikeReader implements CitiBikeReader {
      *
      * @param trips parsed trip data
      */
-    private void addTripsToTRIPROUTE(Collection<TripData> trips) {
-        this.c = this.postgreSQLDatabaseConnection.openDB();
-        for (TripData trip : trips) {
-            double tripID = calculateTripID(trip);
-            double startStation = Long.parseLong(calculateStationIDString(trip.getStartStationData()));
-            double endStation = Long.parseLong(calculateStationIDString(trip.getEndStationData()));
-            this.postgreSQLDatabaseConnection.insertIntoTRIPROUTE(this.c, tripID, startStation, endStation);
-        }
-        try {
-            this.c.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    private void addTripsToTRIPROUTE(HashSet<TripDataObject> trips) {
+        this.postgreSQLDatabaseConnection.insertIntoTRIPROUTE(this.c, trips);
     }
 
     /**
@@ -133,17 +110,8 @@ public class STDBCityBikeReader implements CitiBikeReader {
      *
      * @param trips parsed trip data
      */
-    private void addTripsToTRIPSETTINGS(Collection<TripData> trips) {
-        this.c = this.postgreSQLDatabaseConnection.openDB();
-        for (TripData trip : trips) {
-            double tripID = calculateTripID(trip);
-            this.postgreSQLDatabaseConnection.insertIntoTRIPSETTINGS(this.c, tripID, trip.getBikeData().getId(), trip.getUserType(), trip.getUserGender());
-        }
-        try {
-            this.c.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    private void addTripsToTRIPSETTINGS(HashSet<TripDataObject> trips) {
+        this.postgreSQLDatabaseConnection.insertIntoTRIPSETTINGS(this.c, trips);
     }
 
     /**
@@ -153,11 +121,11 @@ public class STDBCityBikeReader implements CitiBikeReader {
      * @param station station for which the ID should be calculated
      * @return stationID
      */
-    private String calculateStationIDString(StationData station) {
-        int lat = (int) Math.abs(station.getLatitude()* DECIMAL_PLACE_FOR_ID);
-        int lon = (int) Math.abs(station.getLongitude()* DECIMAL_PLACE_FOR_ID);
+    private long calculateStationIDString(StationData station) {
+        int lat = (int) Math.abs(station.getLatitude() * DECIMAL_PLACE_FOR_ID);
+        int lon = (int) Math.abs(station.getLongitude() * DECIMAL_PLACE_FOR_ID);
         String res = String.valueOf(lat).concat(String.valueOf(lon));
-        return String.valueOf(lat).concat(String.valueOf(lon));
+        return Long.parseLong(String.valueOf(lat).concat(String.valueOf(lon)));
     }
 
     /**
@@ -166,10 +134,29 @@ public class STDBCityBikeReader implements CitiBikeReader {
      * @param trip trip for which the ID should be calculated
      * @return tripID
      */
-    private double calculateTripID(TripData trip) {
+    private long calculateTripID(TripData trip) {
         String bikeID = Long.toString(trip.getBikeData().getId());
-        double start = (double) trip.getStartTime().getTime();
-        return Double.parseDouble(bikeID.concat(Double.toString(start)));
+        long start = (long) trip.getStartTime().getTime();
+        return Long.parseLong(bikeID.concat(Long.toString(start)));
+    }
+
+    /**
+     * Creates an HashSet of TripDataObjects {@see #se.kth.csc.moderndb.cbexplorer.data.TripDataObject}.
+     * This is needed to fill the database tables with appropriate data.
+     *
+     * @param trips TripData arise from parsing cvs-files
+     * @return ready to fill into tables TripDataObjects
+     */
+    private HashSet<TripDataObject> createTripDataObjectsFromTrips(Collection<TripData> trips) {
+        HashSet<TripDataObject> tripDataObjects = new HashSet<TripDataObject>();
+        for (TripData trip : trips) {
+            long tripID = calculateTripID(trip);
+            long startStationID = calculateStationIDString(trip.getStartStationData());
+            long endStationID = calculateStationIDString(trip.getEndStationData());
+            TripDataObject tripDataObject = new TripDataObject(tripID, startStationID, endStationID, trip.getStartTime(), trip.getEndTime(), trip.getBikeData().getId(), trip.getUserGender(), trip.getUserType());
+            tripDataObjects.add(tripDataObject);
+        }
+        return tripDataObjects;
     }
 }
 
