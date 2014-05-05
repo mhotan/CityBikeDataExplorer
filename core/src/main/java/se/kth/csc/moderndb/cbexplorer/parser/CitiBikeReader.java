@@ -16,7 +16,7 @@ public interface CitiBikeReader {
     /**
      * Notification of new Trip Data has been found.
      *
-     * @param trips Trips that were read im.
+     * @param trips Trips that were read in.
      */
     public void addTrips(Collection<TripData> trips);
 
