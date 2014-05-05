@@ -101,7 +101,7 @@ Within intellij right clicking on any class with the Java main function will run
 
 ### Loading Data into Embedded Graph Database
 * Build using "./gradlew clean build" from the project root directory (if needed)
-* run "java -jar graph-load-db/build/libs/citibike-load-data-0.1.0.jar [path directory of csv or zip files]"
+* run "java -jar graph-base/build/libs/graph-base-execjar-1.0.jar [path directory of csv or zip files]"
 
 ### Starting REST Service
 * Build using "./gradlew clean build" from the project root directory (if needed)
