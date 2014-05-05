@@ -1,6 +1,7 @@
 package se.kth.csc.moderndb.cbexplorer.parser;
 
 import org.junit.Assert;
+import org.junit.Test;
 import se.kth.csc.moderndb.cbexplorer.parser.data.TripData;
 
 import java.util.Collection;
@@ -10,14 +11,14 @@ import java.util.Collection;
  */
 public class DefaultCitiBikeParserTest {
 
-    /*@Test
+    @Test
     public void testParse() throws Exception {
-        TestReader parser = new TestReader();
-        DefaultCitiBikeParser parser = new DefaultCitiBikeParser(parser);
+        TestReader reader = new TestReader();
+        DefaultCitiBikeParser parser = new DefaultCitiBikeParser(reader);
         long success = parser.parse();
         Assert.assertNotEquals("Able to parse data set", 0, success);
-        Assert.assertEquals("The count and number of trips return are equal", success, parser.count);
-    }*/
+        Assert.assertEquals("The count and number of trips return are equal", success, reader.count);
+    }
 
     public static class TestReader implements CitiBikeReader {
 
