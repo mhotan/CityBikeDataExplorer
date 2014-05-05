@@ -5,7 +5,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import se.kth.csc.moderndb.cbexplorer.Greeting;
+import se.kth.csc.moderndb.cbexplorer.parser.data.StationData;
+import se.kth.csc.moderndb.cbexplorer.queries.StationQuery;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -27,4 +30,19 @@ public class GreetingController {
                 String.format(template, name));
     }
 
+
+    @RequestMapping("/stations")
+    public @ResponseBody
+    List<StationData> stations() {
+        StationQuery query = new StationQuery();
+        return query.giveFullStationInformationAboutAllStations();
+    }
+
+    @RequestMapping("/station")
+    public @ResponseBody
+    List<StationData> station(
+            @RequestParam(value="name", required=true) String name) {
+        StationQuery query = new StationQuery();
+        return query.giveFullStationInformationAboutStationNamed(name);
+    }
 }
