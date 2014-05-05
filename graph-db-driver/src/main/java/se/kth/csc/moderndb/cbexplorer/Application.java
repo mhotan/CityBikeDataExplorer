@@ -15,23 +15,19 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguratio
  * Created by mhotan on 4/28/14.
  */
 @Configuration
-@EnableNeo4jRepositories
+@EnableNeo4jRepositories(basePackages = "se.kth.csc.moderndb.cbexplorer")
 @Import(RepositoryRestMvcConfiguration.class)
 @EnableAutoConfiguration
 public class Application extends Neo4jConfiguration {
-
-    /**
-     * The name of the database.
-     */
-    protected static final String DATABASE_NAME = "citibike.db";
 
     public Application() {
         setBasePackage("se.kth.csc.moderndb.cbexplorer");
     }
 
+
     @Bean(destroyMethod = "shutdown")
     public GraphDatabaseService graphDatabaseService() {
-        return new GraphDatabaseFactory().newEmbeddedDatabase(DATABASE_NAME);
+        return new GraphDatabaseFactory().newEmbeddedDatabase(DatabaseConstants.DATABASE_PATH);
     }
 
     public static void main(String[] args) {
