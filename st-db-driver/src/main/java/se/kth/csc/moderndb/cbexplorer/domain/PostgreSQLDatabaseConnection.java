@@ -198,8 +198,9 @@ public class PostgreSQLDatabaseConnection {
                 preparedStatement.setString(2, station.getName());
                 preparedStatement.setDouble(3, station.getLongitude());
                 preparedStatement.setDouble(4, station.getLatitude());
-                preparedStatement.executeUpdate();
+                preparedStatement.addBatch();
             }
+            preparedStatement.executeBatch();
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -223,8 +224,9 @@ public class PostgreSQLDatabaseConnection {
                 preparedStatement.setLong(1, tripDataObject.getTripID());
                 preparedStatement.setDate(2, new java.sql.Date(tripDataObject.getStartTime().getTime()));
                 preparedStatement.setDate(3, new java.sql.Date(tripDataObject.getEndTime().getTime()));
-                preparedStatement.executeUpdate();
+                preparedStatement.addBatch();
             }
+            preparedStatement.executeBatch();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -248,8 +250,9 @@ public class PostgreSQLDatabaseConnection {
                 preparedStatement.setLong(1, tripDataObject.getTripID());
                 preparedStatement.setLong(2, tripDataObject.getStartStationID());
                 preparedStatement.setLong(3, tripDataObject.getEndStationID());
-                preparedStatement.executeUpdate();
+                preparedStatement.addBatch();
             }
+            preparedStatement.executeBatch();
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
@@ -273,8 +276,9 @@ public class PostgreSQLDatabaseConnection {
                 preparedStatement.setLong(2, tripDataObject.getBikeID());
                 preparedStatement.setString(3, tripDataObject.getUserDescription());
                 preparedStatement.setInt(4, tripDataObject.getGender());
-                preparedStatement.executeUpdate();
+                preparedStatement.addBatch();
             }
+            preparedStatement.executeBatch();
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
