@@ -24,14 +24,10 @@ public class Application extends Neo4jConfiguration {
         setBasePackage("se.kth.csc.moderndb.cbexplorer");
     }
 
-    /**
-     * The name of the database.
-     */
-    protected static final String DATABASE_NAME = "cbexplorer.db";
 
     @Bean(destroyMethod = "shutdown")
     public GraphDatabaseService graphDatabaseService() {
-        return new GraphDatabaseFactory().newEmbeddedDatabase(DATABASE_NAME);
+        return new GraphDatabaseFactory().newEmbeddedDatabase(DatabaseConstants.DATABASE_PATH);
     }
 
     public static void main(String[] args) {

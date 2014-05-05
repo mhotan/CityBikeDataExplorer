@@ -1,7 +1,19 @@
 apply plugin: 'java'
+apply plugin: 'executable-jar'
 
-sourceCompatibility = 1.5
+project.mainClass = "se.kth.csc.moderndb.cbexplorer.DatabasePopulator"
+sourceCompatibility = 1.7
 version = '1.0'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    // Add the build script for making an executable jar
+    dependencies {
+        classpath 'net.nisgits.gradle:gradle-executable-jar-plugin:1.7.0'
+    }
+}
 
 repositories {
     mavenCentral()
@@ -14,7 +26,6 @@ dependencies {
     compile project(":core")
 }
 
-jar {
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    manifest { attributes 'Main-Class': 'se.kth.csc.moderndb.cbexplorer.DatabasePopulator' }
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.11'
 }

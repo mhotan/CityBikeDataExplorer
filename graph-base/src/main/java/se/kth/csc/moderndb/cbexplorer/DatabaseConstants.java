@@ -5,8 +5,8 @@ package se.kth.csc.moderndb.cbexplorer;
  */
 public class DatabaseConstants {
 
-
-    public static final String DATABASE_PATH = "target/test.db";
+    // Path to locally stored database
+    public static final String DATABASE_PATH = "target/citibike.db";
 
     // Labels
     public static final String BIKE_LABEL = "Bike";

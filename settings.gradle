@@ -4,13 +4,11 @@ include 'core'
 
 include 'st-db-driver'
 
+include 'graph-base'
+
 include 'graph-db-driver'
 
 include 'server'
 
 include 'client'
-
-include 'graph-load-db'
-
-include 'graph-base'
 

@@ -23,13 +23,16 @@ public class DatabasePopulator {
      * @param args Unused arguments.
      */
     public static void main(String[] args) throws ParseException, IOException {
-        File f = null;
-        if (args.length != 0) {
-            String path = args[0];
-            f = new File(path);
-            if (!f.exists()) {
-                throw new IllegalArgumentException("File does not exists at " + path);
-            }
+        if (args.length != 1) {
+            String error =  "Illegal argument signature";
+            System.err.println(error);
+            System.err.println("Correct argument signature: <path to citibike data>");
+            throw new IllegalArgumentException(error);
+        }
+
+        File f = new File(args[0]);
+        if (!f.exists()) {
+            throw new IllegalArgumentException("File does not exists at " + args[0]);
         }
 
         // Delete the old database
@@ -41,14 +44,13 @@ public class DatabasePopulator {
         BatchInserter inserter = BatchInserters.inserter(DatabaseConstants.DATABASE_PATH);
         CitiBikeReader reader = new CitiBikeBatchReader(inserter);
         DefaultCitiBikeParser parser = new DefaultCitiBikeParser(reader);
-        if (f == null) {
-            parser.parse();
-        } else {
+        try {
             parser.parse(f);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            inserter.shutdown();
         }
-
-        // Shutdown the inserter.
-        inserter.shutdown();
     }
 
 }

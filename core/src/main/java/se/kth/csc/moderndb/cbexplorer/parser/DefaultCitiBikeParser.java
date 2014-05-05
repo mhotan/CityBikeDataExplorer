@@ -40,6 +40,23 @@ public class DefaultCitiBikeParser extends CitiBikeParser {
     }
 
     /**
+     *
+     * @return The default Resource to load.
+     * @throws URISyntaxException Default syntax is
+     */
+    public File getDefaultResource() throws URISyntaxException {
+        try {
+            if (dataDirectoryURL == null) {
+                return null;
+            }
+            return new File(dataDirectoryURL.toURI());
+        } catch (URISyntaxException e) {
+            // The URI for the default data source is empty.
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Parses the data stored in the resource directory.
      * @return The number of successful reads.
      */
