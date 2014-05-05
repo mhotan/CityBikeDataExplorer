@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * A simple controller for RESTful queries.
- *
+ * <p/>
  * Created by mhotan on 4/8/14.
  */
 @Controller
@@ -23,26 +23,29 @@ public class GreetingController {
     private final AtomicLong counter = new AtomicLong();
 
     @RequestMapping("/greeting")
-    public @ResponseBody
+    public
+    @ResponseBody
     Greeting greeting(
-            @RequestParam(value="name", required=false, defaultValue="World") String name) {
+            @RequestParam(value = "name", required = false, defaultValue = "World") String name) {
         return new Greeting(counter.incrementAndGet(),
                 String.format(template, name));
     }
 
 
     @RequestMapping("/stations")
-    public @ResponseBody
+    public
+    @ResponseBody
     List<StationData> stations() {
-        StationQuery query = new StationQuery();
-        return query.giveFullStationInformationAboutAllStations();
+        return StationQuery.giveFullStationInformationAboutAllStations();
     }
 
     @RequestMapping("/station")
-    public @ResponseBody
+    public
+    @ResponseBody
     List<StationData> station(
-            @RequestParam(value="name", required=true) String name) {
-        StationQuery query = new StationQuery();
-        return query.giveFullStationInformationAboutStationNamed(name);
+            @RequestParam(value = "name", required = true) String name) {
+        return StationQuery.giveFullStationInformationAboutStationNamed(name);
     }
+
+
 }

@@ -105,3 +105,7 @@ Within intellij right clicking on any class with the Java main function will run
 ### Starting REST Service, Currently not working
 * Build using "./gradlew clean build" from the project root directory (if needed)
 * run "java -jar graph-db-driver/build/libs/citibike-graph-driver-0.1.0.jar"
+
+### Create TDB
+*run "createdb citybike", "psql citybike" and "create extension postgis;"
+* after that you can run the code in MainTDB which creates the tables and fills them with data from Feb 2014

@@ -16,17 +16,11 @@ import java.util.List;
  */
 public class StationQuery extends BikeQuery{
 
-    private final String getXFromPoint = "ST_X(" + PostgreSQLDatabaseConnection.POINT + "::geometry)";
-    private final String getYFromPoint = "ST_Y(" + PostgreSQLDatabaseConnection.POINT + "::geometry)";
 
-    private JdbcTemplate jdbcTemplate;
+    //private JdbcTemplate jdbcTemplate;
 
-    public StationQuery() {
-        super();
-        this.jdbcTemplate = super.jdbcTemplate;
-    }
 
-    public List<String> giveAllStationNames() {
+    public static List<String> giveAllStationNames() {
         System.out.println("Querying for stations names");
         List<String> names = jdbcTemplate.query(
                 "select " + PostgreSQLDatabaseConnection.NAME + " from " + PostgreSQLDatabaseConnection.STATION,
@@ -43,7 +37,7 @@ public class StationQuery extends BikeQuery{
         return names;
     }
 
-    public List<StationData> giveFullStationInformationAboutAllStations() {
+    public static List<StationData> giveFullStationInformationAboutAllStations() {
         System.out.println("Querying for stations");
         List<StationData> results = jdbcTemplate.query(
                 "select * from " + PostgreSQLDatabaseConnection.STATION,
@@ -64,7 +58,7 @@ public class StationQuery extends BikeQuery{
         return results;
     }
 
-    public List<StationData> giveFullStationInformationAboutStationNamed(final String name) {
+    public static List<StationData> giveFullStationInformationAboutStationNamed(final String name) {
         System.out.println("Querying for station named" + name);
         List<StationData> result = jdbcTemplate.query("select " + PostgreSQLDatabaseConnection.ID + ", " + getXFromPoint + ", " + getYFromPoint + "from " + PostgreSQLDatabaseConnection.STATION + " where " + PostgreSQLDatabaseConnection.NAME + " = ?",
                 new Object[]{name},
@@ -81,7 +75,7 @@ public class StationQuery extends BikeQuery{
         return result;
     }
 
-    public List<StationData> giveFullStationInformationAboutStationWithID(final Long id) {
+    public static List<StationData> giveFullStationInformationAboutStationWithID(final Long id) {
         System.out.println("Querying for station with id" + id);
         List<StationData> result = jdbcTemplate.query("select " + PostgreSQLDatabaseConnection.NAME + ", " + getXFromPoint + ", " + getYFromPoint + "from " + PostgreSQLDatabaseConnection.STATION + " where " + PostgreSQLDatabaseConnection.ID + " = ?",
                 new Object[]{id},
@@ -95,7 +89,7 @@ public class StationQuery extends BikeQuery{
         return result;
     }
 
-    public Point givePointForStationWithID(long id) {
+    public static Point givePointForStationWithID(long id) {
         System.out.println("Querying for point with id");
         List<Point> result = jdbcTemplate.query(
                 "select " + getXFromPoint + ", " + getYFromPoint + " from " + PostgreSQLDatabaseConnection.STATION + " where " + PostgreSQLDatabaseConnection.ID + " = ?", new Object[]{id},

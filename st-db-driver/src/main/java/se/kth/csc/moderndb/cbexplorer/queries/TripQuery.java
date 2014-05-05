@@ -13,12 +13,8 @@ import java.util.List;
  */
 public class TripQuery extends BikeQuery{
 
-    private JdbcTemplate jdbcTemplate;
 
-    public TripQuery() {
-        super();
-        this.jdbcTemplate = super.jdbcTemplate;
-    }
+
 
 
 
