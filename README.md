@@ -79,6 +79,11 @@ Provides a consistent virtual machine development environment.
 <p>
 Within intellij right clicking on any class with the Java main function will run that specific class.
 
+#### Starting Graph Specific REST Service
+<p>
+* Build using "./gradlew clean build" from the project root directory (if needed)
+* run "java -jar graph-db-driver/build/libs/citibike-graph-driver-0.1.0.jar"
+
 ####Running the RESTful web service
 <p>
 * To run the web server. Execute "./gradlew clean build && java -jar server/build/libs/gs-rest-service-0.1.0.jar" while in the root directory of the project in your terminal.  This will rebuild the project and run an embedded tomcat server.
@@ -98,16 +103,11 @@ Within intellij right clicking on any class with the Java main function will run
 * Create an instance of DefaultCitiBikeParser passing in your instance CitiBikeReader.  
 * Call DefaultCitiBikeParser.parse() and the tripdata will be forwarded to your Reader.
 
-
-### Loading Data into Embedded Graph Database
+#### Loading Data into Embedded Graph Database
 * Build using "./gradlew clean build" from the project root directory (if needed)
 * run "java -jar graph-base/build/libs/graph-base-execjar-1.0.jar [path directory of csv or zip files]"
 
-### Starting REST Service
-* Build using "./gradlew clean build" from the project root directory (if needed)
-* run "java -jar graph-db-driver/build/libs/citibike-graph-driver-0.1.0.jar"
-
-### Loading Data into PostGis database
+#### Loading Data into PostGis database
 From vagrant command line terminal
 * run "createdb citybike"
 * run "psql citybike"
