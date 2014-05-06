@@ -1,13 +1,41 @@
+buildscript {
+    repositories {
+        maven { url "http://repo.spring.io/libs-snapshot" }
+        mavenLocal()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.2.RELEASE")
+        classpath 'net.nisgits.gradle:gradle-executable-jar-plugin:1.7.0'
+    }
+}
+
 apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+apply plugin: 'executable-jar'
+
+jar {
+    baseName = 'gs-relational-data-access'
+    version =  '0.1.0'
+}
 
 sourceCompatibility = 1.7
 version = '1.0'
+project.mainClass = "se.kth.csc.moderndb.cbexplorer.MainTDB"
 
 repositories {
     mavenCentral()
+    maven { url "http://repo.spring.io/libs-snapshot" }
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile project(':core')
+    compile 'org.postgresql:postgresql:9.3-1101-jdbc41'
+    compile 'org.postgis:postgis-jdbc:1.3.3'
+    compile("org.springframework.boot:spring-boot-starter")
+    compile("org.springframework:spring-jdbc")
+    compile("com.fasterxml.jackson.core:jackson-databind")
+    compile("com.h2database:h2")
 }
+

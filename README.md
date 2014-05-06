@@ -106,3 +106,12 @@ Within intellij right clicking on any class with the Java main function will run
 ### Starting REST Service
 * Build using "./gradlew clean build" from the project root directory (if needed)
 * run "java -jar graph-db-driver/build/libs/citibike-graph-driver-0.1.0.jar"
+
+### Loading Data into PostGis database
+From vagrant command line terminal
+* run "createdb citybike"
+* run "psql citybike"
+* From within psql run "create extension postgis;" You should see "CREATE EXTENSION" in the console
+* Exit psql with "\q"
+* Run ./gradlew build
+* java -jar st-db-driver/build/libs/st-db-driver-execjar-1.0.jar <path to data zips/csv>
