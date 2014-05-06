@@ -5,12 +5,14 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.2.RELEASE")
+        classpath 'net.nisgits.gradle:gradle-executable-jar-plugin:1.7.0'
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
+apply plugin: 'executable-jar'
 
 jar {
     baseName = 'gs-relational-data-access'
@@ -19,6 +21,7 @@ jar {
 
 sourceCompatibility = 1.7
 version = '1.0'
+project.mainClass = "se.kth.csc.moderndb.cbexplorer.MainTDB"
 
 repositories {
     mavenCentral()
