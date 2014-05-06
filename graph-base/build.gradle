@@ -1,0 +1,31 @@
+apply plugin: 'java'
+apply plugin: 'executable-jar'
+
+project.mainClass = "se.kth.csc.moderndb.cbexplorer.DatabasePopulator"
+sourceCompatibility = 1.7
+version = '1.0'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    // Add the build script for making an executable jar
+    dependencies {
+        classpath 'net.nisgits.gradle:gradle-executable-jar-plugin:1.7.0'
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url "http://repo.spring.io/libs-snapshot" }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile("org.springframework.data:spring-data-neo4j:3.0.2.RELEASE")
+    compile project(":core")
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.11'
+}

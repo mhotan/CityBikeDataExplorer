@@ -125,10 +125,11 @@ public class CitiBikeParser {
                     Double.valueOf(row[END_STATION_LONGITUDE_INDEX]), Double.valueOf(row[END_STATION_LATITUDE_INDEX]));
 
             // Parse birth year, which may be a numeric string or "\N".
-            Short birthYear = null;
+            Short birthYear;
             try {
                 birthYear = Short.valueOf(row[BIRTH_YEAR_INDEX]);
             } catch (NumberFormatException e) {
+                birthYear = 0;
             }
 
             // Parse the data objects.
@@ -146,7 +147,7 @@ public class CitiBikeParser {
             tripBuffer.add(tripData);
 
             // Check if the buffer is full
-            // If so notify the citibike reader
+            // If so notify the cbexplorer reader
             if (tripBuffer.size() >= this.maxNumberOfTrips) {
                 numberOfSuccesses += tripBuffer.size();
                 this.reader.addTrips(tripBuffer);

@@ -136,4 +136,18 @@ public class TripData {
             throw new RepresentationException("End time cannot be nul");
         }
     }
+
+    @Override
+    public String toString() {
+        return "TripData{" +
+                "bikeData=" + bikeData +
+                ", startStationData=" + startStationData +
+                ", endStationData=" + endStationData +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", userType='" + userType + '\'' +
+                ", userBirthYear=" + userBirthYear +
+                ", userGender=" + userGender +
+                '}';
+    }
 }
