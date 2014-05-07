@@ -78,6 +78,8 @@ public class PostgreSQLDatabaseConnection {
                     " " + NAME + " TEXT NOT NULL, " +
                     " " + POINT + " geography(POINT,4326)    NOT NULL)";
             stmt.executeUpdate(sql);
+            String index = "\"CREATE INDEX " + STATION + "_INDEX_" + STATIONID + " ON" + STATION + "(" + STATIONID + ")";
+            stmt.executeUpdate(index);
             String rule = "CREATE OR REPLACE RULE \"station_on_duplicate_ignore\" AS ON INSERT TO \"" + STATION + "\" WHERE EXISTS(SELECT 1 FROM " + STATION + " WHERE (" + STATIONID + ")=(NEW." + STATIONID + ")) DO INSTEAD NOTHING;";
             stmt.execute(rule);
             stmt.close();
@@ -108,8 +110,12 @@ public class PostgreSQLDatabaseConnection {
                     " " + USERTYPE + " TEXT NOT NULL, " +
                     " " + BIRTHYEAR + " INT NOT NULL, " +
                     " " + GENDER + " INT    NOT NULL," +
-                    " PRIMARY KEY(" + BIKEID +","+ STARTTIME+"))";
+                    " PRIMARY KEY(" + BIKEID + "," + STARTTIME + "))";
             stmt.executeUpdate(sql);
+            String index = "\"CREATE INDEX " + TRIP + "_INDEX_" + BIKEID + " ON" + TRIP + "(" + BIKEID + ")";
+            stmt.executeUpdate(index);
+            index = "\"CREATE INDEX " + TRIP + "_INDEX_TRIPID" + " ON" + TRIP + "(" + BIKEID + "," + STARTTIME + ")";
+            stmt.executeUpdate(index);
             String rule = "CREATE OR REPLACE RULE \"trip_route_on_duplicate_ignore\" AS ON INSERT TO \"" +
                     TRIP + "\" WHERE EXISTS(SELECT 1 FROM " + TRIP + " WHERE (" + BIKEID + "," +
                     STARTTIME + ")=(NEW." + BIKEID + ", NEW." + STARTTIME + ")) DO INSTEAD NOTHING;";
@@ -122,7 +128,6 @@ public class PostgreSQLDatabaseConnection {
             System.exit(0);
         }
     }
-
 
 
     /**
@@ -164,17 +169,16 @@ public class PostgreSQLDatabaseConnection {
     }
 
 
-
     /**
      * Inserts table specific data from {@param #tripDate} into the table TRIP_ROUTE {@link #createTRIPROUTETable(java.sql.Connection)}.
      *
-     * @param c               connection to the database
+     * @param c        connection to the database
      * @param tripDate set containing data of the given trips
      */
     public void insertIntoTRIP(Connection c, Collection<TripData> tripDate) {
         try {
             String sql = "INSERT INTO " + TRIP + " (" + BIKEID + "," + STARTTIME + "," + ENDTIME + "," +
-                    STARTSTATION + "," + ENDSTATION + "," + USERTYPE +"," + BIRTHYEAR + "," + GENDER+ ") "
+                    STARTSTATION + "," + ENDSTATION + "," + USERTYPE + "," + BIRTHYEAR + "," + GENDER + ") "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = c.prepareStatement(sql);
 
