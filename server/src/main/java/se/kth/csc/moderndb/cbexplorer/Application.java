@@ -1,4 +1,4 @@
-package hello;
+package se.kth.csc.moderndb.cbexplorer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;

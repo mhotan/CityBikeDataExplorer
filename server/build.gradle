@@ -1,70 +1,37 @@
-apply plugin: 'war'
-apply plugin: 'tomcat'
-apply plugin: 'java'
-apply plugin: 'propdeps'
-apply plugin: 'propdeps-maven'
-apply plugin: 'propdeps-idea'
-apply plugin: 'propdeps-eclipse'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-
 buildscript {
     repositories {
-        mavenCentral()
-        maven {
-            url "http://download.java.net/maven/2"
-        }
-        maven { url 'http://repo.spring.io/plugins-release' }
+        maven { url "http://repo.spring.io/libs-snapshot" }
+        mavenLocal()
     }
-
     dependencies {
-        classpath 'org.gradle.api.plugins:gradle-tomcat-plugin:0.9.8'
-        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.1'
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.2.RELEASE")
     }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+
+jar {
+    baseName = 'citibike-rest-service'
+    version =  '0.1.0'
 }
 
 repositories {
     mavenCentral()
-    maven { url "http://m2.neo4j.org/content/repositories/releases" }
+    maven { url "http://repo.spring.io/libs-snapshot" }
 }
 
 dependencies {
-    compile project(':graph-base')
-    compile project(':st-db-driver')
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    testCompile("junit:junit")
 
-    def tomcatVersion = '7.0.53'
-    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
-            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}"
-    tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
-        exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
-    }
-
-    def springBaseVersion = '4.0.3.RELEASE'
-    def springSecurityVersion = '3.2.3.RELEASE'
-    compile "org.springframework:spring-core:${springBaseVersion}"
-    compile "org.springframework:spring-webmvc:${springBaseVersion}"
-    compile 'com.jayway.jsonpath:json-path:0.9.1'
-
-    compile 'javax.validation:validation-api:1.1.0.Final'
-    runtime 'javax.validation:validation-api:1.1.0.Final'
-
-    compile 'org.slf4j:slf4j-api:1.7.7'
-    runtime 'org.slf4j:slf4j-jdk14:1.7.7'
-    runtime 'com.fasterxml.jackson.core:jackson-core:2.4.0-rc2'
-    runtime 'com.fasterxml.jackson.core:jackson-databind:2.4.0-rc2'
-    runtime 'javax.xml.bind:jaxb-api:2.2.11'
-
-    provided 'javax.servlet:javax.servlet-api:3.1.0'
-
-    testCompile 'com.jayway.jsonpath:json-path-assert:0.8.1'
-    testCompile "org.springframework:spring-test:${springBaseVersion}"
-    testCompile 'junit:junit:4.+'
-    testCompile "org.mockito:mockito-all:1.9.5"
-
+    compile project(":st-db-driver")
+    compile project(":graph-base")
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = '1.11'
 }
-
-tomcatRunWar.contextPath = ''
