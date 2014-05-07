@@ -39,6 +39,7 @@ public class PostgreSQLDatabaseConnection {
     public static final String BIKEID = "bike_id";
     public static final String USERTYPE = "user_type";
     public static final String GENDER = "gender";
+    public static final String BIRTHYEAR = "birth_year";
 
 
     /**
@@ -154,6 +155,7 @@ public class PostgreSQLDatabaseConnection {
                     "(" + ID + " BIGINT PRIMARY KEY    NOT NULL," +
                     " " + BIKEID + " BIGINT    NOT NULL, " +
                     " " + USERTYPE + " TEXT NOT NULL, " +
+                    " " + BIRTHYEAR + " INT NOT NULL, " +
                     " " + GENDER + " INT    NOT NULL)";
             stmt.executeUpdate(sql);
             String rule = "CREATE OR REPLACE RULE \"trip_setts_on_duplicate_ignore\" AS ON INSERT TO \"" + TRIPSETTS + "\" WHERE EXISTS(SELECT 1 FROM " + TRIPSETTS + " WHERE (" + ID + ")=(NEW." + ID + ")) DO INSTEAD NOTHING;";
@@ -267,15 +269,16 @@ public class PostgreSQLDatabaseConnection {
      */
     public void insertIntoTRIPSETTINGS(Connection c, HashSet<TripDataObject> tripDataObjects) {
         try {
-            String sql = "INSERT INTO " + TRIPSETTS + " (" + ID + "," + BIKEID + "," + USERTYPE + "," + GENDER + ") "
-                    + "VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO " + TRIPSETTS + " (" + ID + "," + BIKEID + "," + USERTYPE + "," + BIRTHYEAR + "," +  GENDER + ") "
+                    + "VALUES (?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = c.prepareStatement(sql);
 
             for (TripDataObject tripDataObject : tripDataObjects) {
                 preparedStatement.setLong(1, tripDataObject.getTripID());
                 preparedStatement.setLong(2, tripDataObject.getBikeID());
                 preparedStatement.setString(3, tripDataObject.getUserDescription());
-                preparedStatement.setInt(4, tripDataObject.getGender());
+                preparedStatement.setInt(4, tripDataObject.getBirthyear());
+                preparedStatement.setInt(5, tripDataObject.getGender());
                 preparedStatement.addBatch();
             }
             preparedStatement.executeBatch();

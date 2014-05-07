@@ -1,13 +1,10 @@
 package se.kth.csc.moderndb.cbexplorer.data;
 
-import se.kth.csc.moderndb.cbexplorer.parser.data.TripData;
-
 import java.util.Date;
 
 /**
- *
  * Provides all needed attributes to fill the trip related tables in the database.
- *
+ * <p/>
  * Created by Jeannine on 04.05.14.
  */
 public class TripDataObject {
@@ -22,10 +19,11 @@ public class TripDataObject {
 
     private long bikeID;
     private short gender;
+    private int birthyear;
     private String userDescription;
 
 
-    public TripDataObject(long tripID, long startStationID, long endStationID, Date startTime, Date endTime, long bikeID, short gender, String userDescription) {
+    public TripDataObject(long tripID, long startStationID, long endStationID, Date startTime, Date endTime, long bikeID, short gender, int birthyear, String userDescription) {
         this.tripID = tripID;
         this.startStationID = startStationID;
         this.endStationID = endStationID;
@@ -33,6 +31,7 @@ public class TripDataObject {
         this.endTime = endTime;
         this.bikeID = bikeID;
         this.gender = gender;
+        this.birthyear = birthyear;
         this.userDescription = userDescription;
     }
 
@@ -66,5 +65,9 @@ public class TripDataObject {
 
     public Date getEndTime() {
         return endTime;
+    }
+
+    public int getBirthyear() {
+        return birthyear;
     }
 }

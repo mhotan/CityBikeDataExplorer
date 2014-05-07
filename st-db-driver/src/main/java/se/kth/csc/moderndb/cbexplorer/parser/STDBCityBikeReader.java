@@ -153,7 +153,7 @@ public class STDBCityBikeReader implements CitiBikeReader {
             long tripID = calculateTripID(trip);
             long startStationID = calculateStationIDString(trip.getStartStationData());
             long endStationID = calculateStationIDString(trip.getEndStationData());
-            TripDataObject tripDataObject = new TripDataObject(tripID, startStationID, endStationID, trip.getStartTime(), trip.getEndTime(), trip.getBikeData().getId(), trip.getUserGender(), trip.getUserType());
+            TripDataObject tripDataObject = new TripDataObject(tripID, startStationID, endStationID, trip.getStartTime(), trip.getEndTime(), trip.getBikeData().getId(), trip.getUserGender(), trip.getUserBirthYear(), trip.getUserType());
             tripDataObjects.add(tripDataObject);
         }
         return tripDataObjects;
