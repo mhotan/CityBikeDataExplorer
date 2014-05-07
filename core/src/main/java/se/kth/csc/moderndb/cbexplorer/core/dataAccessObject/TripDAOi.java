@@ -9,6 +9,6 @@ import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
  */
 public interface TripDAOi {
 
-    public Trip selectTripByID(long tripID);
+    public Trip findTripByID(long tripID);
 
 }

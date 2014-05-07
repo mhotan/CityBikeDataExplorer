@@ -2,6 +2,8 @@ package se.kth.csc.moderndb.cbexplorer.core.dataAccessObject;
 
 import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
 
+import java.util.List;
+
 /**
  * Interface for the Data Access Object pattern.
  *
@@ -9,5 +11,6 @@ import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
  */
 public interface BikeDAOi {
 
-    public Bike selectBikeByID(long bikeID);
+    public Bike findBikeByID(long bikeID);
+    public Bike findAllBikes();
 }

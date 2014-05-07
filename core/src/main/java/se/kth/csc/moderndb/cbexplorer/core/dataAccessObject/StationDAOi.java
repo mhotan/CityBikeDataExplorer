@@ -10,4 +10,9 @@ import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
 public interface StationDAOi {
 
     public Station findStationByID(long stationId);
+
+    public Station findAllStations();
+
+    public Station findStationByName(String name);
+
 }
