@@ -1,10 +1,13 @@
 package se.kth.csc.moderndb.cbexplorer.domain;
 
+import se.kth.csc.moderndb.cbexplorer.data.TripDataObject;
+import se.kth.csc.moderndb.cbexplorer.parser.data.StationData;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.Date;
+import java.util.HashSet;
 
 /**
  * This class is for opening a connection to a postgreSQL database specified by the static variables in the class.
@@ -20,27 +23,27 @@ public class PostgreSQLDatabaseConnection {
     public static final String TRIPROUTE = "trip_route";
     public static final String TRIPSETTS = "trip_settings";
 
-    private final String URL = "jdbc:postgresql://localhost:5432/";
+    public static final String URL = "jdbc:postgresql://localhost:5432/";
 
-    private final String DATABASE_NAME = "citybike";
-    private final String USERNAME = "vagrant";
-    private final String PASSWORD = "vagrant";
+    public static final String DATABASE_NAME = "citybike";
+    public static final String USERNAME = "vagrant";
+    public static final String PASSWORD = "vagrant";
     // names of the attributes in the tables
-    private final String ID = "ID";
-    private final String NAME = "NAME";
-    private final String POINT = "POINT";
-    private final String STARTTIME = "START_TIME";
-    private final String ENDTIME = "END_TIME";
-    private final String STARTSTATION = "START_STATION_ID";
-    private final String ENDSTATION = "END_STATION_ID";
-    private final String BIKEID = "BIKE_ID";
-    private final String USERTYPE = "USER_TYPE";
-    private final String GENDER = "GENDER";
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String POINT = "point";
+    public static final String STARTTIME = "start_time";
+    public static final String ENDTIME = "end_time";
+    public static final String STARTSTATION = "start_station_id";
+    public static final String ENDSTATION = "end_station_id";
+    public static final String BIKEID = "bike_id";
+    public static final String USERTYPE = "user_type";
+    public static final String GENDER = "gender";
 
 
     /**
-     * This method opens a connection to a postgreSQL database named like {@value #DATABASE_NAME}.
-     * Therefore it uses the username stored in {@value #USERNAME} and the password stored in {@value #PASSWORD}.
+     * This method opens a connection to a postgreSQL database named like {@link #DATABASE_NAME}.
+     * Therefore it uses the username stored in {@link #USERNAME} and the password stored in {@link #PASSWORD}.
      *
      * @return the connection to the opened database or null if opening was not successful
      */
@@ -72,7 +75,7 @@ public class PostgreSQLDatabaseConnection {
         try {
             Statement stmt = c.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS " + STATION + " " +
-                    "(" + ID + " DOUBLE PRECISION PRIMARY KEY NOT NULL," +
+                    "(" + ID + " BIGINT PRIMARY KEY NOT NULL," +
                     " " + NAME + " TEXT NOT NULL, " +
                     " " + POINT + " geography(POINT,4326)    NOT NULL)";
             stmt.executeUpdate(sql);
@@ -179,104 +182,103 @@ public class PostgreSQLDatabaseConnection {
     }
 
     /**
-     * Inserts an entry into the table STATION {@link #createSTATIONTable(java.sql.Connection)}.
-     *
-     * @param c         connection to the database
-     * @param id        station id = {latitude, longitude}
-     * @param name      station name
-     * @param longitude longitude of the station's pos
-     * @param latitude  latitude of the station's pos
-     */
-    public void insertIntoSTATION(Connection c, long id, String name, double longitude, double latitude) {
-        try {
-            //Statement stmt = c.createStatement();
-            //((org.postgresql.Connection)c).addDataType("geometry","org.postgis.PGgeometry");
-            String sql = "INSERT INTO " + STATION + " (" + ID + "," + NAME + "," + POINT + ") "
-                    + "VALUES (?, ?, ST_GeographyFromText('SRID=4326;POINT(' || ? || ' ' || ? || ')'))"; //+ id + ", '" + name + "', ST_GeomFromText(\"POINT(" + longitude + ", " + latitude + ")\", 4326))";
-            PreparedStatement preparedStatement = c.prepareStatement(sql);
-            preparedStatement.setLong(1, id);
-            preparedStatement.setString(2, name);
-            //preparedStatement.setString(3, "POINT(" + longitude + ", " + latitude + ")");
-            preparedStatement.setDouble(3, longitude);
-            preparedStatement.setDouble(4, latitude);
-            preparedStatement.executeUpdate();
-            //stmt.executeUpdate(sql);
-            //stmt.close();
-            //c.commit();
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-    }
-
-    /**
-     * Inserts an entry into the table TRIP_TIME {@link #createTRIPTIMETable(java.sql.Connection)}.
-     *
-     * @param c         connection to the database
-     * @param id        trip id = {bikeid + start time}
-     * @param startTime start time of the trip
-     * @param endTime   end time of the trip
-     */
-    public void insertIntoTRIPTIME(Connection c, double id, Date startTime, Date endTime) {
-        try {
-
-            Statement stmt = c.createStatement();
-            String sql = "INSERT INTO " + TRIPTIME + " (" + ID + "," + STARTTIME + "," + ENDTIME + ") "
-                    + "VALUES (" + id + ", '" + startTime + "', '" + endTime + "');";
-            stmt.executeUpdate(sql);
-            stmt.close();
-            //c.commit();
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-
-    }
-
-    /**
-     * Inserts an entry into the table TRIP_ROUTE {@link #createTRIPROUTETable(java.sql.Connection)}.
-     *
-     * @param c              connection to the database
-     * @param id             trip id = {bikeid + start time}
-     * @param startStationID id of the trip's start station
-     * @param endStationID   id of the trip's end station
-     */
-    public void insertIntoTRIPROUTE(Connection c, double id, double startStationID, double endStationID) {
-        try {
-
-            Statement stmt = c.createStatement();
-            String sql = "INSERT INTO " + TRIPROUTE + " (" + ID + "," + STARTSTATION + "," + ENDSTATION + ") "
-                    + "VALUES (" + id + ", " + startStationID + ", " + endStationID + ");";
-            stmt.executeUpdate(sql);
-            stmt.close();
-            //c.commit();
-
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-    }
-
-    /**
-     * Inserts an entry into the table TRIP_SETTINGS {@link #createTRIPSETTINGSTable(java.sql.Connection)}
+     * Inserts all data sets from {@param stations} into the table STATION {@link #createSTATIONTable(java.sql.Connection)}.
      *
      * @param c        connection to the database
-     * @param id       trip id = {bikeid concat start time}
-     * @param bikeID   bike id
-     * @param usertype type of the user
-     * @param gender   gender of the user
+     * @param stations set containing the data of stations that should be put into the table
      */
-    public void insertIntoTRIPSETTINGS(Connection c, double id, long bikeID, String usertype, int gender) {
+    public void insertIntoSTATION(Connection c, HashSet<StationData> stations) {
         try {
+            String sql = "INSERT INTO " + STATION + " (" + ID + "," + NAME + "," + POINT + ") "
+                    + "VALUES (?, ?, ST_GeographyFromText('SRID=4326;POINT(' || ? || ' ' || ? || ')'))";
+            PreparedStatement preparedStatement = c.prepareStatement(sql);
 
-            Statement stmt = c.createStatement();
+            for (StationData station : stations) {
+                preparedStatement.setLong(1, station.getStationId());
+                preparedStatement.setString(2, station.getName());
+                preparedStatement.setDouble(3, station.getLongitude());
+                preparedStatement.setDouble(4, station.getLatitude());
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+    }
+
+    /**
+     * Inserts table specific data from {@param #tripDataObjects} into the table TRIP_TIME {@link #createTRIPTIMETable(java.sql.Connection)}.
+     *
+     * @param c               connection to the database
+     * @param tripDataObjects set containing data of the given trips
+     */
+    public void insertIntoTRIPTIME(Connection c, HashSet<TripDataObject> tripDataObjects) {
+        try {
+            String sql = "INSERT INTO " + TRIPTIME + " (" + ID + "," + STARTTIME + "," + ENDTIME + ") "
+                    + "VALUES (?, ?, ?)";
+            PreparedStatement preparedStatement = c.prepareStatement(sql);
+
+            for (TripDataObject tripDataObject : tripDataObjects) {
+                preparedStatement.setLong(1, tripDataObject.getTripID());
+                preparedStatement.setDate(2, new java.sql.Date(tripDataObject.getStartTime().getTime()));
+                preparedStatement.setDate(3, new java.sql.Date(tripDataObject.getEndTime().getTime()));
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+
+    }
+
+    /**
+     * Inserts table specific data from {@param #tripDataObjects} into the table TRIP_ROUTE {@link #createTRIPROUTETable(java.sql.Connection)}.
+     *
+     * @param c               connection to the database
+     * @param tripDataObjects set containing data of the given trips
+     */
+    public void insertIntoTRIPROUTE(Connection c, HashSet<TripDataObject> tripDataObjects) {
+        try {
+            String sql = "INSERT INTO " + TRIPROUTE + " (" + ID + "," + STARTSTATION + "," + ENDSTATION + ") "
+                    + "VALUES (?, ?, ?)";
+            PreparedStatement preparedStatement = c.prepareStatement(sql);
+
+            for (TripDataObject tripDataObject : tripDataObjects) {
+                preparedStatement.setLong(1, tripDataObject.getTripID());
+                preparedStatement.setLong(2, tripDataObject.getStartStationID());
+                preparedStatement.setLong(3, tripDataObject.getEndStationID());
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+    }
+
+    /**
+     * Inserts table specific data from {@param #tripDataObjects} into the table TRIP_SETTINGS {@link #createTRIPSETTINGSTable(java.sql.Connection)}
+     *
+     * @param c               connection to the database
+     * @param tripDataObjects set containing data of the given trips
+     */
+    public void insertIntoTRIPSETTINGS(Connection c, HashSet<TripDataObject> tripDataObjects) {
+        try {
             String sql = "INSERT INTO " + TRIPSETTS + " (" + ID + "," + BIKEID + "," + USERTYPE + "," + GENDER + ") "
-                    + "VALUES (" + id + ", " + bikeID + ", '" + usertype + "', " + gender + ");";
-            stmt.executeUpdate(sql);
-            stmt.close();
-            //c.commit();
+                    + "VALUES (?, ?, ?, ?)";
+            PreparedStatement preparedStatement = c.prepareStatement(sql);
+
+            for (TripDataObject tripDataObject : tripDataObjects) {
+                preparedStatement.setLong(1, tripDataObject.getTripID());
+                preparedStatement.setLong(2, tripDataObject.getBikeID());
+                preparedStatement.setString(3, tripDataObject.getUserDescription());
+                preparedStatement.setInt(4, tripDataObject.getGender());
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
 
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());

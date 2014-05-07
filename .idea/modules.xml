@@ -5,8 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/CityBikeDataExplorer.iml" filepath="$PROJECT_DIR$/CityBikeDataExplorer.iml" />
       <module fileurl="file://$PROJECT_DIR$/client/client.iml" filepath="$PROJECT_DIR$/client/client.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/graph-base/graph-base.iml" filepath="$PROJECT_DIR$/graph-base/graph-base.iml" />
       <module fileurl="file://$PROJECT_DIR$/graph-db-driver/graph-db-driver.iml" filepath="$PROJECT_DIR$/graph-db-driver/graph-db-driver.iml" />
-      <module fileurl="file://$PROJECT_DIR$/graph-load-db/graph-load-db.iml" filepath="$PROJECT_DIR$/graph-load-db/graph-load-db.iml" />
       <module fileurl="file://$PROJECT_DIR$/server/server.iml" filepath="$PROJECT_DIR$/server/server.iml" />
       <module fileurl="file://$PROJECT_DIR$/st-db-driver/st-db-driver.iml" filepath="$PROJECT_DIR$/st-db-driver/st-db-driver.iml" />
     </modules>

@@ -1,5 +1,6 @@
 package se.kth.csc.moderndb.cbexplorer;
 
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 
@@ -9,6 +10,7 @@ import org.springframework.data.neo4j.annotation.NodeEntity;
  * @author Michael Hotan
  */
 @NodeEntity
+@TypeAlias(DatabaseConstants.STATION_LABEL)
 public class Station extends AbstractEntity {
 
     /*
@@ -16,10 +18,8 @@ public class Station extends AbstractEntity {
     * This is very similar to online example.
     * */
 
-    // Actual station ID.
-    // TODO Verify if these indexes are correct.
     @Indexed(numeric = true, unique = true)
-    private Long stationId;
+    long stationID;
 
     // The readable name of the Station.
     String name;
@@ -37,10 +37,8 @@ public class Station extends AbstractEntity {
     /**
      * Creates a station.
      *
-     * @param stationId CitiBike specified Station number
      */
-    public Station(long stationId, String name, double longitude, double latitude) {
-        this.stationId = stationId;
+    public Station(long stationID, String name, double longitude, double latitude) {
         setName(name);
         setLocation(longitude, latitude);
     }
@@ -66,10 +64,18 @@ public class Station extends AbstractEntity {
         this.location = String.format("POINT(%f %f)", longitude, latitude).replace(",",".");
     }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
         return "Station{" +
-                "stationId=" + stationId +
+                "stationId=" + getId() +
                 ", name='" + name + '\'' +
                 ", location='" + location + '\'' +
                 '}';

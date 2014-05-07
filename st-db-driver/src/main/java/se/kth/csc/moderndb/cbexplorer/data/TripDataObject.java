@@ -5,9 +5,10 @@ import se.kth.csc.moderndb.cbexplorer.parser.data.TripData;
 import java.util.Date;
 
 /**
- * Created by Jeannine on 04.05.14.
  *
  * Provides all needed attributes to fill the trip related tables in the database.
+ *
+ * Created by Jeannine on 04.05.14.
  */
 public class TripDataObject {
 
