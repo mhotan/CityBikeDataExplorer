@@ -50,6 +50,7 @@ public class CitiBikeBatchReader implements CitiBikeReader {
             throw new NullPointerException(getClass().getSimpleName() + "() " +
                     "Cannot have null inserter.");
         this.inserter = inserter;
+        populateIndexes(inserter);
 
         // Initialize the tripCount of objects
         tripCount = 0;
@@ -58,7 +59,10 @@ public class CitiBikeBatchReader implements CitiBikeReader {
     }
 
     private static void populateIndexes(BatchInserter inserter) {
-//TODO
+        inserter.createDeferredSchemaIndex(BIKE_LABEL).on(DatabaseConstants.BIKE_ID).create();
+        inserter.createDeferredSchemaIndex(STATION_LABEL).on(DatabaseConstants.STATION_ID).create();
+        inserter.createDeferredSchemaIndex(STATION_LABEL).on(DatabaseConstants.STATION_NAME).create();
+        inserter.createDeferredSchemaIndex(TRIP_LABEL).on(DatabaseConstants.TRIP_START_TIME).create();
     }
 
     @Override

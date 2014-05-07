@@ -19,10 +19,10 @@ public class DatabaseConstants {
     public static final String ENDED_AT_RELATION = "ENDED_AT";
 
     // Bike Properties
-    public static final String BIKE_ID = "bikeID";
+    public static final String BIKE_ID = "bikeId";
 
     // Station Properties
-    public static final String STATION_ID = "stationID";
+    public static final String STATION_ID = "stationId";
     public static final String STATION_NAME = "name";
     public static final String STATION_LOCATION = "location";
 

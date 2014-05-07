@@ -1,37 +1,67 @@
-buildscript {
-    repositories {
-        maven { url "http://repo.spring.io/libs-snapshot" }
-        mavenLocal()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.1.RELEASE")
-    }
-}
-
+apply plugin: 'war'
+apply plugin: 'tomcat'
 apply plugin: 'java'
+apply plugin: 'propdeps'
+apply plugin: 'propdeps-maven'
+apply plugin: 'propdeps-idea'
+apply plugin: 'propdeps-eclipse'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'spring-boot'
 
-jar {
-    baseName = 'gs-rest-service'
-    version =  '0.1.0'
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "http://download.java.net/maven/2"
+        }
+        maven { url 'http://repo.spring.io/plugins-release' }
+    }
+
+    dependencies {
+        classpath 'org.gradle.api.plugins:gradle-tomcat-plugin:0.9.8'
+        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.1'
+    }
 }
 
 repositories {
     mavenCentral()
-    maven { url "http://repo.spring.io/libs-snapshot" }
+    maven { url "http://m2.neo4j.org/content/repositories/releases" }
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
-    compile("com.fasterxml.jackson.core:jackson-databind")
-    testCompile("junit:junit")
-    compile project(':core')
-    compile project(':graph-db-driver')
+    compile project(':graph-base')
     compile project(':st-db-driver')
+
+    def tomcatVersion = '7.0.53'
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}"
+    tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
+        exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
+    }
+
+    def springBaseVersion = '4.0.3.RELEASE'
+    def springSecurityVersion = '3.2.3.RELEASE'
+    compile "org.springframework:spring-core:${springBaseVersion}"
+    compile "org.springframework:spring-webmvc:${springBaseVersion}"
+    compile 'com.jayway.jsonpath:json-path:0.9.1'
+
+    compile 'org.slf4j:slf4j-api:1.7.7'
+    runtime 'org.slf4j:slf4j-jdk14:1.7.7'
+    runtime 'com.fasterxml.jackson.core:jackson-core:2.4.0-rc2'
+    runtime 'com.fasterxml.jackson.core:jackson-databind:2.4.0-rc2'
+    runtime 'javax.xml.bind:jaxb-api:2.2.11'
+
+    provided 'javax.servlet:javax.servlet-api:3.1.0'
+
+    testCompile 'com.jayway.jsonpath:json-path-assert:0.8.1'
+    testCompile 'org.springframework:spring-test:3.2.3.RELEASE'
+    testCompile 'junit:junit:4.+'
+    testCompile "org.mockito:mockito-all:1.9.5"
+
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = '1.11'
 }
+
+tomcatRunWar.contextPath = ''

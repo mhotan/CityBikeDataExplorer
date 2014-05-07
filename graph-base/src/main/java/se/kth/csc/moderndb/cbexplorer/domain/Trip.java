@@ -1,10 +1,11 @@
-package se.kth.csc.moderndb.cbexplorer;
+package se.kth.csc.moderndb.cbexplorer.domain;
 
 import org.neo4j.graphdb.Direction;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.neo4j.annotation.Fetch;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedTo;
+import se.kth.csc.moderndb.cbexplorer.DatabaseConstants;
 
 import java.util.Date;
 

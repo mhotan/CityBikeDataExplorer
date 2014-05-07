@@ -37,29 +37,37 @@ public class STDBCityBikeReader implements CitiBikeReader {
         c = this.postgreSQLDatabaseConnection.openDB();
         this.postgreSQLDatabaseConnection.createAllNecessaryTables(c);
         // after creating the tables close the connection
-        try {
-            this.c.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            this.c.close();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
     public void addTrips(Collection<TripData> trips) {
-        this.c = this.postgreSQLDatabaseConnection.openDB();
+//        this.c = this.postgreSQLDatabaseConnection.openDB();
         addTripsToSTATION(trips);
         HashSet<TripDataObject> tripObjects = createTripDataObjectsFromTrips(trips);
         addTripsToTRIPROUTE(tripObjects);
         addTripsToTRIPTIME(tripObjects);
         addTripsToTRIPSETTINGS(tripObjects);
-        try {
-            this.c.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            this.c.close();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
         tripCount += trips.size();
         System.out.println(tripCount + " total trips processed");
+    }
+
+    /**
+     * Closes the SQL Connection
+     * @throws SQLException
+     */
+    public void close() throws SQLException {
+        this.c.close();
     }
 
     /**
