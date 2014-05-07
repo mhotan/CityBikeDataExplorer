@@ -39,7 +39,7 @@ public class BikeQuery {
     public static List<TripRoute> giveAllTripStationInformation() {
         System.out.println("Querying for all trip station info");
         List<TripRoute> tripRoutes = jdbcTemplate.query(
-                "select * from " + PostgreSQLDatabaseConnection.TRIPROUTE,
+                "select * from " + PostgreSQLDatabaseConnection.TRIP,
                 new RowMapper<TripRoute>() {
                     @Override
                     public TripRoute mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -59,7 +59,7 @@ public class BikeQuery {
     public static TripRoute giveTripStationInformationForTripWithID(final long id) {
         System.out.println("Querying for trip station with given trip id");
         List<TripRoute> tripRoute = jdbcTemplate.query(
-                "select " + PostgreSQLDatabaseConnection.STARTSTATION + ", " + PostgreSQLDatabaseConnection.ENDSTATION + " from " + PostgreSQLDatabaseConnection.TRIPROUTE + " where " + PostgreSQLDatabaseConnection.ID + " = ?",
+                "select " + PostgreSQLDatabaseConnection.STARTSTATION + ", " + PostgreSQLDatabaseConnection.ENDSTATION + " from " + PostgreSQLDatabaseConnection.TRIP + " where " + PostgreSQLDatabaseConnection.ID + " = ?",
                 new Object[]{id},
                 new RowMapper<TripRoute>() {
                     @Override
