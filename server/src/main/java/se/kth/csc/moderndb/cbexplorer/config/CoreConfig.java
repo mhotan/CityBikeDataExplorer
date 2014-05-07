@@ -24,7 +24,7 @@ import se.kth.csc.moderndb.cbexplorer.core.services.BikeService;
 public class CoreConfig extends Neo4jConfiguration {
 
     public CoreConfig() {
-        setBasePackage("se.kth.csc.moderndb.cbexplorer");
+        setBasePackage("se.kth.csc.moderndb.cbexplorer.core.repository");
     }
 
     @Bean(destroyMethod = "shutdown")
@@ -32,18 +32,14 @@ public class CoreConfig extends Neo4jConfiguration {
         return new GraphDatabaseFactory().newEmbeddedDatabase(DatabaseConstants.DATABASE_PATH);
     }
 
-    @Autowired // Attempt to auto wire the bike repository.
-    private BikeRepository bikeRepository;
+     // Attempt to auto wire the bike repository.
+    @Autowired
+    public BikeRepository bikeRepository;
 
     @Bean
-    public BikeService createService(BikeRepository repo) {
+    @Autowired
+    public BikeService createBikeService(BikeRepository repo) {
         return new BikeEventHandler(repo);
     }
-
-    @Bean
-    public BikeRepository createBikeRepo() {
-        return bikeRepository;
-    }
-
 
 }

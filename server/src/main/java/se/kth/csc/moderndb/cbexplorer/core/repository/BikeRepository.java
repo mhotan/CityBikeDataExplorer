@@ -10,4 +10,6 @@ import se.kth.csc.moderndb.cbexplorer.domain.Bike;
  */
 public interface BikeRepository extends GraphRepository<Bike> {
 
+
+
 }

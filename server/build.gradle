@@ -45,6 +45,9 @@ dependencies {
     compile "org.springframework:spring-webmvc:${springBaseVersion}"
     compile 'com.jayway.jsonpath:json-path:0.9.1'
 
+    compile 'javax.validation:validation-api:1.1.0.Final'
+    runtime 'javax.validation:validation-api:1.1.0.Final'
+
     compile 'org.slf4j:slf4j-api:1.7.7'
     runtime 'org.slf4j:slf4j-jdk14:1.7.7'
     runtime 'com.fasterxml.jackson.core:jackson-core:2.4.0-rc2'
