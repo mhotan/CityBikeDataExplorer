@@ -1,8 +1,9 @@
-package se.kth.csc.moderndb.cbexplorer;
+package se.kth.csc.moderndb.cbexplorer.domain;
 
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
+import se.kth.csc.moderndb.cbexplorer.DatabaseConstants;
 
 /**
  * Bike Station entity for graph representation within Neo4j.
@@ -19,7 +20,7 @@ public class Station extends AbstractEntity {
     * */
 
     @Indexed(numeric = true, unique = true)
-    long stationID;
+    long stationId;
 
     // The readable name of the Station.
     String name;
@@ -38,7 +39,8 @@ public class Station extends AbstractEntity {
      * Creates a station.
      *
      */
-    public Station(long stationID, String name, double longitude, double latitude) {
+    public Station(long stationId, String name, double longitude, double latitude) {
+        this.stationId = stationId;
         setName(name);
         setLocation(longitude, latitude);
     }
@@ -62,6 +64,18 @@ public class Station extends AbstractEntity {
         this.latitude = latitude;
         this.longitude = longitude;
         this.location = String.format("POINT(%f %f)", longitude, latitude).replace(",",".");
+    }
+
+    public long getStationId() {
+        return stationId;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
     }
 
     public String getLocation() {

@@ -47,7 +47,7 @@ public class CitiBikeParser {
 
     // The default number of
     // TODO Validate this quantity to work on all systems.
-    private static final int DEFAULT_TRIPDATA_BUFFERSIZE = 500;
+    private static final int DEFAULT_TRIPDATA_BUFFERSIZE = 2000;
 
     /**
      * Reader that reads and interprets raw data.
