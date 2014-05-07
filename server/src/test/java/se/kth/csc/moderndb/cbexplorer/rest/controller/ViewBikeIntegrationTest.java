@@ -34,7 +34,7 @@ public class ViewBikeIntegrationTest {
     @Mock
     BikeService bikeService;
 
-    long testId = 1l;
+    int testId = 1;
 
     @Before
     public void setUp() throws Exception {
