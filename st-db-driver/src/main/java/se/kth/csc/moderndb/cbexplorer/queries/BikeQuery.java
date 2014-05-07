@@ -39,11 +39,11 @@ public class BikeQuery {
     public static List<TripRoute> giveAllTripStationInformation() {
         System.out.println("Querying for all trip station info");
         List<TripRoute> tripRoutes = jdbcTemplate.query(
-                "select * from " + PostgreSQLDatabaseConnection.TRIPROUTE,
+                "select * from " + PostgreSQLDatabaseConnection.TRIP,
                 new RowMapper<TripRoute>() {
                     @Override
                     public TripRoute mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return new TripRoute(rs.getLong(PostgreSQLDatabaseConnection.ID),
+                        return new TripRoute(rs.getLong(PostgreSQLDatabaseConnection.STATIONID),
                                 StationQuery.giveFullStationInformationAboutStationWithID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION)).get(0),
                                 StationQuery.giveFullStationInformationAboutStationWithID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION)).get(0));
                     }
@@ -59,7 +59,7 @@ public class BikeQuery {
     public static TripRoute giveTripStationInformationForTripWithID(final long id) {
         System.out.println("Querying for trip station with given trip id");
         List<TripRoute> tripRoute = jdbcTemplate.query(
-                "select " + PostgreSQLDatabaseConnection.STARTSTATION + ", " + PostgreSQLDatabaseConnection.ENDSTATION + " from " + PostgreSQLDatabaseConnection.TRIPROUTE + " where " + PostgreSQLDatabaseConnection.ID + " = ?",
+                "select " + PostgreSQLDatabaseConnection.STARTSTATION + ", " + PostgreSQLDatabaseConnection.ENDSTATION + " from " + PostgreSQLDatabaseConnection.TRIP + " where " + PostgreSQLDatabaseConnection.STATIONID + " = ?",
                 new Object[]{id},
                 new RowMapper<TripRoute>() {
                     @Override
