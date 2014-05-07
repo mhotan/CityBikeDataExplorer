@@ -110,7 +110,9 @@ public class PostgreSQLDatabaseConnection {
                     " " + GENDER + " INT    NOT NULL," +
                     " PRIMARY KEY(" + BIKEID +","+ STARTTIME+"))";
             stmt.executeUpdate(sql);
-            String rule = "CREATE OR REPLACE RULE \"trip_route_on_duplicate_ignore\" AS ON INSERT TO \"" + TRIP + "\" WHERE EXISTS(SELECT 1 FROM " + TRIP + " WHERE (" + BIKEID + "," + STARTTIME + ")=(NEW." + BIKEID + ", NEW." + STARTTIME + ")) DO INSTEAD NOTHING;";
+            String rule = "CREATE OR REPLACE RULE \"trip_route_on_duplicate_ignore\" AS ON INSERT TO \"" +
+                    TRIP + "\" WHERE EXISTS(SELECT 1 FROM " + TRIP + " WHERE (" + BIKEID + "," +
+                    STARTTIME + ")=(NEW." + BIKEID + ", NEW." + STARTTIME + ")) DO INSTEAD NOTHING;";
             stmt.execute(rule);
 
             stmt.close();
@@ -171,18 +173,20 @@ public class PostgreSQLDatabaseConnection {
      */
     public void insertIntoTRIP(Connection c, Collection<TripData> tripDate) {
         try {
-            String sql = "INSERT INTO " + TRIP + " (" + BIKEID + "," + STARTTIME + "," + ENDTIME + "," + STARTSTATION + "," + ENDSTATION + "," + USERTYPE +"," + BIRTHYEAR + "," + GENDER+ ") "
+            String sql = "INSERT INTO " + TRIP + " (" + BIKEID + "," + STARTTIME + "," + ENDTIME + "," +
+                    STARTSTATION + "," + ENDSTATION + "," + USERTYPE +"," + BIRTHYEAR + "," + GENDER+ ") "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = c.prepareStatement(sql);
 
             for (TripData tripDataObject : tripDate) {
                 preparedStatement.setLong(1, tripDataObject.getBikeData().getId());
                 preparedStatement.setDate(2, new java.sql.Date(tripDataObject.getStartTime().getTime()));
-                preparedStatement.setLong(3, tripDataObject.getStartStationData().getStationId());
-                preparedStatement.setLong(4, tripDataObject.getEndStationData().getStationId());
-                preparedStatement.setString(5, tripDataObject.getUserType());
-                preparedStatement.setInt(6, tripDataObject.getUserBirthYear());
-                preparedStatement.setInt(7, tripDataObject.getUserGender());
+                preparedStatement.setDate(3, new java.sql.Date(tripDataObject.getEndTime().getTime()));
+                preparedStatement.setLong(4, tripDataObject.getStartStationData().getStationId());
+                preparedStatement.setLong(5, tripDataObject.getEndStationData().getStationId());
+                preparedStatement.setString(6, tripDataObject.getUserType());
+                preparedStatement.setInt(7, tripDataObject.getUserBirthYear());
+                preparedStatement.setInt(8, tripDataObject.getUserGender());
                 preparedStatement.addBatch();
             }
             preparedStatement.executeBatch();
