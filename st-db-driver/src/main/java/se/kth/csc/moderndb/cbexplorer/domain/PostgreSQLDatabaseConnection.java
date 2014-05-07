@@ -27,7 +27,7 @@ public class PostgreSQLDatabaseConnection {
     public static final String USERNAME = "vagrant";
     public static final String PASSWORD = "vagrant";
     // names of the attributes in the tables
-    public static final String ID = "id";
+    public static final String STATIONID = "station_id";
     public static final String NAME = "name";
     public static final String POINT = "point";
     public static final String STARTTIME = "start_time";
@@ -65,7 +65,7 @@ public class PostgreSQLDatabaseConnection {
 
     /**
      * Creates the database table STATION having the following structure:
-     * ID (int, primary key), NAME (text), POINT (int), LATITUDE (int).
+     * STATIONID (int, primary key), NAME (text), POINT (int), LATITUDE (int).
      * It also adds a rule to ignore duplicated entries in the database.
      *
      * @param c connection to the database
@@ -74,11 +74,11 @@ public class PostgreSQLDatabaseConnection {
         try {
             Statement stmt = c.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS " + STATION + " " +
-                    "(" + ID + " BIGINT PRIMARY KEY NOT NULL," +
+                    "(" + STATIONID + " BIGINT PRIMARY KEY NOT NULL," +
                     " " + NAME + " TEXT NOT NULL, " +
                     " " + POINT + " geography(POINT,4326)    NOT NULL)";
             stmt.executeUpdate(sql);
-            String rule = "CREATE OR REPLACE RULE \"station_on_duplicate_ignore\" AS ON INSERT TO \"" + STATION + "\" WHERE EXISTS(SELECT 1 FROM " + STATION + " WHERE (" + ID + ")=(NEW." + ID + ")) DO INSTEAD NOTHING;";
+            String rule = "CREATE OR REPLACE RULE \"station_on_duplicate_ignore\" AS ON INSERT TO \"" + STATION + "\" WHERE EXISTS(SELECT 1 FROM " + STATION + " WHERE (" + STATIONID + ")=(NEW." + STATIONID + ")) DO INSTEAD NOTHING;";
             stmt.execute(rule);
             stmt.close();
             //c.close();
@@ -91,7 +91,7 @@ public class PostgreSQLDatabaseConnection {
 
     /**
      * Creates the database table TRIP_ROUTE having the following structure:
-     * ID (int, primary key), START_STATION_ID (int), END_STATION_ID (int).
+     * STATIONID (int, primary key), START_STATION_ID (int), END_STATION_ID (int).
      * It also adds a rule to ignore duplicated entries in the database.
      *
      * @param c connection to the database
@@ -144,7 +144,7 @@ public class PostgreSQLDatabaseConnection {
      */
     public void insertIntoSTATION(Connection c, HashSet<StationData> stations) {
         try {
-            String sql = "INSERT INTO " + STATION + " (" + ID + "," + NAME + "," + POINT + ") "
+            String sql = "INSERT INTO " + STATION + " (" + STATIONID + "," + NAME + "," + POINT + ") "
                     + "VALUES (?, ?, ST_GeographyFromText('SRID=4326;POINT(' || ? || ' ' || ? || ')'))";
             PreparedStatement preparedStatement = c.prepareStatement(sql);
 

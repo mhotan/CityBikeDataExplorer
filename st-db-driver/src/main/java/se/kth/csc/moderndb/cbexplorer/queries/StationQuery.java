@@ -1,9 +1,7 @@
 package se.kth.csc.moderndb.cbexplorer.queries;
 
 import org.postgis.Point;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import se.kth.csc.moderndb.cbexplorer.domain.PostgreSQLDatabaseConnection;
 import se.kth.csc.moderndb.cbexplorer.parser.data.StationData;
 
@@ -44,8 +42,8 @@ public class StationQuery extends BikeQuery{
                 new RowMapper<StationData>() {
                     @Override
                     public StationData mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        Point p = givePointForStationWithID(rs.getLong(PostgreSQLDatabaseConnection.ID));
-                        return new StationData(rs.getLong(PostgreSQLDatabaseConnection.ID), rs.getString(PostgreSQLDatabaseConnection.NAME),
+                        Point p = givePointForStationWithID(rs.getLong(PostgreSQLDatabaseConnection.STATIONID));
+                        return new StationData(rs.getLong(PostgreSQLDatabaseConnection.STATIONID), rs.getString(PostgreSQLDatabaseConnection.NAME),
                                 p.getX(), p.getY());
                     }
                 }
@@ -60,12 +58,12 @@ public class StationQuery extends BikeQuery{
 
     public static List<StationData> giveFullStationInformationAboutStationNamed(final String name) {
         System.out.println("Querying for station named" + name);
-        List<StationData> result = jdbcTemplate.query("select " + PostgreSQLDatabaseConnection.ID + ", " + getXFromPoint + ", " + getYFromPoint + "from " + PostgreSQLDatabaseConnection.STATION + " where " + PostgreSQLDatabaseConnection.NAME + " = ?",
+        List<StationData> result = jdbcTemplate.query("select " + PostgreSQLDatabaseConnection.STATIONID + ", " + getXFromPoint + ", " + getYFromPoint + "from " + PostgreSQLDatabaseConnection.STATION + " where " + PostgreSQLDatabaseConnection.NAME + " = ?",
                 new Object[]{name},
                 new RowMapper<StationData>() {
                     @Override
                     public StationData mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return new StationData(rs.getLong(PostgreSQLDatabaseConnection.ID), name, rs.getDouble(2), rs.getDouble(3));
+                        return new StationData(rs.getLong(PostgreSQLDatabaseConnection.STATIONID), name, rs.getDouble(2), rs.getDouble(3));
                     }
                 }
         );
@@ -77,7 +75,7 @@ public class StationQuery extends BikeQuery{
 
     public static List<StationData> giveFullStationInformationAboutStationWithID(final Long id) {
         System.out.println("Querying for station with id" + id);
-        List<StationData> result = jdbcTemplate.query("select " + PostgreSQLDatabaseConnection.NAME + ", " + getXFromPoint + ", " + getYFromPoint + "from " + PostgreSQLDatabaseConnection.STATION + " where " + PostgreSQLDatabaseConnection.ID + " = ?",
+        List<StationData> result = jdbcTemplate.query("select " + PostgreSQLDatabaseConnection.NAME + ", " + getXFromPoint + ", " + getYFromPoint + "from " + PostgreSQLDatabaseConnection.STATION + " where " + PostgreSQLDatabaseConnection.STATIONID + " = ?",
                 new Object[]{id},
                 new RowMapper<StationData>() {
                     @Override
@@ -92,7 +90,7 @@ public class StationQuery extends BikeQuery{
     public static Point givePointForStationWithID(long id) {
         System.out.println("Querying for point with id");
         List<Point> result = jdbcTemplate.query(
-                "select " + getXFromPoint + ", " + getYFromPoint + " from " + PostgreSQLDatabaseConnection.STATION + " where " + PostgreSQLDatabaseConnection.ID + " = ?", new Object[]{id},
+                "select " + getXFromPoint + ", " + getYFromPoint + " from " + PostgreSQLDatabaseConnection.STATION + " where " + PostgreSQLDatabaseConnection.STATIONID + " = ?", new Object[]{id},
                 new RowMapper<Point>() {
                     @Override
                     public Point mapRow(ResultSet rs, int rowNum) throws SQLException {
