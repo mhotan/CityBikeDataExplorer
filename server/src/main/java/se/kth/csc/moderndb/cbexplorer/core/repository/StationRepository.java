@@ -16,8 +16,8 @@ public interface StationRepository extends GraphRepository<Station> {
 
     Station findByName(@Param("0") String name);
 
-    @Query("START start=node({station}) MATCH start<-[:" + STARTED_FROM_RELATION + "]-" +
-            "trip-[:" + ENDED_AT_RELATION + "]->end RETURN DISTINCT end")
+    @Query("START start=node({station}) MATCH start<-[:" + STARTS_AT_RELATION + "]-" +
+            "trip-[:" + ENDS_AT_RELATION + "]->end RETURN DISTINCT end")
     List<Station> getDestinations(@Param("station") Long startStationId);
 
 }

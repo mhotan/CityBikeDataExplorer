@@ -27,8 +27,8 @@ public class CitiBikeBatchReader implements CitiBikeReader {
     public static final Label TRIP_PRIMARY_LABEL = DynamicLabel.label("_" + DatabaseConstants.TRIP_LABEL);
 
     // Relations
-    public static final RelationshipType startedFrom = DynamicRelationshipType.withName(DatabaseConstants.STARTED_FROM_RELATION);
-    public static final RelationshipType endedAt = DynamicRelationshipType.withName(DatabaseConstants.ENDED_AT_RELATION);
+    public static final RelationshipType startedFrom = DynamicRelationshipType.withName(DatabaseConstants.STARTS_AT_RELATION);
+    public static final RelationshipType endedAt = DynamicRelationshipType.withName(DatabaseConstants.ENDS_AT_RELATION);
     public static final RelationshipType uses = DynamicRelationshipType.withName(DatabaseConstants.USES_RELATION);
 
     private final BatchInserter inserter;
