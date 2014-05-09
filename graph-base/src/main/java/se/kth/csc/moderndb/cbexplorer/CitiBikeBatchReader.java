@@ -50,7 +50,9 @@ public class CitiBikeBatchReader implements CitiBikeReader {
             throw new NullPointerException(getClass().getSimpleName() + "() " +
                     "Cannot have null inserter.");
         this.inserter = inserter;
-        populateIndexes(inserter);
+
+        // TODO Verify runtime index issue.
+//        populateIndexes(inserter);
 
         // Initialize the tripCount of objects
         tripCount = 0;
