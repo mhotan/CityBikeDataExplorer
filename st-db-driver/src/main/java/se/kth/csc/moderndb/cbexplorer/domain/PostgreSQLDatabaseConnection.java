@@ -3,10 +3,7 @@ package se.kth.csc.moderndb.cbexplorer.domain;
 import se.kth.csc.moderndb.cbexplorer.parser.data.StationData;
 import se.kth.csc.moderndb.cbexplorer.parser.data.TripData;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -78,9 +75,9 @@ public class PostgreSQLDatabaseConnection {
             String sql = "CREATE TABLE IF NOT EXISTS " + STATION + " " +
                     "(" + STATIONID + " BIGINT PRIMARY KEY NOT NULL," +
                     " " + NAME + " TEXT NOT NULL, " +
-                    " " + POINT + " geography(POINT,4326)    NOT NULL)";
+                    " " + POINT + " geography(POINT,4326)    NOT NULL);";
             stmt.executeUpdate(sql);
-            String index = "\"CREATE INDEX " + STATION + "_INDEX_" + STATIONID + " ON" + STATION + "(" + STATIONID + ")";
+            String index = "CREATE INDEX " + STATION + "_INDEX_" + STATIONID + " ON " + STATION + "(" + STATIONID + ")";
             stmt.executeUpdate(index);
             String rule = "CREATE OR REPLACE RULE \"station_on_duplicate_ignore\" AS ON INSERT TO \"" + STATION + "\" WHERE EXISTS(SELECT 1 FROM " + STATION + " WHERE (" + STATIONID + ")=(NEW." + STATIONID + ")) DO INSTEAD NOTHING;";
             stmt.execute(rule);
@@ -105,19 +102,19 @@ public class PostgreSQLDatabaseConnection {
             Statement stmt = c.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS " + TRIP + " " +
                     "(" + BIKEID + " BIGINT      NOT NULL," +
-                    " " + STARTTIME + " DATE  NOT NULL, " +
-                    " " + ENDTIME + " DATE  NOT NULL," +
-                    " " + DURATION + "BIGINT NOT NULL" +
+                    " " + STARTTIME + " TIMESTAMP  NOT NULL, " +
+                    " " + ENDTIME + " TIMESTAMP  NOT NULL," +
+                    " " + DURATION + " BIGINT NOT NULL," +
                     " " + STARTSTATION + " BIGINT  NOT NULL, " +
                     " " + ENDSTATION + " BIGINT    NOT NULL," +
                     " " + USERTYPE + " TEXT NOT NULL, " +
                     " " + BIRTHYEAR + " INT NOT NULL, " +
                     " " + GENDER + " INT    NOT NULL," +
-                    " PRIMARY KEY(" + BIKEID + "," + STARTTIME + "))";
+                    " PRIMARY KEY(" + BIKEID + "," + STARTTIME + "));";
             stmt.executeUpdate(sql);
-            String index = "\"CREATE INDEX " + TRIP + "_INDEX_" + BIKEID + " ON" + TRIP + "(" + BIKEID + ")";
+            String index = "CREATE INDEX " + TRIP + "_INDEX_" + BIKEID + " ON " + TRIP + "(" + BIKEID + ");";
             stmt.executeUpdate(index);
-            index = "\"CREATE INDEX " + TRIP + "_INDEX_TRIPID" + " ON" + TRIP + "(" + BIKEID + "," + STARTTIME + ")";
+            index = "CREATE INDEX " + TRIP + "_INDEX_TRIPID" + " ON " + TRIP + "(" + BIKEID + "," + STARTTIME + ");";
             stmt.executeUpdate(index);
             String rule = "CREATE OR REPLACE RULE \"trip_route_on_duplicate_ignore\" AS ON INSERT TO \"" +
                     TRIP + "\" WHERE EXISTS(SELECT 1 FROM " + TRIP + " WHERE (" + BIKEID + "," +
@@ -153,7 +150,7 @@ public class PostgreSQLDatabaseConnection {
     public void insertIntoSTATION(Connection c, HashSet<StationData> stations) {
         try {
             String sql = "INSERT INTO " + STATION + " (" + STATIONID + "," + NAME + "," + POINT + ") "
-                    + "VALUES (?, ?, ST_GeographyFromText('SRID=4326;POINT(' || ? || ' ' || ? || ')'))";
+                    + "VALUES (?, ?, ST_GeographyFromText('SRID=4326;POINT(' || ? || ' ' || ? || ')'));";
             PreparedStatement preparedStatement = c.prepareStatement(sql);
 
             for (StationData station : stations) {
@@ -187,8 +184,8 @@ public class PostgreSQLDatabaseConnection {
 
             for (TripData tripDataObject : tripDate) {
                 preparedStatement.setLong(1, tripDataObject.getBikeData().getId());
-                preparedStatement.setDate(2, new java.sql.Date(tripDataObject.getStartTime().getTime()));
-                preparedStatement.setDate(3, new java.sql.Date(tripDataObject.getEndTime().getTime()));
+                preparedStatement.setTimestamp(2, new Timestamp(tripDataObject.getStartTime().getTime()));
+                preparedStatement.setTimestamp(3, new java.sql.Timestamp(tripDataObject.getEndTime().getTime()));
                 preparedStatement.setLong(4, tripDataObject.getDuration());
                 preparedStatement.setLong(5, tripDataObject.getStartStationData().getStationId());
                 preparedStatement.setLong(6, tripDataObject.getEndStationData().getStationId());
