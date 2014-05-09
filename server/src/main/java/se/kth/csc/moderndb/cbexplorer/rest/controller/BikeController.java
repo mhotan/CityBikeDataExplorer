@@ -24,9 +24,9 @@ import java.util.function.Consumer;
  */
 @Controller
 @RequestMapping(RestContants.AGGREGATORS_URI_PATH + RestContants.BIKES_URI_PATH)
-public class BikeQueriesController {
+public class BikeController {
 
-    private static Logger LOG = LoggerFactory.getLogger(BikeQueriesController.class);
+    private static Logger LOG = LoggerFactory.getLogger(BikeController.class);
 
     @Autowired
     private BikeService bikeService;
