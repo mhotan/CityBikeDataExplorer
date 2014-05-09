@@ -1,7 +1,7 @@
 package se.kth.csc.moderndb.cbexplorer.core.services;
 
 import se.kth.csc.moderndb.cbexplorer.DatabaseConstants;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
+import se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike;
 import se.kth.csc.moderndb.cbexplorer.core.repository.BikeRepository;
 import se.kth.csc.moderndb.cbexplorer.core.repository.StationRepository;
 import se.kth.csc.moderndb.cbexplorer.core.repository.TripRepository;
@@ -32,6 +32,7 @@ public class GraphServiceImpl implements GraphService {
         this.tripRepository = tripRepository;
         this.stationRepository = stationRepository;
     }
+
 
     @Override
     public List<Bike> requestAllBikes() {
