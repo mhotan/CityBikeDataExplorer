@@ -5,6 +5,7 @@ import se.kth.csc.moderndb.cbexplorer.core.domain.TripParameters;
 import se.kth.csc.moderndb.cbexplorer.core.domain.UserParameters;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Interface for the Data Access Object pattern.
@@ -13,19 +14,19 @@ import java.util.Date;
  */
 public interface TripDAOi {
 
-    public Trip findTripByID(long bikeID, Date startDate);
+    public List<Trip> findTripByID(long bikeID, Date startDate);
 
-    public Trip findTripSpecifiedByUserCharacteristics(UserParameters userParameters);
+    public List<Trip> findTripSpecifiedByUserCharacteristics(UserParameters userParameters);
 
-    public Trip findTripWithDistanceBetween(TripParameters tripParameters);
+    public List<Trip> findTripWithDistanceBetween(TripParameters tripParameters);
 
-    public Trip findTripWithDurationBetween(TripParameters tripParameters);
+    public List<Trip> findTripWithDurationBetween(TripParameters tripParameters);
 
-    public Trip findTripWithinTimeRange(TripParameters tripParameters);
+    public List<Trip> findTripWithinTimeRange(TripParameters tripParameters);
 
-    public Trip findTripWithBikes(TripParameters tripParameters);
+    public List<Trip> findTripWithBikes(TripParameters tripParameters);
 
-    public Trip findTripWithStartStations(TripParameters tripParameters);
+    public List<Trip> findTripWithStartStations(TripParameters tripParameters);
 
-    public Trip findTripWithEndStations(TripParameters tripParameters);
+    public List<Trip> findTripWithEndStations(TripParameters tripParameters);
 }

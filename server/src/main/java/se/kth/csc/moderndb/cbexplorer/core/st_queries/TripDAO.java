@@ -1,18 +1,19 @@
 package se.kth.csc.moderndb.cbexplorer.core.st_queries;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import se.kth.csc.moderndb.cbexplorer.core.dataAccessObject.TripDAOi;
 import se.kth.csc.moderndb.cbexplorer.core.domain.*;
 import se.kth.csc.moderndb.cbexplorer.domain.PostgreSQLDatabaseConnection;
 
 import javax.sql.DataSource;
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Created by Jeannine on 09.05.14.
@@ -22,58 +23,58 @@ public class TripDAO implements TripDAOi {
     private final String START_RANGE = "_start";
     private final String END_RANGE = "_end";
 
-
-    private DataSource dataSource;
     // for building dynamic sql queries
     private boolean alreadyAdded;
 
-    public TripDAO(DataSource dataSource) {
-        this.dataSource = dataSource;
+    private JdbcTemplate jdbcTemplate;
+
+
+    public TripDAO() {
+        SimpleDriverDataSource driverDataSource = new SimpleDriverDataSource() {{
+            setDriverClass(org.postgresql.Driver.class);
+            setUsername(PostgreSQLDatabaseConnection.USERNAME);
+            setUrl(PostgreSQLDatabaseConnection.URL + PostgreSQLDatabaseConnection.DATABASE_NAME);
+            setPassword(PostgreSQLDatabaseConnection.PASSWORD);
+        }};
+        this.jdbcTemplate = new JdbcTemplate(driverDataSource);
+
+
     }
 
+
     @Override
-    public Trip findTripByID(long bikeID, Date startDate) {
+    public List<Trip> findTripByID(long bikeID, Date startDate) {
         String sql = "SELECT * FROM " + PostgreSQLDatabaseConnection.TRIP +
                 " WHERE " + PostgreSQLDatabaseConnection.BIKEID + " = ? AND " + PostgreSQLDatabaseConnection.STARTTIME + " = ?";
-        Connection conn = null;
-        try {
-            conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setLong(1, bikeID);
-            ps.setDate(2, new java.sql.Date(startDate.getTime()));
-            Trip trip = null;
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                //String userType, short userBirthYear, short userGender, Station startedFrom, Station endedAt, Bike bike) {
-                Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
-                StationDAO stationDAO = new StationDAO(this.dataSource);
-                Station startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION));
-                Station endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION));
-                trip = new Trip(
-                        new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
-                        new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
-                        rs.getInt(PostgreSQLDatabaseConnection.DURATION),
-                        rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
-                        rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
-                        rs.getShort(PostgreSQLDatabaseConnection.GENDER),
-                        startStation,
-                        endStation,
-                        bike);
-            }
-            rs.close();
-            ps.close();
-            return trip;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
-        }
+        List<Trip> results = jdbcTemplate.query(
+                sql, new Object[]{bikeID, startDate},
+                new RowMapper<Trip>() {
+                    @Override
+                    public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
+                        StationDAO stationDAO = new StationDAO();
+                        Station startStation = null;
+                        Station endStation = null;
+                        try {
+                            startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION)).get(0);
+                            endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION)).get(0);
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+                        return new Trip(
+                                new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
+                                new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
+                                rs.getInt(PostgreSQLDatabaseConnection.DURATION),
+                                rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
+                                rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
+                                rs.getShort(PostgreSQLDatabaseConnection.GENDER),
+                                startStation,
+                                endStation,
+                                bike);
+                    }});
+    return results;
     }
+
 
     /**
      * This method constructs and execute a query that can specify trips according to user data.
@@ -83,67 +84,63 @@ public class TripDAO implements TripDAOi {
      * @return trip fitting the given attributes about the user
      */
     @Override
-    public Trip findTripSpecifiedByUserCharacteristics(UserParameters userParameters) {
+    public List<Trip> findTripSpecifiedByUserCharacteristics(UserParameters userParameters) {
         String sql = "SELECT * FROM " + PostgreSQLDatabaseConnection.TRIP + " WHERE";
         Connection conn = null;
         this.alreadyAdded = false;
         HashMap<String, Object> argument = addUserParametersToQuery(sql, userParameters);
-        try {
-            conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            int c = 1;
-            if (argument.containsKey(PostgreSQLDatabaseConnection.GENDER)) {
+        ArrayList<Object> args = new ArrayList<Object>();
+        if (argument.containsKey(PostgreSQLDatabaseConnection.GENDER)) {
                 int gender = ((Integer) argument.get(PostgreSQLDatabaseConnection.GENDER)).intValue();
-                ps.setInt(c, gender);
-                c++;
+                args.add(0, gender);
             }
             if (argument.containsKey(PostgreSQLDatabaseConnection.BIRTHYEAR + START_RANGE)) {
                 int birthyearStart = ((Integer) argument.get(PostgreSQLDatabaseConnection.BIRTHYEAR + START_RANGE)).intValue();
-                ps.setInt(c, birthyearStart);
-                c++;
+                args.add(1, birthyearStart);
             }
             if (argument.containsKey(PostgreSQLDatabaseConnection.BIRTHYEAR + END_RANGE)) {
                 int birthyearEnd = ((Integer) argument.get(PostgreSQLDatabaseConnection.BIRTHYEAR + END_RANGE)).intValue();
-                ps.setInt(c, birthyearEnd);
-                c++;
+               args.add(2, birthyearEnd);
             }
             if (argument.containsKey(PostgreSQLDatabaseConnection.USERTYPE)) {
                 String userType = ((String) argument.get(PostgreSQLDatabaseConnection.USERTYPE));
-                ps.setString(c, userType);
-                c++;
+                args.add(4, userType);
             }
-            Trip trip = null;
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                //String userType, short userBirthYear, short userGender, Station startedFrom, Station endedAt, Bike bike) {
-                Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
-                StationDAO stationDAO = new StationDAO(this.dataSource);
-                Station startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION));
-                Station endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION));
-                trip = new Trip(
-                        new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
-                        new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
-                        rs.getInt(PostgreSQLDatabaseConnection.DURATION),
-                        rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
-                        rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
-                        rs.getShort(PostgreSQLDatabaseConnection.GENDER),
-                        startStation,
-                        endStation,
-                        bike);
-            }
-            rs.close();
-            ps.close();
-            return trip;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
+        // filter out all the arrays that are not null
+        ArrayList<Object> notNullArgs = new ArrayList<Object>();
+        for(Object arg : args){
+            if(arg != null){
+                notNullArgs.add(arg);
             }
         }
+
+        List<Trip> results = jdbcTemplate.query(
+                sql, notNullArgs.toArray(),
+                new RowMapper<Trip>() {
+                    @Override
+                    public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
+                        StationDAO stationDAO = new StationDAO();
+                        Station startStation = null;
+                        Station endStation = null;
+                        try {
+                            startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION)).get(0);
+                            endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION)).get(0);
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+                        return new Trip(
+                                new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
+                                new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
+                                rs.getInt(PostgreSQLDatabaseConnection.DURATION),
+                                rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
+                                rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
+                                rs.getShort(PostgreSQLDatabaseConnection.GENDER),
+                                startStation,
+                                endStation,
+                                bike);
+                    }});
+        return results;
     }
 
     /**
@@ -154,7 +151,7 @@ public class TripDAO implements TripDAOi {
      * @throws IllegalArgumentException if the start of the range is bigger than the end, the start or the end are smaller than 0
      */
     @Override
-    public Trip findTripWithDistanceBetween(TripParameters tripParameters) throws IllegalArgumentException {
+    public List<Trip> findTripWithDistanceBetween(TripParameters tripParameters) throws IllegalArgumentException {
         String sql = "SELECT * FROM " + PostgreSQLDatabaseConnection.TRIP +
                 " WHERE " +
                 "(Select ST_Distance(JD.end_point,point)" +
@@ -162,24 +159,19 @@ public class TripDAO implements TripDAOi {
                 "from station" +
                 "where " + PostgreSQLDatabaseConnection.TRIP + "." + PostgreSQLDatabaseConnection.STARTSTATION + " = station_id)JD" +
                 "where " + PostgreSQLDatabaseConnection.TRIP + "." + PostgreSQLDatabaseConnection.ENDSTATION + " = station_id)";
-        Connection conn = null;
-        try {
-            conn = dataSource.getConnection();
-            PreparedStatement ps;
             long start = tripParameters.getStartOfTripDistanceRange();
             long end = tripParameters.getEndOfTripDistanceRange();
-            if (start >= 0) {
+        ArrayList<Object> args = new ArrayList<Object>();
+        if (start >= 0) {
                 if (end > 0) {
                     if (start < end) {
                         sql.concat(" BETWEEN ? AND ?");
-                        ps = conn.prepareStatement(sql);
-                        ps.setLong(1, start);
-                        ps.setLong(2, end);
+                        args.add(0, start);
+                        args.add(1, end);
                     } else {
                         if (start == end) {
                             sql.concat(" = ?");
-                            ps = conn.prepareStatement(sql);
-                            ps.setLong(1, start);
+                            args.add(0, start);
                         } else {
                             throw new IllegalArgumentException("End of distance range must be bigger than start");
                         }
@@ -187,8 +179,7 @@ public class TripDAO implements TripDAOi {
                 } else {
                     if (end == 0) {
                         sql.concat(" >= ?");
-                        ps = conn.prepareStatement(sql);
-                        ps.setLong(1, start);
+                        args.add(0, start);
                     } else {
                         throw new IllegalArgumentException("End of distance range must at least be 0");
                     }
@@ -196,37 +187,33 @@ public class TripDAO implements TripDAOi {
             } else {
                 throw new IllegalArgumentException("End of distance range must at least be 0");
             }
-            Trip trip = null;
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
-                StationDAO stationDAO = new StationDAO(this.dataSource);
-                Station startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION));
-                Station endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION));
-                trip = new Trip(
-                        new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
-                        new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
-                        rs.getInt(PostgreSQLDatabaseConnection.DURATION),
-                        rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
-                        rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
-                        rs.getShort(PostgreSQLDatabaseConnection.GENDER),
-                        startStation,
-                        endStation,
-                        bike);
-            }
-            rs.close();
-            ps.close();
-            return trip;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
-        }
+        List<Trip> results = jdbcTemplate.query(
+                sql, args.toArray(),
+                new RowMapper<Trip>() {
+                    @Override
+                    public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
+                        StationDAO stationDAO = new StationDAO();
+                        Station startStation = null;
+                        Station endStation = null;
+                        try {
+                            startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION)).get(0);
+                            endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION)).get(0);
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+                        return new Trip(
+                                new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
+                                new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
+                                rs.getInt(PostgreSQLDatabaseConnection.DURATION),
+                                rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
+                                rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
+                                rs.getShort(PostgreSQLDatabaseConnection.GENDER),
+                                startStation,
+                                endStation,
+                                bike);
+                    }});
+        return results;
     }
 
     /**
@@ -237,27 +224,22 @@ public class TripDAO implements TripDAOi {
      * @throws IllegalArgumentException if the start of the range is bigger than the end, the start or the end are smaller than 0
      */
     @Override
-    public Trip findTripWithDurationBetween(TripParameters tripParameters) {
+    public List<Trip> findTripWithDurationBetween(TripParameters tripParameters) {
         String sql = "SELECT * FROM " + PostgreSQLDatabaseConnection.TRIP +
                 " WHERE " + PostgreSQLDatabaseConnection.DURATION;
-        Connection conn = null;
-        try {
-            conn = dataSource.getConnection();
-            PreparedStatement ps;
             long start = tripParameters.getStartOfTripDurationRange();
             long end = tripParameters.getEndOfTripDurationRange();
+        ArrayList<Object> args = new ArrayList<Object>();
             if (start >= 0) {
                 if (end > 0) {
                     if (start < end) {
                         sql.concat(" BETWEEN ? AND ?");
-                        ps = conn.prepareStatement(sql);
-                        ps.setLong(1, start);
-                        ps.setLong(2, end);
+                        args.add(0, start);
+                        args.add(1, end);
                     } else {
                         if (start == end) {
                             sql.concat(" = ?");
-                            ps = conn.prepareStatement(sql);
-                            ps.setLong(1, start);
+                            args.add(0, start);
                         } else {
                             throw new IllegalArgumentException("End of duration range must be bigger than start");
                         }
@@ -265,8 +247,7 @@ public class TripDAO implements TripDAOi {
                 } else {
                     if (end == 0) {
                         sql.concat(" >= ?");
-                        ps = conn.prepareStatement(sql);
-                        ps.setLong(1, start);
+                        args.add(0, start);
                     } else {
                         throw new IllegalArgumentException("End of duration range must at least be 0");
                     }
@@ -274,50 +255,43 @@ public class TripDAO implements TripDAOi {
             } else {
                 throw new IllegalArgumentException("End of duration range must at least be 0");
             }
-            Trip trip = null;
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
-                StationDAO stationDAO = new StationDAO(this.dataSource);
-                Station startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION));
-                Station endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION));
-                trip = new Trip(
-                        new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
-                        new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
-                        rs.getInt(PostgreSQLDatabaseConnection.DURATION),
-                        rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
-                        rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
-                        rs.getShort(PostgreSQLDatabaseConnection.GENDER),
-                        startStation,
-                        endStation,
-                        bike);
-            }
-            rs.close();
-            ps.close();
-            return trip;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
-        }
+        List<Trip> results = jdbcTemplate.query(
+                sql, args.toArray(),
+                new RowMapper<Trip>() {
+                    @Override
+                    public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
+                        StationDAO stationDAO = new StationDAO();
+                        Station startStation = null;
+                        Station endStation = null;
+                        try {
+                            startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION)).get(0);
+                            endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION)).get(0);
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+                        return new Trip(
+                                new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
+                                new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
+                                rs.getInt(PostgreSQLDatabaseConnection.DURATION),
+                                rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
+                                rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
+                                rs.getShort(PostgreSQLDatabaseConnection.GENDER),
+                                startStation,
+                                endStation,
+                                bike);
+                    }});
+        return results;
     }
 
     @Override
-    public Trip findTripWithinTimeRange(TripParameters tripParameters) {
+    public List<Trip> findTripWithinTimeRange(TripParameters tripParameters) {
         String sql = "SELECT * FROM " + PostgreSQLDatabaseConnection.TRIP +
                 " WHERE";
-        Connection conn = null;
-        try {
-            conn = dataSource.getConnection();
-            PreparedStatement ps;
             long start = tripParameters.getStartOfTripStartTimeRange();
             long end = tripParameters.getEndOfTripStartTimeRange();
             this.alreadyAdded = false;
+        ArrayList<Object> args = new ArrayList<Object>();
             // conditions for start time
             if (start > 0) {
                 sql.concat(" " + PostgreSQLDatabaseConnection.STARTTIME);
@@ -325,14 +299,12 @@ public class TripDAO implements TripDAOi {
                 if (end > 0) {
                     if (start < end) {
                         sql.concat(" BETWEEN ? AND ?");
-                        ps = conn.prepareStatement(sql);
-                        ps.setLong(1, start);
-                        ps.setLong(2, end);
+                        args.add(0, start);
+                        args.add(1, end);
                     } else {
                         if (start == end) {
                             sql.concat(" = ?");
-                            ps = conn.prepareStatement(sql);
-                            ps.setLong(1, start);
+                            args.add(0, start);
                         } else {
                             throw new IllegalArgumentException("End of start time range must be bigger than start");
                         }
@@ -340,8 +312,7 @@ public class TripDAO implements TripDAOi {
                 } else {
                     if (end == 0) {
                         sql.concat(" >= ?");
-                        ps = conn.prepareStatement(sql);
-                        ps.setLong(1, start);
+                        args.add(0, start);
                     } else {
                         throw new IllegalArgumentException("End of start time range must at least be 0");
                     }
@@ -352,6 +323,7 @@ public class TripDAO implements TripDAOi {
 
             start = tripParameters.getStartOfTripStartTimeRange();
             end = tripParameters.getEndOfTripStartTimeRange();
+        ArrayList<Object> argsEnd = new ArrayList<Object>();
             // conditions for end time
             if (start > 0) {
                 if(this.alreadyAdded){
@@ -362,14 +334,12 @@ public class TripDAO implements TripDAOi {
                 if (end > 0) {
                     if (start < end) {
                         sql.concat(" BETWEEN ? AND ?");
-                        ps = conn.prepareStatement(sql);
-                        ps.setLong(1, start);
-                        ps.setLong(2, end);
+                        argsEnd.add(0, start);
+                        argsEnd.add(1,end);
                     } else {
                         if (start == end) {
                             sql.concat(" = ?");
-                            ps = conn.prepareStatement(sql);
-                            ps.setLong(1, start);
+                            argsEnd.add(0, start);
                         } else {
                             throw new IllegalArgumentException("End of end time range must be bigger than start");
                         }
@@ -377,8 +347,7 @@ public class TripDAO implements TripDAOi {
                 } else {
                     if (end == 0) {
                         sql.concat(" >= ?");
-                        ps = conn.prepareStatement(sql);
-                        ps.setLong(1, start);
+                        argsEnd.add(0, start);
                     } else {
                         throw new IllegalArgumentException("End of end time range must at least be 0");
                     }
@@ -386,187 +355,156 @@ public class TripDAO implements TripDAOi {
             } else {
                 throw new IllegalArgumentException("End of duration range must at least be 0");
             }
-            Trip trip = null;
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
-                StationDAO stationDAO = new StationDAO(this.dataSource);
-                Station startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION));
-                Station endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION));
-                trip = new Trip(
-                        new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
-                        new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
-                        rs.getInt(PostgreSQLDatabaseConnection.DURATION),
-                        rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
-                        rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
-                        rs.getShort(PostgreSQLDatabaseConnection.GENDER),
-                        startStation,
-                        endStation,
-                        bike);
-            }
-            rs.close();
-            ps.close();
-            return trip;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
-        }
+        args.addAll(argsEnd);
+        List<Trip> results = jdbcTemplate.query(
+                sql, args.toArray(),
+                new RowMapper<Trip>() {
+                    @Override
+                    public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
+                        StationDAO stationDAO = new StationDAO();
+                        Station startStation = null;
+                        Station endStation = null;
+                        try {
+                            startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION)).get(0);
+                            endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION)).get(0);
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+                        return new Trip(
+                                new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
+                                new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
+                                rs.getInt(PostgreSQLDatabaseConnection.DURATION),
+                                rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
+                                rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
+                                rs.getShort(PostgreSQLDatabaseConnection.GENDER),
+                                startStation,
+                                endStation,
+                                bike);
+                    }});
+        return results;
     }
 
     @Override
-    public Trip findTripWithBikes(TripParameters tripParameters) throws IllegalArgumentException {
+    public List<Trip> findTripWithBikes(TripParameters tripParameters) throws IllegalArgumentException {
         String sql = "SELECT * FROM " + PostgreSQLDatabaseConnection.TRIP +
                 " WHERE " + PostgreSQLDatabaseConnection.BIKEID + " = ?";
-        Connection conn = null;
         if (tripParameters.getBikeIDs() == null || tripParameters.getBikeIDs().size() == 0) {
             throw new IllegalArgumentException("No bike id(s) selected");
         }
-        try {
-            conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            Trip trip = null;
             ArrayList<Long> bikeIDs = tripParameters.getBikeIDs();
             for (long bikeID : bikeIDs) {
-                ps.setLong(1, bikeID);
-                ResultSet rs = ps.executeQuery();
-                if (rs.next()) {
-                    Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
-                    StationDAO stationDAO = new StationDAO(this.dataSource);
-                    Station startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION));
-                    Station endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION));
-                    trip = new Trip(
-                            new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
-                            new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
-                            rs.getInt(PostgreSQLDatabaseConnection.DURATION),
-                            rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
-                            rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
-                            rs.getShort(PostgreSQLDatabaseConnection.GENDER),
-                            startStation,
-                            endStation,
-                            bike);
-                    rs.close();
-                    ps.close(); // TODO check whether this is working or whether it must out of the for-loop
-                    return trip;
-                }
+                List<Trip> results = jdbcTemplate.query(
+                        sql, new Object[] {bikeID},
+                        new RowMapper<Trip>() {
+                            @Override
+                            public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
+                                Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
+                                StationDAO stationDAO = new StationDAO();
+                                Station startStation = null;
+                                Station endStation = null;
+                                try {
+                                    startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION)).get(0);
+                                    endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION)).get(0);
+                                } catch (Exception e1) {
+                                    e1.printStackTrace();
+                                }
+                                return new Trip(
+                                        new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
+                                        new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
+                                        rs.getInt(PostgreSQLDatabaseConnection.DURATION),
+                                        rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
+                                        rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
+                                        rs.getShort(PostgreSQLDatabaseConnection.GENDER),
+                                        startStation,
+                                        endStation,
+                                        bike);
+                            }});
+                return results;
             }
-            return null;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
-        }
+        return null;
     }
 
     @Override
-    public Trip findTripWithStartStations(TripParameters tripParameters) {
+    public List<Trip> findTripWithStartStations(TripParameters tripParameters) {
         String sql = "SELECT * FROM " + PostgreSQLDatabaseConnection.TRIP +
                 " WHERE " + PostgreSQLDatabaseConnection.STARTSTATION + " = ?";
-        Connection conn = null;
+
         if (tripParameters.getStartStation() == null || tripParameters.getStartStation().size() == 0) {
             throw new IllegalArgumentException("No start station(s) selected");
         }
-        try {
-            conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            Trip trip = null;
             ArrayList<Station> stations = tripParameters.getStartStation();
             for (Station station : stations) {
-                ps.setLong(1, station.getStationId());
-                ResultSet rs = ps.executeQuery();
-                if (rs.next()) {
-                    Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
-                    StationDAO stationDAO = new StationDAO(this.dataSource);
-                    Station startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION));
-                    Station endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION));
-                    trip = new Trip(
-                            new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
-                            new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
-                            rs.getInt(PostgreSQLDatabaseConnection.DURATION),
-                            rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
-                            rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
-                            rs.getShort(PostgreSQLDatabaseConnection.GENDER),
-                            startStation,
-                            endStation,
-                            bike);
-                    rs.close();
-                    ps.close(); // TODO check whether this is working or whether it must out of the for-loop
-                    return trip;
-                }
+                List<Trip> results = jdbcTemplate.query(
+                        sql, new Object[] {station},
+                        new RowMapper<Trip>() {
+                            @Override
+                            public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
+                                Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
+                                StationDAO stationDAO = new StationDAO();
+                                Station startStation = null;
+                                Station endStation = null;
+                                try {
+                                    startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION)).get(0);
+                                    endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION)).get(0);
+                                } catch (Exception e1) {
+                                    e1.printStackTrace();
+                                }
+                                return new Trip(
+                                        new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
+                                        new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
+                                        rs.getInt(PostgreSQLDatabaseConnection.DURATION),
+                                        rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
+                                        rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
+                                        rs.getShort(PostgreSQLDatabaseConnection.GENDER),
+                                        startStation,
+                                        endStation,
+                                        bike);
+                            }});
+                return results;
             }
-            return null;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
-        }
+        return null;
     }
 
     @Override
-    public Trip findTripWithEndStations(TripParameters tripParameters) {
+    public List<Trip> findTripWithEndStations(TripParameters tripParameters) {
         String sql = "SELECT * FROM " + PostgreSQLDatabaseConnection.TRIP +
                 " WHERE " + PostgreSQLDatabaseConnection.ENDSTATION + " = ?";
-        Connection conn = null;
+
         if (tripParameters.getStartStation() == null || tripParameters.getStartStation().size() == 0) {
             throw new IllegalArgumentException("No end station(s) selected");
         }
-        try {
-            conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            Trip trip = null;
             ArrayList<Station> stations = tripParameters.getEndStation();
             for (Station station : stations) {
-                ps.setLong(1, station.getStationId());
-                ResultSet rs = ps.executeQuery();
-                if (rs.next()) {
-                    Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
-                    StationDAO stationDAO = new StationDAO(this.dataSource);
-                    Station startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION));
-                    Station endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION));
-                    trip = new Trip(
-                            new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
-                            new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
-                            rs.getInt(PostgreSQLDatabaseConnection.DURATION),
-                            rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
-                            rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
-                            rs.getShort(PostgreSQLDatabaseConnection.GENDER),
-                            startStation,
-                            endStation,
-                            bike);
-                    rs.close();
-                    ps.close(); // TODO check whether this is working or whether it must out of the for-loop
-                    return trip;
-                }
+                List<Trip> results = jdbcTemplate.query(
+                        sql, new Object[] {station},
+                        new RowMapper<Trip>() {
+                            @Override
+                            public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
+                                Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
+                                StationDAO stationDAO = new StationDAO();
+                                Station startStation = null;
+                                Station endStation = null;
+                                try {
+                                    startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION)).get(0);
+                                    endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION)).get(0);
+                                } catch (Exception e1) {
+                                    e1.printStackTrace();
+                                }
+                                return new Trip(
+                                        new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
+                                        new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
+                                        rs.getInt(PostgreSQLDatabaseConnection.DURATION),
+                                        rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
+                                        rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
+                                        rs.getShort(PostgreSQLDatabaseConnection.GENDER),
+                                        startStation,
+                                        endStation,
+                                        bike);
+                            }});
+                return results;
             }
-            return null;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
-        }
+        return null;
     }
 
 
