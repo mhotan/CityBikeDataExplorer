@@ -13,6 +13,7 @@ public class Trip {
      * Trip time
      */
     private Date startTime, endTime;
+    private int duration;
 
     /**
      * User information
@@ -36,6 +37,7 @@ public class Trip {
     public Trip() {
     }
 
+
     /**
      *
      * Creates a POJO Trip entity     *
@@ -49,10 +51,12 @@ public class Trip {
      * @param endedAt station where the trip is ending
      * @param bike bike that is used for the trip
      */
-    public Trip(Date startTime, Date endTime, String userType,
+    public Trip(Date startTime, Date endTime, int duration, String userType,
                 short userBirthYear, short userGender, Station startedFrom, Station endedAt, Bike bike) {
         this.startTime = startTime;
         this.endTime = endTime;
+        this.duration = duration;
+
         this.userType = userType;
         this.userBirthYear = userBirthYear;
         this.userGender = userGender;
@@ -92,4 +96,6 @@ public class Trip {
     public Bike getBike() {
         return bike;
     }
+
+    public int getDuration() {  return duration;  }
 }

@@ -52,6 +52,7 @@ public class TripDAO implements TripDAOi {
                 trip = new Trip(
                         new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
                         new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
+                        rs.getInt(PostgreSQLDatabaseConnection.DURATION),
                         rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
                         rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
                         rs.getShort(PostgreSQLDatabaseConnection.GENDER),
@@ -122,6 +123,7 @@ public class TripDAO implements TripDAOi {
                 trip = new Trip(
                         new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
                         new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
+                        rs.getInt(PostgreSQLDatabaseConnection.DURATION),
                         rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
                         rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
                         rs.getShort(PostgreSQLDatabaseConnection.GENDER),
@@ -204,6 +206,7 @@ public class TripDAO implements TripDAOi {
                 trip = new Trip(
                         new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
                         new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
+                        rs.getInt(PostgreSQLDatabaseConnection.DURATION),
                         rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
                         rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
                         rs.getShort(PostgreSQLDatabaseConnection.GENDER),
@@ -281,6 +284,7 @@ public class TripDAO implements TripDAOi {
                 trip = new Trip(
                         new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
                         new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
+                        rs.getInt(PostgreSQLDatabaseConnection.DURATION),
                         rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
                         rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
                         rs.getShort(PostgreSQLDatabaseConnection.GENDER),
@@ -392,6 +396,7 @@ public class TripDAO implements TripDAOi {
                 trip = new Trip(
                         new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
                         new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
+                        rs.getInt(PostgreSQLDatabaseConnection.DURATION),
                         rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
                         rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
                         rs.getShort(PostgreSQLDatabaseConnection.GENDER),
@@ -438,6 +443,7 @@ public class TripDAO implements TripDAOi {
                     trip = new Trip(
                             new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
                             new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
+                            rs.getInt(PostgreSQLDatabaseConnection.DURATION),
                             rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
                             rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
                             rs.getShort(PostgreSQLDatabaseConnection.GENDER),
@@ -487,6 +493,7 @@ public class TripDAO implements TripDAOi {
                     trip = new Trip(
                             new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
                             new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
+                            rs.getInt(PostgreSQLDatabaseConnection.DURATION),
                             rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
                             rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
                             rs.getShort(PostgreSQLDatabaseConnection.GENDER),
@@ -536,6 +543,7 @@ public class TripDAO implements TripDAOi {
                     trip = new Trip(
                             new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
                             new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
+                            rs.getInt(PostgreSQLDatabaseConnection.DURATION),
                             rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
                             rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
                             rs.getShort(PostgreSQLDatabaseConnection.GENDER),
@@ -608,23 +616,4 @@ public class TripDAO implements TripDAOi {
         return arguments;
     }
 
-    /*private HashMap<String, Object> addTripParametersToQuery(String sql, TripParameters tripParameters) {
-        HashMap<String, Object> arguments = new HashMap<String, Object>();
-        if (tripParameters.getUserParameters() != null) {
-            arguments = addUserParametersToQuery(sql, tripParameters.getUserParameters();
-        }
-        if (tripParameters.getStartOfTripDistanceRange() > 0) {
-            if (alreadyAdded) {
-                sql.concat(" AND");
-            } else {
-                alreadyAdded = true;
-            }
-            double distanceFromQuery = 3; // TODO: add method call to distance
-            sql.concat(" " + Double.toString(distanceFromQuery) + " = ?");
-
-        }
-
-        return arguments;
-
-    }*/
 }
