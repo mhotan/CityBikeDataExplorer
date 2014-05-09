@@ -23,7 +23,7 @@ import java.util.List;
  * Created by mhotan on 5/9/14.
  */
 @Controller
-@RequestMapping(RestContants.AGGREGATORS_URI_PATH)
+@RequestMapping(RestContants.API_URI_PATH)
 public class CitiBikeController {
 
     private static final String template = "Hello, %s!";

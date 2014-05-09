@@ -11,5 +11,11 @@
 
 <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/CitiBikeApi.js"></script>
+<script type="text/javascript">
+    CitiBikeApi.getAllStations(function (result) {
+        console.log(result);
+    });
+</script>
 </body>
 </html>
