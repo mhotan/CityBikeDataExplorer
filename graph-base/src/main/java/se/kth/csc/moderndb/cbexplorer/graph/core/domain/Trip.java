@@ -64,7 +64,7 @@ public class Trip extends AbstractEntity {
      * @param bike Bike used on the trip
      * @param startedFrom Station where the bike started from.
      */
-    public Trip(Station startedFrom, se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike bike, Date startTime) {
+    public Trip(Station startedFrom, Bike bike, Date startTime) {
         if (startedFrom == null)
             throw new NullPointerException(getClass().getSimpleName() + "() startedFrom cannot be null");
         if (bike == null)
@@ -127,6 +127,13 @@ public class Trip extends AbstractEntity {
 
     public se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike getBike() {
         return bike;
+    }
+
+    public se.kth.csc.moderndb.cbexplorer.core.domain.Trip toCoreTrip() {
+        return new se.kth.csc.moderndb.cbexplorer.core.domain.Trip(
+                getStartTime(), getEndTime(), getUserType(), getUserBirthYear(), getUserGender(),
+                getStartedFrom().toCoreStation(), getEndedAt().toCoreStation(), getBike().toCoreBike()
+        );
     }
 
     @Override

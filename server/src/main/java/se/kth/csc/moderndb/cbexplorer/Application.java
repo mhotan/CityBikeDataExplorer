@@ -13,13 +13,13 @@ import org.springframework.data.neo4j.config.EnableNeo4jRepositories;
 import org.springframework.data.neo4j.config.Neo4jConfiguration;
 import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import se.kth.csc.moderndb.cbexplorer.core.dataAccessObject.StationDAOi;
+import se.kth.csc.moderndb.cbexplorer.core.dao.StationDAOi;
 import se.kth.csc.moderndb.cbexplorer.core.repository.BikeRepository;
 import se.kth.csc.moderndb.cbexplorer.core.repository.StationRepository;
 import se.kth.csc.moderndb.cbexplorer.core.repository.TripRepository;
 import se.kth.csc.moderndb.cbexplorer.core.services.GraphService;
 import se.kth.csc.moderndb.cbexplorer.core.services.GraphServiceImpl;
-import se.kth.csc.moderndb.cbexplorer.core.st_queries.StationDAO;
+import se.kth.csc.moderndb.cbexplorer.core.dao.StationDAO;
 import se.kth.csc.moderndb.cbexplorer.domain.PostgreSQLDatabaseConnection;
 
 import javax.sql.DataSource;

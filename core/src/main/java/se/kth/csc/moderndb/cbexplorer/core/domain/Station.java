@@ -57,4 +57,18 @@ public class Station {
     public double getLatitude() {
         return latitude;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Station)) return false;
+        Station station = (Station) o;
+        if (stationId != station.stationId) return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (stationId ^ (stationId >>> 32));
+    }
 }

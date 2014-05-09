@@ -1,5 +1,6 @@
-package se.kth.csc.moderndb.cbexplorer.core.dataAccessObject;
+package se.kth.csc.moderndb.cbexplorer.core.dao;
 
+import org.springframework.transaction.annotation.Transactional;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
 
 /**
@@ -9,6 +10,7 @@ import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
  */
 public interface TripDAOi {
 
+    @Transactional
     public Trip findTripByID(long tripID);
 
 }

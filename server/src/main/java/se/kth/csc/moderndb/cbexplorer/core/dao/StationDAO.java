@@ -1,6 +1,5 @@
-package se.kth.csc.moderndb.cbexplorer.core.st_queries;
+package se.kth.csc.moderndb.cbexplorer.core.dao;
 
-import se.kth.csc.moderndb.cbexplorer.core.dataAccessObject.StationDAOi;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
 import se.kth.csc.moderndb.cbexplorer.domain.PostgreSQLDatabaseConnection;
 

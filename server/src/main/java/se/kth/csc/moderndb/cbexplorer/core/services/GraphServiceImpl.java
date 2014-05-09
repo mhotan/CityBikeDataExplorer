@@ -1,13 +1,15 @@
 package se.kth.csc.moderndb.cbexplorer.core.services;
 
 import se.kth.csc.moderndb.cbexplorer.DatabaseConstants;
-import se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike;
+import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
+import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
 import se.kth.csc.moderndb.cbexplorer.core.repository.BikeRepository;
 import se.kth.csc.moderndb.cbexplorer.core.repository.StationRepository;
 import se.kth.csc.moderndb.cbexplorer.core.repository.TripRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Implementation of {@link se.kth.csc.moderndb.cbexplorer.core.services.GraphService}. Uses provided
@@ -36,16 +38,36 @@ public class GraphServiceImpl implements GraphService {
 
     @Override
     public List<Bike> requestAllBikes() {
-        List<Bike> bikes = new ArrayList<Bike>();
-        for (Bike bike: bikeRepository.findAll()) {
-            bikes.add(bike);
-        }
-        System.out.println("requestAllBikes(), " + bikes.size() + " bikes found.");
+        final List<Bike> bikes = new ArrayList<Bike>();
+        bikeRepository.findAll().forEach(new Consumer<se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike>() {
+            @Override
+            public void accept(se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike bike) {
+                bikes.add(bike.toCoreBike());
+            }
+        });
         return bikes;
     }
 
     @Override
     public Bike requestBike(long bikeID) {
-        return bikeRepository.findBySchemaPropertyValue(DatabaseConstants.BIKE_ID, bikeID);
+        return bikeRepository.findBySchemaPropertyValue(DatabaseConstants.BIKE_ID, bikeID).toCoreBike();
+    }
+
+
+    @Override
+    public List<Station> requestAllStations() {
+        final List<Station> stations = new ArrayList<Station>();
+        stationRepository.findAll().forEach(new Consumer<se.kth.csc.moderndb.cbexplorer.graph.core.domain.Station>() {
+            @Override
+            public void accept(se.kth.csc.moderndb.cbexplorer.graph.core.domain.Station station) {
+                stations.add(station.toCoreStation());
+            }
+        });
+        return stations;
+    }
+
+    @Override
+    public Station requestStation(long stationId) {
+        return stationRepository.findBySchemaPropertyValue(DatabaseConstants.STATION_ID, stationId).toCoreStation();
     }
 }

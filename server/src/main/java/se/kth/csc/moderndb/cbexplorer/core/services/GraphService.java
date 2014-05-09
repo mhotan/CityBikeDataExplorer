@@ -1,7 +1,8 @@
 package se.kth.csc.moderndb.cbexplorer.core.services;
 
 import org.springframework.transaction.annotation.Transactional;
-import se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike;
+import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
+import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
 
 import java.util.List;
 
@@ -30,5 +31,9 @@ public interface GraphService {
     // TODO Place the base requirements for any graph related request.
     // Be sure to add @Transactional.
 
+    @Transactional
+    public List<Station> requestAllStations();
 
+    @Transactional
+    public Station requestStation(long stationId);
 }

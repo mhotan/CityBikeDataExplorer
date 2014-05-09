@@ -33,6 +33,23 @@ public class Bike {
     public long getBikeId() {
         return bikeId;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Bike)) return false;
+
+        Bike bike = (Bike) o;
+
+        if (bikeId != bike.bikeId) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (bikeId ^ (bikeId >>> 32));
+    }
 }
 
 

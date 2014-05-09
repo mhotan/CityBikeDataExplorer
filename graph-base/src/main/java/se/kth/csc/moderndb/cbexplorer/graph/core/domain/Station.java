@@ -27,9 +27,6 @@ public class Station extends AbstractEntity {
 
     private double latitude, longitude;
 
-    // Point representation of the geographical location
-    String location;
-
     /**
      * Constructor for Neo4j
      */
@@ -43,6 +40,10 @@ public class Station extends AbstractEntity {
         this.stationId = stationId;
         setName(name);
         setLocation(longitude, latitude);
+    }
+
+    public se.kth.csc.moderndb.cbexplorer.core.domain.Station toCoreStation() {
+        return new se.kth.csc.moderndb.cbexplorer.core.domain.Station(stationId, name, longitude, latitude);
     }
 
     /**
@@ -63,7 +64,6 @@ public class Station extends AbstractEntity {
     private void setLocation(double longitude, double latitude) {
         this.latitude = latitude;
         this.longitude = longitude;
-        this.location = String.format("POINT(%f %f)", longitude, latitude).replace(",",".");
     }
 
     public long getStationId() {
@@ -78,10 +78,6 @@ public class Station extends AbstractEntity {
         return longitude;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
     public String getName() {
         return name;
     }
@@ -91,7 +87,6 @@ public class Station extends AbstractEntity {
         return "Station{" +
                 "stationId=" + getId() +
                 ", name='" + name + '\'' +
-                ", location='" + location + '\'' +
                 '}';
     }
 }

@@ -24,7 +24,8 @@ public class DatabaseConstants {
     // Station Properties
     public static final String STATION_ID = "stationId";
     public static final String STATION_NAME = "name";
-    public static final String STATION_LOCATION = "location";
+    public static final String STATION_LONGITUDE = "longitude";
+    public static final String STATION_LATITUDE = "latitude";
 
     // Trip Properties
     public static final String TRIP_START_TIME = "startTime";

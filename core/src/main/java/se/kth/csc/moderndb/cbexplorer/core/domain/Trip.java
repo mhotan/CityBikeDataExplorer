@@ -47,7 +47,8 @@ public class Trip {
      * @param endedAt station where the trip is ending
      * @param bike bike that is used for the trip
      */
-    public Trip(long startTime, long endTime, String userType, short userBirthYear, short userGender, Station startedFrom, Station endedAt, Bike bike) {
+    public Trip(long startTime, long endTime, String userType, short userBirthYear, short userGender,
+                Station startedFrom, Station endedAt, Bike bike) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.userType = userType;
@@ -88,5 +89,25 @@ public class Trip {
 
     public Bike getBike() {
         return bike;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Trip)) return false;
+
+        Trip trip = (Trip) o;
+
+        if (startTime != trip.startTime) return false;
+        if (bike != null ? !bike.equals(trip.bike) : trip.bike != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (startTime ^ (startTime >>> 32));
+        result = 31 * result + (bike != null ? bike.hashCode() : 0);
+        return result;
     }
 }

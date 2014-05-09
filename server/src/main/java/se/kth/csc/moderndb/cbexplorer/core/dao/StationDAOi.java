@@ -1,5 +1,6 @@
-package se.kth.csc.moderndb.cbexplorer.core.dataAccessObject;
+package se.kth.csc.moderndb.cbexplorer.core.dao;
 
+import org.springframework.transaction.annotation.Transactional;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
 
 /**
@@ -9,10 +10,13 @@ import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
  */
 public interface StationDAOi {
 
+    @Transactional
     public Station findStationByID(long stationId);
 
+    @Transactional
     public Station findAllStations();
 
+    @Transactional
     public Station findStationByName(String name);
 
 }
