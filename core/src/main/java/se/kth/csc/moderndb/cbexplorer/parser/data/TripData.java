@@ -15,8 +15,6 @@ public class TripData {
     // Internal Station data.
     private StationData startStationData, endStationData;
 
-    private int duration;
-
     private final Date startTime, endTime;
 
     private final String userType;
@@ -130,10 +128,6 @@ public class TripData {
         return userGender == 1 ? "M" : userGender == 2 ? "F" : "";
     }
 
-
-    public int getDuration() {
-        return duration;
-    }
 
     private void checkRep() {
         if (bikeData == null) {
