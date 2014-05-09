@@ -38,6 +38,7 @@ public class PostgreSQLDatabaseConnection {
     public static final String USERTYPE = "user_type";
     public static final String GENDER = "gender";
     public static final String BIRTHYEAR = "birth_year";
+    public static final String DURATION = "duration";
 
 
     /**
@@ -105,6 +106,7 @@ public class PostgreSQLDatabaseConnection {
                     "(" + BIKEID + " BIGINT      NOT NULL," +
                     " " + STARTTIME + " DATE  NOT NULL, " +
                     " " + ENDTIME + " DATE  NOT NULL," +
+                    " " + DURATION + "BIGINT NOT NULL" +
                     " " + STARTSTATION + " BIGINT  NOT NULL, " +
                     " " + ENDSTATION + " BIGINT    NOT NULL," +
                     " " + USERTYPE + " TEXT NOT NULL, " +
@@ -177,20 +179,21 @@ public class PostgreSQLDatabaseConnection {
      */
     public void insertIntoTRIP(Connection c, Collection<TripData> tripDate) {
         try {
-            String sql = "INSERT INTO " + TRIP + " (" + BIKEID + "," + STARTTIME + "," + ENDTIME + "," +
+            String sql = "INSERT INTO " + TRIP + " (" + BIKEID + "," + STARTTIME + "," + ENDTIME + "," + DURATION + "," +
                     STARTSTATION + "," + ENDSTATION + "," + USERTYPE + "," + BIRTHYEAR + "," + GENDER + ") "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = c.prepareStatement(sql);
 
             for (TripData tripDataObject : tripDate) {
                 preparedStatement.setLong(1, tripDataObject.getBikeData().getId());
                 preparedStatement.setDate(2, new java.sql.Date(tripDataObject.getStartTime().getTime()));
                 preparedStatement.setDate(3, new java.sql.Date(tripDataObject.getEndTime().getTime()));
-                preparedStatement.setLong(4, tripDataObject.getStartStationData().getStationId());
-                preparedStatement.setLong(5, tripDataObject.getEndStationData().getStationId());
-                preparedStatement.setString(6, tripDataObject.getUserType());
-                preparedStatement.setInt(7, tripDataObject.getUserBirthYear());
-                preparedStatement.setInt(8, tripDataObject.getUserGender());
+                preparedStatement.setLong(4, tripDataObject.getDuration());
+                preparedStatement.setLong(5, tripDataObject.getStartStationData().getStationId());
+                preparedStatement.setLong(6, tripDataObject.getEndStationData().getStationId());
+                preparedStatement.setString(7, tripDataObject.getUserType());
+                preparedStatement.setInt(8, tripDataObject.getUserBirthYear());
+                preparedStatement.setInt(9, tripDataObject.getUserGender());
                 preparedStatement.addBatch();
             }
             preparedStatement.executeBatch();
@@ -200,25 +203,5 @@ public class PostgreSQLDatabaseConnection {
         }
     }
 
-
-
-
-    /*private void creatingInitDatabase() {
-        Connection c = null;
-        Statement stmt = null;
-        try {
-            Class.forName("org.postgresql.Driver");
-            c = DriverManager
-                    .getConnection(URLPROGRES, USERNAME, PASSWORD);
-            stmt = c.createStatement();
-            String sql = "CREATE DATABASE " + DATABASE_NAME;
-            stmt.executeUpdate(sql);
-            stmt.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-    }*/
 }
 
