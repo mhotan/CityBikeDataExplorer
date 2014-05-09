@@ -128,6 +128,7 @@ public class TripData {
         return userGender == 1 ? "M" : userGender == 2 ? "F" : "";
     }
 
+
     private void checkRep() {
         if (bikeData == null) {
             throw new RepresentationException("Bike Data cannot be nul");
