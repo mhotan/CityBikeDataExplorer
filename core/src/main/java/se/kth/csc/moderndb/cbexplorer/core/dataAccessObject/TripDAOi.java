@@ -17,5 +17,15 @@ public interface TripDAOi {
 
     public Trip findTripSpecifiedByUserCharacteristics(UserParameters userParameters);
 
+    public Trip findTripWithDistanceBetween(TripParameters tripParameters);
 
+    public Trip findTripWithDurationBetween(TripParameters tripParameters);
+
+    public Trip findTripWithinTimeRange(TripParameters tripParameters);
+
+    public Trip findTripWithBikes(TripParameters tripParameters);
+
+    public Trip findTripWithStartStations(TripParameters tripParameters);
+
+    public Trip findTripWithEndStations(TripParameters tripParameters);
 }

@@ -38,6 +38,7 @@ public class PostgreSQLDatabaseConnection {
     public static final String USERTYPE = "user_type";
     public static final String GENDER = "gender";
     public static final String BIRTHYEAR = "birth_year";
+    public static final String DURATION = "duration";
 
 
     /**
