@@ -3,7 +3,7 @@ package se.kth.csc.moderndb.cbexplorer.core.repository;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.neo4j.repository.GraphRepository;
 import org.springframework.data.repository.query.Param;
-import se.kth.csc.moderndb.cbexplorer.domain.Station;
+import se.kth.csc.moderndb.cbexplorer.graph.core.domain.Station;
 
 import java.util.List;
 
@@ -16,8 +16,8 @@ public interface StationRepository extends GraphRepository<Station> {
 
     Station findByName(@Param("0") String name);
 
-    @Query("START start=node({station}) MATCH start<-[:" + STARTED_FROM_RELATION + "]-" +
-            "trip-[:" + ENDED_AT_RELATION + "]->end RETURN DISTINCT end")
+    @Query("START start=node({station}) MATCH start<-[:" + STARTS_AT_RELATION + "]-" +
+            "trip-[:" + ENDS_AT_RELATION + "]->end RETURN DISTINCT end")
     List<Station> getDestinations(@Param("station") Long startStationId);
 
 }

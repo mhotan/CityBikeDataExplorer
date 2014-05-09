@@ -1,6 +1,6 @@
 package se.kth.csc.moderndb.cbexplorer.rest.controller.fixture;
 
-import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
+import se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike;
 import se.kth.csc.moderndb.cbexplorer.core.events.bikes.AllBikesEvent;
 
 import java.util.ArrayList;

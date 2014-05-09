@@ -1,6 +1,6 @@
 package se.kth.csc.moderndb.cbexplorer.core.events.bikes;
 
-import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
+import se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike;
 import se.kth.csc.moderndb.cbexplorer.core.events.ReadEvent;
 
 /**
