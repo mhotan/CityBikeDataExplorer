@@ -126,5 +126,34 @@ public class StationDAO implements StationDAOi {
             }
         }
     }
+    public Double findDistanceBtwStations(long station_id1,long station_id2){
+        String sql = "SELECT ST_DISTANCE(JD.end_point,point)from "
+                + PostgreSQLDatabaseConnection.STATION +
+                ",(Select " + GET_X_FROM_POINT + "," + GET_Y_FROM_POINT + "as end_point from "
+                +PostgreSQLDatabaseConnection.STATION+
+                "where ?= +" + PostgreSQLDatabaseConnection.STATIONID + ")JD where ?= "
+                + PostgreSQLDatabaseConnection.STATIONID+";";
+        Connection conn= null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setLong(1, station_id1);
+            ps.setLong(2,station_id2);
+            ResultSet rs = ps.executeQuery();
+            rs.close();
+            ps.close();
+            return rs.getDouble(1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+
+    }
 
 }
