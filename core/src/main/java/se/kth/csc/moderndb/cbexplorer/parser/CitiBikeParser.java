@@ -47,7 +47,7 @@ public class CitiBikeParser {
 
     // The default number of
     // TODO Validate this quantity to work on all systems.
-    private static final int DEFAULT_TRIPDATA_BUFFERSIZE = 500;
+    private static final int DEFAULT_TRIPDATA_BUFFERSIZE = 5000;
 
     /**
      * Reader that reads and interprets raw data.
@@ -129,7 +129,7 @@ public class CitiBikeParser {
             int duration;
             try {
                 birthYear = Short.valueOf(row[BIRTH_YEAR_INDEX]);
-                duration = Integer.parseInt(row[TRIP_DURATION_INDEX]);
+                duration = Integer.valueOf(row[TRIP_DURATION_INDEX]);
             } catch (NumberFormatException e) {
                 birthYear = 0;
                 duration = 0;
@@ -138,6 +138,7 @@ public class CitiBikeParser {
             // Parse the data objects.
             Date startTime = format.parse(row[START_TIME_INDEX]);
             Date endTime = format.parse(row[END_TIME_INDEX]);
+
             TripData tripData = new TripData(
                     bikeData,
                     startData,

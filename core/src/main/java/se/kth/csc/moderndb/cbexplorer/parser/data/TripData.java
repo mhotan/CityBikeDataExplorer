@@ -23,12 +23,15 @@ public class TripData {
 
     private final Short userBirthYear, userGender;
 
+    private final int duration;
+
     /**
      * Creates a wrapper for Trip data.
      *
      * @param bikeData The data about the bike for this trip
-     * @param startStationData
-     * @param endStationData
+     * @param startStationData Start Station Data
+     * @param endStationData End Station Data
+     * @param duration
      * @param startTime
      * @param endTime
      * @param userType
@@ -55,6 +58,13 @@ public class TripData {
         this.userGender = userGender;
 
         checkRep();
+    }
+
+    /**
+     * @return The duration of the trip.
+     */
+    public int getDuration() {
+        return duration;
     }
 
     /**

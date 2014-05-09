@@ -4,7 +4,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.1.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.2.RELEASE")
     }
 }
 
@@ -14,7 +14,7 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot'
 
 jar {
-    baseName = 'gs-rest-service'
+    baseName = 'citibike-rest-service'
     version =  '0.1.0'
 }
 
@@ -25,11 +25,17 @@ repositories {
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
-    compile("com.fasterxml.jackson.core:jackson-databind")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+
+    // Broken Spring requires manual import of these libraries
+    compile('javax.validation:validation-api:1.1.0.Final')
+    compile 'org.hibernate:hibernate-validator:5.1.0.Final'
+
     testCompile("junit:junit")
-    compile project(':core')
-    compile project(':graph-db-driver')
-    compile project(':st-db-driver')
+    testCompile ("org.springframework:spring-test")
+
+    compile project(":st-db-driver")
+    compile project(":graph-base")
 }
 
 task wrapper(type: Wrapper) {

@@ -47,6 +47,10 @@ public class STDBCityBikeReader implements CitiBikeReader {
         System.out.println(tripCount + " total trips processed");
     }
 
+    /**
+     * Closes the SQL Connection
+     * @throws SQLException
+     */
     public void close() throws SQLException {
         this.c.close();
     }
