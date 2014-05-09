@@ -1,5 +1,7 @@
 package se.kth.csc.moderndb.cbexplorer.core.domain;
 
+import java.util.Date;
+
 /**
  * Trip POJO class for REST Service.
  *
@@ -10,7 +12,7 @@ public class Trip {
     /**
      * Trip time
      */
-    private long startTime, endTime;
+    private Date startTime, endTime;
 
     /**
      * User information
@@ -47,7 +49,8 @@ public class Trip {
      * @param endedAt station where the trip is ending
      * @param bike bike that is used for the trip
      */
-    public Trip(long startTime, long endTime, String userType, short userBirthYear, short userGender, Station startedFrom, Station endedAt, Bike bike) {
+    public Trip(Date startTime, Date endTime, String userType,
+                short userBirthYear, short userGender, Station startedFrom, Station endedAt, Bike bike) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.userType = userType;
@@ -58,11 +61,11 @@ public class Trip {
         this.bike = bike;
     }
 
-    public long getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public long getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 

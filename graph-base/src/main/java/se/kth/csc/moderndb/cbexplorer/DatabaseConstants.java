@@ -15,8 +15,8 @@ public class DatabaseConstants {
 
     // Relations
     public static final String USES_RELATION = "USES";
-    public static final String STARTED_FROM_RELATION = "STARTED_FROM";
-    public static final String ENDED_AT_RELATION = "ENDED_AT";
+    public static final String STARTS_AT_RELATION = "STARTS_AT";
+    public static final String ENDS_AT_RELATION = "ENDS_AT";
 
     // Bike Properties
     public static final String BIKE_ID = "bikeId";

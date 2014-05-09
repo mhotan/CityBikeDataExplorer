@@ -1,4 +1,4 @@
-package se.kth.csc.moderndb.cbexplorer.domain;
+package se.kth.csc.moderndb.cbexplorer.core.domain;
 
 import org.springframework.data.neo4j.annotation.GraphId;
 

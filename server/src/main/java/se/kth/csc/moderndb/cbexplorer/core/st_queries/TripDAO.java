@@ -50,8 +50,8 @@ public class TripDAO implements TripDAOi {
                 Station startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION));
                 Station endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION));
                 trip = new Trip(
-                        rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime(),
-                        rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime(),
+                        new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
+                        new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
                         rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
                         rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
                         rs.getShort(PostgreSQLDatabaseConnection.GENDER),
@@ -120,8 +120,8 @@ public class TripDAO implements TripDAOi {
                 Station startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION));
                 Station endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION));
                 trip = new Trip(
-                        rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime(),
-                        rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime(),
+                        new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
+                        new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
                         rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
                         rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
                         rs.getShort(PostgreSQLDatabaseConnection.GENDER),
@@ -202,8 +202,8 @@ public class TripDAO implements TripDAOi {
                 Station startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION));
                 Station endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION));
                 trip = new Trip(
-                        rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime(),
-                        rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime(),
+                        new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
+                        new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
                         rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
                         rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
                         rs.getShort(PostgreSQLDatabaseConnection.GENDER),
@@ -279,8 +279,8 @@ public class TripDAO implements TripDAOi {
                 Station startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION));
                 Station endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION));
                 trip = new Trip(
-                        rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime(),
-                        rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime(),
+                        new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
+                        new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
                         rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
                         rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
                         rs.getShort(PostgreSQLDatabaseConnection.GENDER),
@@ -390,8 +390,8 @@ public class TripDAO implements TripDAOi {
                 Station startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION));
                 Station endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION));
                 trip = new Trip(
-                        rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime(),
-                        rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime(),
+                        new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
+                        new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
                         rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
                         rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
                         rs.getShort(PostgreSQLDatabaseConnection.GENDER),
@@ -436,8 +436,8 @@ public class TripDAO implements TripDAOi {
                     Station startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION));
                     Station endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION));
                     trip = new Trip(
-                            rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime(),
-                            rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime(),
+                            new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
+                            new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
                             rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
                             rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
                             rs.getShort(PostgreSQLDatabaseConnection.GENDER),
@@ -485,8 +485,8 @@ public class TripDAO implements TripDAOi {
                     Station startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION));
                     Station endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION));
                     trip = new Trip(
-                            rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime(),
-                            rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime(),
+                            new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
+                            new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
                             rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
                             rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
                             rs.getShort(PostgreSQLDatabaseConnection.GENDER),
@@ -534,8 +534,8 @@ public class TripDAO implements TripDAOi {
                     Station startStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.STARTSTATION));
                     Station endStation = stationDAO.findStationByID(rs.getLong(PostgreSQLDatabaseConnection.ENDSTATION));
                     trip = new Trip(
-                            rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime(),
-                            rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime(),
+                            new Date (rs.getDate(PostgreSQLDatabaseConnection.STARTTIME).getTime()),
+                            new Date (rs.getDate(PostgreSQLDatabaseConnection.ENDTIME).getTime()),
                             rs.getString(PostgreSQLDatabaseConnection.USERTYPE),
                             rs.getShort(PostgreSQLDatabaseConnection.BIRTHYEAR),
                             rs.getShort(PostgreSQLDatabaseConnection.GENDER),
