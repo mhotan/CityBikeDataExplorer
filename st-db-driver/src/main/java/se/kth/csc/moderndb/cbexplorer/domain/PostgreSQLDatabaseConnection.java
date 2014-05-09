@@ -22,6 +22,7 @@ public class PostgreSQLDatabaseConnection {
     public static final String STATION = "station";
     public static final String TRIP = "trip";
     public static final String URL = "jdbc:postgresql://localhost:5432/";
+    public static final String DRIVER_FULL_NAME = "org.postgresql.Driver";
 
     public static final String DATABASE_NAME = "citybike";
     public static final String USERNAME = "vagrant";
@@ -50,7 +51,7 @@ public class PostgreSQLDatabaseConnection {
         Connection c = null;
         Statement stmt = null;
         try {
-            Class.forName("org.postgresql.Driver").newInstance();
+            Class.forName(DRIVER_FULL_NAME).newInstance();
             c = DriverManager
                     .getConnection(URL + DATABASE_NAME, USERNAME, PASSWORD);
         } catch (Exception e) {

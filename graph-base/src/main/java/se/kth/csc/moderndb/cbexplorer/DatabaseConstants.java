@@ -15,16 +15,17 @@ public class DatabaseConstants {
 
     // Relations
     public static final String USES_RELATION = "USES";
-    public static final String STARTED_FROM_RELATION = "STARTED_FROM";
-    public static final String ENDED_AT_RELATION = "ENDED_AT";
+    public static final String STARTS_AT_RELATION = "STARTS_AT";
+    public static final String ENDS_AT_RELATION = "ENDS_AT";
 
     // Bike Properties
-    public static final String BIKE_ID = "bikeID";
+    public static final String BIKE_ID = "bikeId";
 
     // Station Properties
-    public static final String STATION_ID = "stationID";
+    public static final String STATION_ID = "stationId";
     public static final String STATION_NAME = "name";
-    public static final String STATION_LOCATION = "location";
+    public static final String STATION_LONGITUDE = "longitude";
+    public static final String STATION_LATITUDE = "latitude";
 
     // Trip Properties
     public static final String TRIP_START_TIME = "startTime";

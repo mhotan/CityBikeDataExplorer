@@ -27,8 +27,8 @@ public class CitiBikeBatchReader implements CitiBikeReader {
     public static final Label TRIP_PRIMARY_LABEL = DynamicLabel.label("_" + DatabaseConstants.TRIP_LABEL);
 
     // Relations
-    public static final RelationshipType startedFrom = DynamicRelationshipType.withName(DatabaseConstants.STARTED_FROM_RELATION);
-    public static final RelationshipType endedAt = DynamicRelationshipType.withName(DatabaseConstants.ENDED_AT_RELATION);
+    public static final RelationshipType startedFrom = DynamicRelationshipType.withName(DatabaseConstants.STARTS_AT_RELATION);
+    public static final RelationshipType endedAt = DynamicRelationshipType.withName(DatabaseConstants.ENDS_AT_RELATION);
     public static final RelationshipType uses = DynamicRelationshipType.withName(DatabaseConstants.USES_RELATION);
 
     private final BatchInserter inserter;
@@ -51,6 +51,9 @@ public class CitiBikeBatchReader implements CitiBikeReader {
                     "Cannot have null inserter.");
         this.inserter = inserter;
 
+        // TODO Verify runtime index issue.
+//        populateIndexes(inserter);
+
         // Initialize the tripCount of objects
         tripCount = 0;
         bikeIDs = new HashMap<Long, Long>();
@@ -58,7 +61,10 @@ public class CitiBikeBatchReader implements CitiBikeReader {
     }
 
     private static void populateIndexes(BatchInserter inserter) {
-//TODO
+        inserter.createDeferredSchemaIndex(BIKE_LABEL).on(DatabaseConstants.BIKE_ID).create();
+        inserter.createDeferredSchemaIndex(STATION_LABEL).on(DatabaseConstants.STATION_ID).create();
+        inserter.createDeferredSchemaIndex(STATION_LABEL).on(DatabaseConstants.STATION_NAME).create();
+        inserter.createDeferredSchemaIndex(TRIP_LABEL).on(DatabaseConstants.TRIP_START_TIME).create();
     }
 
     @Override
@@ -142,9 +148,8 @@ public class CitiBikeBatchReader implements CitiBikeReader {
             // Populate the properties
             Map<String, Object> properties = new HashMap<String, Object>();
             properties.put(DatabaseConstants.STATION_NAME, data.getName());
-            String location = String.format("POINT(%f %f)",
-                    data.getLongitude(), data.getLatitude()).replace(",", ".");
-            properties.put(DatabaseConstants.STATION_LOCATION, location);
+            properties.put(DatabaseConstants.STATION_LONGITUDE, data.getLongitude());
+            properties.put(DatabaseConstants.STATION_LATITUDE, data.getLatitude());
             properties.put(DatabaseConstants.STATION_ID, stationID);
 
             // Insert into the database
