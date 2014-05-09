@@ -1,20 +1,12 @@
 package se.kth.csc.moderndb.cbexplorer.core.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.neo4j.conversion.Result;
-import org.springframework.data.neo4j.support.Neo4jTemplate;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static se.kth.csc.moderndb.cbexplorer.DatabaseConstants.*;
-
 /**
  * Created by corey on 5/9/14.
  */
 public class StationCustomRepositoryImpl implements StationCustomRepository {
+    /*
     @Autowired
+
     private Neo4jTemplate template;
 
     @Override
@@ -31,4 +23,5 @@ public class StationCustomRepositoryImpl implements StationCustomRepository {
         }
         return result;
     }
+    */
 }
