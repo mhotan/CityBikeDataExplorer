@@ -1,4 +1,4 @@
-package se.kth.csc.moderndb.cbexplorer.core.domain;
+package se.kth.csc.moderndb.cbexplorer.graph.core.domain;
 
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.neo4j.annotation.Indexed;
@@ -26,4 +26,9 @@ public class Bike extends AbstractEntity {
     public long getBikeId() {
         return bikeId;
     }
+
+    public se.kth.csc.moderndb.cbexplorer.core.domain.Bike toCoreBike() {
+        return new se.kth.csc.moderndb.cbexplorer.core.domain.Bike();
+    }
+
 }

@@ -1,12 +1,11 @@
-package se.kth.csc.moderndb.cbexplorer.core.st_queries;
+package se.kth.csc.moderndb.cbexplorer.core.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
-import se.kth.csc.moderndb.cbexplorer.core.dataAccessObject.StationDAOi;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
 import se.kth.csc.moderndb.cbexplorer.domain.PostgreSQLDatabaseConnection;
 
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,14 +22,14 @@ public class StationDAO implements StationDAOi {
     private JdbcTemplate jdbcTemplate;
 
 
-    public StationDAO() {
-        SimpleDriverDataSource driverDataSource = new SimpleDriverDataSource() {{
-            setDriverClass(org.postgresql.Driver.class);
-            setUsername(PostgreSQLDatabaseConnection.USERNAME);
-            setUrl(PostgreSQLDatabaseConnection.URL + PostgreSQLDatabaseConnection.DATABASE_NAME);
-            setPassword(PostgreSQLDatabaseConnection.PASSWORD);
-        }};
-        this.jdbcTemplate = new JdbcTemplate(driverDataSource);
+    public StationDAO(DataSource source) {
+//        SimpleDriverDataSource driverDataSource = new SimpleDriverDataSource() {{
+//            setDriverClass(org.postgresql.Driver.class);
+//            setUsername(PostgreSQLDatabaseConnection.USERNAME);
+//            setUrl(PostgreSQLDatabaseConnection.URL + PostgreSQLDatabaseConnection.DATABASE_NAME);
+//            setPassword(PostgreSQLDatabaseConnection.PASSWORD);
+//        }};
+        this.jdbcTemplate = new JdbcTemplate(source);
     }
 
     @Override
@@ -127,4 +126,5 @@ public class StationDAO implements StationDAOi {
         );
         return results;
     }
+
 }

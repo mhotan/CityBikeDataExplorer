@@ -1,8 +1,6 @@
-package se.kth.csc.moderndb.cbexplorer.core.st_queries;
+package se.kth.csc.moderndb.cbexplorer.core.dao;
 
-import se.kth.csc.moderndb.cbexplorer.core.dataAccessObject.BikeDAOi;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
 import se.kth.csc.moderndb.cbexplorer.domain.PostgreSQLDatabaseConnection;
 
 import javax.sql.DataSource;

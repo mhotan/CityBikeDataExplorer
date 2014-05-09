@@ -3,7 +3,7 @@ package se.kth.csc.moderndb.cbexplorer.core.repository;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.neo4j.repository.GraphRepository;
 import org.springframework.data.repository.query.Param;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
+import se.kth.csc.moderndb.cbexplorer.graph.core.domain.Station;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import static se.kth.csc.moderndb.cbexplorer.DatabaseConstants.*;
 /**
  * Created by mhotan on 4/21/14.
  */
-public interface StationRepository extends GraphRepository<Station> {
+public interface StationRepository extends GraphRepository<Station>, StationCustomRepository {
 
     Station findByName(@Param("0") String name);
 

@@ -1,5 +1,6 @@
-package se.kth.csc.moderndb.cbexplorer.core.dataAccessObject;
+package se.kth.csc.moderndb.cbexplorer.core.dao;
 
+import org.springframework.transaction.annotation.Transactional;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
 
 import java.util.List;
@@ -11,12 +12,16 @@ import java.util.List;
  */
 public interface StationDAOi {
 
+    @Transactional
     public List<Station> findStationByID(long stationId) throws Exception;
 
+    @Transactional
     public List<Station> findAllStations();
 
+    @Transactional
     public List<Station> findStationByName(String name);
 
+    @Transactional
     public List<List<Station>> findStationPairsWithDistance(double distance);
 
 }

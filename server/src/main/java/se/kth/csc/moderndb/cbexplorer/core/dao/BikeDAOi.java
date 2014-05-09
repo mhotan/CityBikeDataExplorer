@@ -1,8 +1,7 @@
-package se.kth.csc.moderndb.cbexplorer.core.dataAccessObject;
+package se.kth.csc.moderndb.cbexplorer.core.dao;
 
+import org.springframework.transaction.annotation.Transactional;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
-
-import java.util.List;
 
 /**
  * Interface for the Data Access Object pattern.
@@ -11,6 +10,9 @@ import java.util.List;
  */
 public interface BikeDAOi {
 
+    @Transactional
     public Bike findBikeByID(long bikeID);
+
+    @Transactional
     public Bike findAllBikes();
 }

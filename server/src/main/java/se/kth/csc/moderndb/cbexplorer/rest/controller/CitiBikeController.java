@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import se.kth.csc.moderndb.cbexplorer.Greeting;
+import se.kth.csc.moderndb.cbexplorer.core.dao.StationDAOi;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
+import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
 import se.kth.csc.moderndb.cbexplorer.core.services.GraphService;
 import se.kth.csc.moderndb.cbexplorer.rest.RestContants;
 
@@ -29,6 +31,9 @@ public class CitiBikeController {
     @Autowired
     GraphService graphService;
 
+    @Autowired
+    StationDAOi stationDAO;
+
     @RequestMapping(method= RequestMethod.GET, value = "/hello")
     public @ResponseBody
     Greeting sayHello(@RequestParam(value="name", required=false, defaultValue="Stranger") String name) {
@@ -38,8 +43,13 @@ public class CitiBikeController {
     // TODO Add more RESTful Spring method calls.
 
     @RequestMapping(method = RequestMethod.GET, value = RestContants.BIKES_URI_PATH)
-    public @ResponseBody List<Bike> getAllBikes() {
+    public @ResponseBody
+    List<Bike> getAllBikes() {
         return graphService.requestAllBikes();
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = RestContants.STATIONS_URI_PATH)
+    public @ResponseBody
+    List<Station> getAllStations() {return  graphService.requestAllStations(); }
 
 }

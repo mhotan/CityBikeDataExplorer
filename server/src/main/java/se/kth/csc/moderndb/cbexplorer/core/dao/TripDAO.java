@@ -1,16 +1,12 @@
-package se.kth.csc.moderndb.cbexplorer.core.st_queries;
+package se.kth.csc.moderndb.cbexplorer.core.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
-import se.kth.csc.moderndb.cbexplorer.core.dataAccessObject.TripDAOi;
 import se.kth.csc.moderndb.cbexplorer.core.domain.*;
 import se.kth.csc.moderndb.cbexplorer.domain.PostgreSQLDatabaseConnection;
 
 import javax.sql.DataSource;
-import java.lang.reflect.Array;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -28,17 +24,14 @@ public class TripDAO implements TripDAOi {
 
     private JdbcTemplate jdbcTemplate;
 
-
-    public TripDAO() {
-        SimpleDriverDataSource driverDataSource = new SimpleDriverDataSource() {{
-            setDriverClass(org.postgresql.Driver.class);
-            setUsername(PostgreSQLDatabaseConnection.USERNAME);
-            setUrl(PostgreSQLDatabaseConnection.URL + PostgreSQLDatabaseConnection.DATABASE_NAME);
-            setPassword(PostgreSQLDatabaseConnection.PASSWORD);
-        }};
-        this.jdbcTemplate = new JdbcTemplate(driverDataSource);
-
-
+    public TripDAO(DataSource source) {
+//        SimpleDriverDataSource driverDataSource = new SimpleDriverDataSource() {{
+//            setDriverClass(org.postgresql.Driver.class);
+//            setUsername(PostgreSQLDatabaseConnection.USERNAME);
+//            setUrl(PostgreSQLDatabaseConnection.URL + PostgreSQLDatabaseConnection.DATABASE_NAME);
+//            setPassword(PostgreSQLDatabaseConnection.PASSWORD);
+//        }};
+        this.jdbcTemplate = new JdbcTemplate(source);
     }
 
 
@@ -52,7 +45,7 @@ public class TripDAO implements TripDAOi {
                     @Override
                     public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
                         Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
-                        StationDAO stationDAO = new StationDAO();
+                        StationDAO stationDAO = new StationDAO(jdbcTemplate.getDataSource());
                         Station startStation = null;
                         Station endStation = null;
                         try {
@@ -120,7 +113,7 @@ public class TripDAO implements TripDAOi {
                     @Override
                     public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
                         Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
-                        StationDAO stationDAO = new StationDAO();
+                        StationDAO stationDAO = new StationDAO(jdbcTemplate.getDataSource());
                         Station startStation = null;
                         Station endStation = null;
                         try {
@@ -193,7 +186,7 @@ public class TripDAO implements TripDAOi {
                     @Override
                     public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
                         Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
-                        StationDAO stationDAO = new StationDAO();
+                        StationDAO stationDAO = new StationDAO(jdbcTemplate.getDataSource());
                         Station startStation = null;
                         Station endStation = null;
                         try {
@@ -261,7 +254,7 @@ public class TripDAO implements TripDAOi {
                     @Override
                     public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
                         Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
-                        StationDAO stationDAO = new StationDAO();
+                        StationDAO stationDAO = new StationDAO(jdbcTemplate.getDataSource());
                         Station startStation = null;
                         Station endStation = null;
                         try {
@@ -362,7 +355,7 @@ public class TripDAO implements TripDAOi {
                     @Override
                     public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
                         Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
-                        StationDAO stationDAO = new StationDAO();
+                        StationDAO stationDAO = new StationDAO(jdbcTemplate.getDataSource());
                         Station startStation = null;
                         Station endStation = null;
                         try {
@@ -400,7 +393,7 @@ public class TripDAO implements TripDAOi {
                             @Override
                             public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
                                 Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
-                                StationDAO stationDAO = new StationDAO();
+                                StationDAO stationDAO = new StationDAO(jdbcTemplate.getDataSource());
                                 Station startStation = null;
                                 Station endStation = null;
                                 try {
@@ -441,7 +434,7 @@ public class TripDAO implements TripDAOi {
                             @Override
                             public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
                                 Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
-                                StationDAO stationDAO = new StationDAO();
+                                StationDAO stationDAO = new StationDAO(jdbcTemplate.getDataSource());
                                 Station startStation = null;
                                 Station endStation = null;
                                 try {
@@ -482,7 +475,7 @@ public class TripDAO implements TripDAOi {
                             @Override
                             public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
                                 Bike bike = new Bike(rs.getLong(PostgreSQLDatabaseConnection.BIKEID));
-                                StationDAO stationDAO = new StationDAO();
+                                StationDAO stationDAO = new StationDAO(jdbcTemplate.getDataSource());
                                 Station startStation = null;
                                 Station endStation = null;
                                 try {

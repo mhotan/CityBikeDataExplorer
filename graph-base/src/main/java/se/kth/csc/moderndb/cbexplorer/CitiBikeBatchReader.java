@@ -148,9 +148,8 @@ public class CitiBikeBatchReader implements CitiBikeReader {
             // Populate the properties
             Map<String, Object> properties = new HashMap<String, Object>();
             properties.put(DatabaseConstants.STATION_NAME, data.getName());
-            String location = String.format("POINT(%f %f)",
-                    data.getLongitude(), data.getLatitude()).replace(",", ".");
-            properties.put(DatabaseConstants.STATION_LOCATION, location);
+            properties.put(DatabaseConstants.STATION_LONGITUDE, data.getLongitude());
+            properties.put(DatabaseConstants.STATION_LATITUDE, data.getLatitude());
             properties.put(DatabaseConstants.STATION_ID, stationID);
 
             // Insert into the database

@@ -1,4 +1,4 @@
-package se.kth.csc.moderndb.cbexplorer.core.domain;
+package se.kth.csc.moderndb.cbexplorer.graph.core.domain;
 
 import org.neo4j.graphdb.Direction;
 import org.springframework.data.annotation.TypeAlias;
@@ -31,6 +31,8 @@ public class Trip extends AbstractEntity {
 
     Long endTime;
 
+    int duration;
+
     // TODO later figure ways to incorporate Enums with Spring framework.
     // TODO Have to figure out how to ensure that the startTime + startedFrom + bike is the primary key.
 
@@ -50,7 +52,7 @@ public class Trip extends AbstractEntity {
 
     @Fetch
     @RelatedTo(type = USES_TYPE, direction = Direction.OUTGOING)
-    Bike bike;
+    se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike bike;
 
     /**
      * Constructor for Neo4J
@@ -97,6 +99,14 @@ public class Trip extends AbstractEntity {
         this.endedAt = endedAt;
     }
 
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
     public Long getStartTime() {
         return startTime;
     }
@@ -125,8 +135,22 @@ public class Trip extends AbstractEntity {
         return endedAt;
     }
 
-    public Bike getBike() {
+    public se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike getBike() {
         return bike;
+    }
+
+    public se.kth.csc.moderndb.cbexplorer.core.domain.Trip toCoreTrip() {
+        return new se.kth.csc.moderndb.cbexplorer.core.domain.Trip(
+                new Date(getStartTime()),
+                new Date(getEndTime()),
+                getDuration(),
+                getUserType(),
+                getUserBirthYear(),
+                getUserGender(),
+                getStartedFrom().toCoreStation(),
+                getEndedAt().toCoreStation(),
+                getBike().toCoreBike()
+        );
     }
 
     @Override
