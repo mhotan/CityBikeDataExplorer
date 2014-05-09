@@ -15,6 +15,8 @@ public class TripData {
     // Internal Station data.
     private StationData startStationData, endStationData;
 
+    private int duration;
+
     private final Date startTime, endTime;
 
     private final String userType;
@@ -36,6 +38,7 @@ public class TripData {
     public TripData(BikeData bikeData,
                     StationData startStationData,
                     StationData endStationData,
+                    int duration,
                     Date startTime,
                     Date endTime,
                     String userType,
@@ -44,6 +47,7 @@ public class TripData {
         this.bikeData = bikeData;
         this.startStationData = startStationData;
         this.endStationData = endStationData;
+        this.duration = duration;
         this.startTime = startTime;
         this.endTime = endTime;
         this.userType = userType;
