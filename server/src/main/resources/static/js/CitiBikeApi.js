@@ -15,6 +15,9 @@ var CitiBikeApi = (function ($) {
         },
         getStationDestinations: function (station, callback) {
             $.getJSON(api_path + "/stations/" + station + "/destinations", callback);
+        },
+        getDistanceBetweenStations: function (station1, station2, callback) {
+            $.getJSON(api_path + "/stations/distance/" + station1 + "/" + station2);
         }
     };
 })(jQuery);

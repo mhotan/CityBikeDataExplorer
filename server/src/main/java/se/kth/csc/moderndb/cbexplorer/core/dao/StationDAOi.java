@@ -19,4 +19,6 @@ public interface StationDAOi {
     @Transactional
     public Station findStationByName(String name);
 
+    @Transactional
+    Double findDistanceBtwStations(long station_id1, long station_id2);
 }

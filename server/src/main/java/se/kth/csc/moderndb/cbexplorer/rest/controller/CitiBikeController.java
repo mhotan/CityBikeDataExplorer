@@ -67,4 +67,10 @@ public class CitiBikeController {
         return graphService.getStationDestinations(stationId);
     }
 
+    @RequestMapping(RestConstants.STATIONS_URI_PATH + "/distance/{station1}/{station2}")
+    public @ResponseBody
+    String getDistanceBetweenStations(@PathVariable long station1, @PathVariable long station2) {
+        return stationDAO.findDistanceBtwStations(station1, station2).toString();
+    }
+
 }
