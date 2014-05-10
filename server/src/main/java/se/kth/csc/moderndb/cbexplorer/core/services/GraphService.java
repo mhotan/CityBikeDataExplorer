@@ -17,7 +17,7 @@ public interface GraphService {
      * @return All the Request all the bikes available
      */
     @Transactional
-    public List<Bike> requestAllBikes();
+    public List<Bike> findAllBikes();
 
     /**
      *
@@ -26,14 +26,23 @@ public interface GraphService {
      * @return Bike with the BikeID.
      */
     @Transactional
-    public Bike requestBike(long bikeID);
+    public Bike findBike(long bikeID);
+
+    @Transactional
+    public Long getBikeTripCount(long bikeID);
 
     // TODO Place the base requirements for any graph related request.
     // Be sure to add @Transactional.
 
     @Transactional
-    public List<Station> requestAllStations();
+    public List<Station> findAllStations();
 
     @Transactional
-    public Station requestStation(long stationId);
+    public Station findStation(long stationId);
+
+    @Transactional
+    public Station findStationByName(String name);
+
+    @Transactional
+    public List<Station> getStationDestinations(long startStationId);
 }

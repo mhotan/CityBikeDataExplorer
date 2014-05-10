@@ -1,11 +1,20 @@
 var CitiBikeApi = (function ($) {
     var api_path = "/api";
     return {
-        getAllBikes: function (callback) {
+        findAllBikes: function (callback) {
             $.getJSON(api_path + "/bikes", callback);
         },
-        getAllStations: function (callback) {
+        getBikeTripCount: function (bike, callback) {
+            $.getJSON(api_path + "/bikes/" + bike + "/tripCount", callback);
+        },
+        findAllStations: function (callback) {
             $.getJSON(api_path + "/stations", callback);
+        },
+        findStationByName: function (name, callback) {
+            $.getJSON(api_path + "/stations/byName/" + encodeURIComponent(name), callback);
+        },
+        getStationDestinations: function (station, callback) {
+            $.getJSON(api_path + "/stations/" + station + "/destinations", callback);
         }
     };
 })(jQuery);
