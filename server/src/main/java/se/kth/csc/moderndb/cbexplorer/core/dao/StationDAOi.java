@@ -3,6 +3,8 @@ package se.kth.csc.moderndb.cbexplorer.core.dao;
 import org.springframework.transaction.annotation.Transactional;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
 
+import java.util.List;
+
 /**
  * Interface for the Data Access Object pattern.
  *
@@ -11,12 +13,15 @@ import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
 public interface StationDAOi {
 
     @Transactional
-    public Station findStationByID(long stationId);
+    public List<Station> findStationByID(long stationId) throws Exception;
 
     @Transactional
-    public Station findAllStations();
+    public List<Station> findAllStations();
 
     @Transactional
-    public Station findStationByName(String name);
+    public List<Station> findStationByName(String name);
+
+    @Transactional
+    public List<List<Station>> findStationPairsWithDistance(double distance);
 
 }
