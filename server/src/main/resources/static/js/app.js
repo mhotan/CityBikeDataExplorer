@@ -18,5 +18,7 @@ $(document).ready(function() {
     // The Map view.
     var mapView = new CitiBikeMapView(map, model);
     var mapController = new MapController(mapView, model);
+    mapController.addListener(this);
+
 
 });

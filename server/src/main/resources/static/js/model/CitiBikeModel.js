@@ -70,6 +70,7 @@ var CitiBikeModel = function() {
             if (selectedStations[i].stationId == station.stationId) return;
         }
         selectedStations.push(station);
+        notifyObservers();
     }
 
     this.removeSelectedStation = function(station) {
@@ -83,10 +84,12 @@ var CitiBikeModel = function() {
         if (toRemove > -1) {
             selectedStations.splice(toRemove, 1);
         }
+        notifyObservers();
     }
 
     this.clearSelectedStations = function() {
         selectedStations = [];
+        notifyObservers();
     }
 
     /*****************************************
