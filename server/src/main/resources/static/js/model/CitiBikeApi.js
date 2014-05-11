@@ -1,5 +1,5 @@
 var CitiBikeApi = (function ($) {
-    var api_path = "/api";
+    var api_path = "http://localhost:8080/api";
     return {
         findAllBikes: function (callback) {
             $.getJSON(api_path + "/bikes", callback);
