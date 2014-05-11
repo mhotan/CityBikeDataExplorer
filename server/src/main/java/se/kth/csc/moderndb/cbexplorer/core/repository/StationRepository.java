@@ -12,7 +12,7 @@ import static se.kth.csc.moderndb.cbexplorer.DatabaseConstants.*;
 /**
  * Created by mhotan on 4/21/14.
  */
-public interface StationRepository extends GraphRepository<Station>, StationCustomRepository {
+public interface StationRepository extends GraphRepository<Station>, StationRepositoryCustom {
 
     Station findByName(@Param("0") String name);
 

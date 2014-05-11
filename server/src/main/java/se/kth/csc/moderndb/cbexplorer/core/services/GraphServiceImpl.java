@@ -8,7 +8,10 @@ import se.kth.csc.moderndb.cbexplorer.core.repository.StationRepository;
 import se.kth.csc.moderndb.cbexplorer.core.repository.TripRepository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -78,12 +81,19 @@ public class GraphServiceImpl implements GraphService {
     }
 
     @Override
-    public List<Station> getStationDestinations(long startStationId) {
+    public Map<Long, Long> getStationDestinations(long startStationId) {
         se.kth.csc.moderndb.cbexplorer.graph.core.domain.Station station = stationRepository.findBySchemaPropertyValue(DatabaseConstants.STATION_ID, startStationId);
         if (station == null) {
             return null;
         }
-        return stationsToCoreList(stationRepository.getDestinations(station.getId()));
+        final Map<Long, Long> stations = new HashMap<Long, Long>();
+        stationRepository.getDestinationCounts(station.getId()).forEach(new BiConsumer<Long, Long>() {
+            @Override
+            public void accept(Long stationId, Long aLong) {
+                stations.put(stationId, aLong);
+            }
+        });
+        return stations;
     }
 
     private List<Station> stationsToCoreList(Iterable<se.kth.csc.moderndb.cbexplorer.graph.core.domain.Station> result) {
