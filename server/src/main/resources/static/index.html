@@ -5,6 +5,9 @@
     <title>Citi Bike Data Explorer</title>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="css/tap-order.css">
+
+
 
     <!-- Load the base Style conditions for the Map -->
     <link rel="stylesheet" href="css/base-map.css"/>
@@ -14,8 +17,18 @@
             src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=visualization">
     </script>
 
+
     <!-- Set up the Google Map and create all the callbacks. -->
     <script src="js/setup.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+    <script>
+  $(function() {
+    $( "#tabs" ).tabs();
+  });
+  </script>
 </head>
 <body>
 <h1 >Citi Bike Data Explorer</h1>
@@ -23,12 +36,56 @@
 
 <div id="controller-pane">
     <!--TODO Remove the place holder text with a controller pane.-->
-    Controller Pane
+    <div id="tabs">
+        <ul>
+            <li><a href="#tabs-1">Station</a></li>
+            <li><a href="#tabs-2">Bike</a></li>
+        </ul>
+
+    </div>
+    <div id='tabs-1'>
+        <div id = "searchSection">
+        <form name="searchBarForm" action="">
+            <input type="text" name="searchBar" value="Search Station" onfocus="this.value==this.defaultValue?this.value='':null">
+            <input type="button" value="Search" onclick="exec(document.Test.query.value)">
+        </form>
+        <form action="select.htm">
+            <p>
+                <select name="results" size="10">
+                    <option>A</option>
+                    <option>B</option>
+                    <option>C</option>
+                    <option>D</option>
+                    <option>E</option>
+                </select>
+            </p>
+        </form>
+        </div>
+        <div id="slider-range"></div>
+        <script type="text/javascript">
+            $("#slider-range").slider({
+                range: true,
+                min: 0,
+                max: 1439,
+                values: [540, 1020],
+                step:5
+            });
+        </script>
+    </div>
+    <div id='tabs-2'>
+        <p>This is the 2nd tab.</p>
+    </div>
+
+    <h3>Time Range</h3>
+
 </div>
 
 <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/CitiBikeApi.js"></script>
+<script type="text/javascript" src="js/Tabs.js"></script>
+
+
 <script type="text/javascript">
     CitiBikeApi.findAllStations(function (result) {
         console.log(result);
