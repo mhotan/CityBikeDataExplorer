@@ -4,12 +4,30 @@
     <meta charset="utf-8">
     <title>Citi Bike Data Explorer</title>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/bootstrap-theme-min.css"/>
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
+
+    <!-- Load the base Style conditions for the Map -->
+    <link rel="stylesheet" href="css/base-map.css"/>
+
+    <!-- Load the javascript scripts for Google Maps using our application API key -->
+    <script
+            src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=visualization">
+    </script>
+
+    <!-- Set up the Google Map and create all the callbacks. -->
+    <script src="js/setup.js"></script>
 </head>
 <body>
-<h1>Citi Bike Data Explorer</h1>
+<h1 >Citi Bike Data Explorer</h1>
+<div id="map_canvas"></div>
+
+<div id="controller-pane">
+    <!--TODO Remove the place holder text with a controller pane.-->
+    Controller Pane
+</div>
 
 <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 </body>
 </html>
+

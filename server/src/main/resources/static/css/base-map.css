@@ -1,0 +1,18 @@
+
+body {
+    height: 100%; margin: 0; padding: 0
+}
+html {
+    height: 100%
+}
+#map-canvas {
+    height: 100%
+}
+
+/* The Controller Pane for all the interaction
+This will overlap the controller pane over the map.*/
+#controller-pane {
+    position:fixed;
+    top:100px;
+    right:100px;
+}
