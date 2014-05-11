@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <meta charset="utf-8">
     <title>Citi Bike Data Explorer</title>
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="js/jquery-1.2.6.min.js"></script>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
-    <link rel="stylesheet" href="css/tap-order.css">
+
 
     <!-- Load the base Style conditions for the Map -->
     <link rel="stylesheet" href="css/base-map.css"/>
@@ -26,28 +29,36 @@
   $(function() {
     $( "#tabs" ).tabs();
   });
-  </script>
+
+    </script>
 
 </head>
 <body>
-<h1 >Citi Bike Data Explorer</h1>
+<h1>Citi Bike Data Explorer</h1>
+
 <div id="map_canvas"></div>
 
 <div id="controller-pane">
     <!--TODO Remove the place holder text with a controller pane.-->
-    <ul class='tabs'>
-        <li><a href='#tab1'>Station</a></li>
-        <li><a href='#tab2'>Bike</a></li>
-    </ul>
+    <div class="tab_wrap">
+    </div>
+    <div class="tabs">
+        <ul class="tabs">
+            <li><a href="#tab1">Station</a></li>
+            <li><a href="#tab2">Bike</a></li>
+        </ul>
+
+    </div>
     <div id="tab1">
-        <div id = "searchSection">
+        <div id="searchSection">
             <form name="searchBarForm" action="">
-                <input type="text" name="searchBar" value="Search Station" onfocus="this.value==this.defaultValue?this.value='':null">
+                <input type="text" name="searchBar" value="Search Station"
+                       onfocus="this.value==this.defaultValue?this.value='':null">
                 <input type="button" value="Search" onclick="exec(document.Test.query.value)">
             </form>
             <form action="select.htm">
                 <p>
-                    <select name="results" size="10">
+                    <select name="results" class="listContents" size="6" multiple>
                         <option>A</option>
                         <option>B</option>
                         <option>C</option>
@@ -58,20 +69,75 @@
             </form>
         </div>
 
-        <h3>Time Range</h3>
-        <div id="slider-range"></div>
-        <script type="text/javascript">
-            $("#slider-range").slider({
+        <div id="timeRangeSection">
+            <h3>Time Range</h3>
+
+            <div id="slider-range1"></div>
+            <script type="text/javascript">
+            $("#slider-range1").slider({
                 range: true,
                 min: 0,
                 max: 1439,
                 values: [540, 1020],
                 step:5
             });
-        </script>
+
+            </script>
+        </div>
+
+        <div id="widgetSection">
+            <h3>Widget Extras</h3>
+        </div>
+
+
+        <div id="statisticSection">
+            <h3>Statistics</h3>
+        </div>
     </div>
     <div id="tab2">
-        <p>Morbi </p>
+        <div id="searchSection">
+            <form name="searchBarForm" action="">
+                <input type="text" name="searchBar" value="Search Station"
+                       onfocus="this.value==this.defaultValue?this.value='':null">
+                <input type="button" value="Search" onclick="exec(document.Test.query.value)">
+            </form>
+            <form action="select.htm">
+                <p>
+                    <select name="results" class="listContents" size="6" multiple>
+                        <option>A</option>
+                        <option>B</option>
+                        <option>C</option>
+                        <option>D</option>
+                        <option>E</option>
+                    </select>
+                </p>
+            </form>
+        </div>
+
+        <div id="timeRangeSection">
+            <h3>Time Range</h3>
+
+            <div id="slider-range2"></div>
+            <script type="text/javascript">
+            $("#slider-range2").slider({
+                range: true,
+                min: 0,
+                max: 1439,
+                values: [540, 1020],
+                step:5
+            });
+
+            </script>
+        </div>
+
+        <div id="widgetSection">
+            <h3>Widget Extras</h3>
+        </div>
+
+
+        <div id="statisticSection">
+            <h3>Statistics</h3>
+        </div>
     </div>
 
 
