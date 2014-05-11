@@ -84,7 +84,7 @@ public class PostgreSQLDatabaseConnection {
             dropIndex = "DROP INDEX IF EXISTS " + STATION + "_INDEX_" + POINT;
             stmt.executeUpdate(dropIndex);
             index = "CREATE INDEX " + STATION + "_INDEX_" + POINT + " ON " + STATION + "(" + POINT + ")";
-            stmt.executeUpdate(index);*/
+            stmt.executeUpdate(index);
 
             String rule = "CREATE OR REPLACE RULE \"station_on_duplicate_ignore\" AS ON INSERT TO \"" + STATION + "\" WHERE EXISTS(SELECT 1 FROM " + STATION + " WHERE (" + STATIONID + ")=(NEW." + STATIONID + ")) DO INSTEAD NOTHING;";
             stmt.execute(rule);
