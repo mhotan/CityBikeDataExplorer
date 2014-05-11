@@ -77,8 +77,15 @@ public class PostgreSQLDatabaseConnection {
                     " " + NAME + " TEXT NOT NULL, " +
                     " " + POINT + " geography(POINT,4326)    NOT NULL);";
             stmt.executeUpdate(sql);
+            String dropIndex = "DROP INDEX IF EXISTS " + STATION + "_INDEX_" + STATIONID;
+            stmt.executeUpdate(dropIndex);
             String index = "CREATE INDEX " + STATION + "_INDEX_" + STATIONID + " ON " + STATION + "(" + STATIONID + ")";
             stmt.executeUpdate(index);
+            dropIndex = "DROP INDEX IF EXISTS " + STATION + "_INDEX_" + POINT;
+            stmt.executeUpdate(dropIndex);
+            index = "CREATE INDEX " + STATION + "_INDEX_" + POINT + " ON " + STATION + "(" + POINT + ")";
+            stmt.executeUpdate(index);*/
+
             String rule = "CREATE OR REPLACE RULE \"station_on_duplicate_ignore\" AS ON INSERT TO \"" + STATION + "\" WHERE EXISTS(SELECT 1 FROM " + STATION + " WHERE (" + STATIONID + ")=(NEW." + STATIONID + ")) DO INSTEAD NOTHING;";
             stmt.execute(rule);
             stmt.close();
@@ -112,8 +119,12 @@ public class PostgreSQLDatabaseConnection {
                     " " + GENDER + " INT    NOT NULL," +
                     " PRIMARY KEY(" + BIKEID + "," + STARTTIME + "));";
             stmt.executeUpdate(sql);
+            String deleteIndex = "DROP INDEX IF EXISTS " + TRIP + "_INDEX_" + BIKEID;
+            stmt.executeUpdate(deleteIndex);
             String index = "CREATE INDEX " + TRIP + "_INDEX_" + BIKEID + " ON " + TRIP + "(" + BIKEID + ");";
             stmt.executeUpdate(index);
+            deleteIndex = "DROP INDEX IF EXISTS " + TRIP + "_INDEX_TRIPID";
+            stmt.executeUpdate(deleteIndex);
             index = "CREATE INDEX " + TRIP + "_INDEX_TRIPID" + " ON " + TRIP + "(" + BIKEID + "," + STARTTIME + ");";
             stmt.executeUpdate(index);
             String rule = "CREATE OR REPLACE RULE \"trip_route_on_duplicate_ignore\" AS ON INSERT TO \"" +

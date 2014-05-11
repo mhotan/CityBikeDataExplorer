@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class MainTDB {
 
     public static void main(String [] args) throws FileNotFoundException, SQLException {
-       /* if (args.length != 1) {
+       if (args.length != 1) {
             String error =  "Illegal argument signature";
             System.err.println(error);
             System.err.println("Correct argument signature: <path to citibike data>");
@@ -23,15 +23,15 @@ public class MainTDB {
         File data = new File(args[0]);
         if (!data.exists()) {
             throw new FileNotFoundException("File does not exists at " + args[0]);
-        }*/
+        }
 
         STDBCityBikeReader reader = new STDBCityBikeReader();
         CitiBikeParser parser = new CitiBikeParser(reader);
 
-        File file = new File("/home/yeliz/workspace/ModernData/CityBikeDataExplorer.git/data/2014-02 - Citi Bike trip data.csv");
+        //File file = new File("/home/yeliz/workspace/ModernData/CityBikeDataExplorer.git/data/2014-02 - Citi Bike trip data.csv");
 
         try {
-            parser.parse(file);
+            parser.parse(data);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
