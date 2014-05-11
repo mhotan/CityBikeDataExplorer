@@ -17,7 +17,6 @@
             src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=visualization">
     </script>
 
-
     <!-- Set up the Google Map and create all the callbacks. -->
     <script src="js/setup.js"></script>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
@@ -29,6 +28,7 @@
     $( "#tabs" ).tabs();
   });
   </script>
+
 </head>
 <body>
 <h1 >Citi Bike Data Explorer</h1>
@@ -82,15 +82,21 @@
 
 <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/CitiBikeApi.js"></script>
 <script type="text/javascript" src="js/Tabs.js"></script>
 
+<!-- Reference our Model scripts. -->
+<script type="text/javascript" src="js/model/CitiBikeApi.js"></script>
+<script type="text/javascript" src="js/model/CitiBikeModel.js"></script>
 
-<script type="text/javascript">
-    CitiBikeApi.findAllStations(function (result) {
-        console.log(result);
-    });
-</script>
+<!-- Reference our View classes. -->
+<script type="text/javascript" src="js/view/MapView.js"></script>
+
+<!-- Reference our Controller classes. -->
+<script type="text/javascript" src="js/controller/MapController.js"></script>
+
+<!-- The application javascript class that starts the entire user interface -->
+<script type="text/javascript" src="js/app.js"></script>
+
 </body>
 </html>
 
