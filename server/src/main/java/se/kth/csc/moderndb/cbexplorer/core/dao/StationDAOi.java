@@ -24,4 +24,6 @@ public interface StationDAOi {
     @Transactional
     public List<List<Station>> findStationPairsWithDistance(double distance);
 
+    @Transactional
+    Double findDistanceBtwStations(long station_id1, long station_id2);
 }

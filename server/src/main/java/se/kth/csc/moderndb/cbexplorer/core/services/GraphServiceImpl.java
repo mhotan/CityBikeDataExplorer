@@ -37,7 +37,7 @@ public class GraphServiceImpl implements GraphService {
 
 
     @Override
-    public List<Bike> requestAllBikes() {
+    public List<Bike> findAllBikes() {
         final List<Bike> bikes = new ArrayList<Bike>();
         bikeRepository.findAll().forEach(new Consumer<se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike>() {
             @Override
@@ -49,25 +49,51 @@ public class GraphServiceImpl implements GraphService {
     }
 
     @Override
-    public Bike requestBike(long bikeID) {
+    public Bike findBike(long bikeID) {
         return bikeRepository.findBySchemaPropertyValue(DatabaseConstants.BIKE_ID, bikeID).toCoreBike();
     }
 
+    @Override
+    public Long getBikeTripCount(long bikeID) {
+        se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike bike = bikeRepository.findBySchemaPropertyValue(DatabaseConstants.BIKE_ID, bikeID);
+        if (bike == null) {
+            return null;
+        }
+        return bikeRepository.getTripCount(bike.getId());
+    }
 
     @Override
-    public List<Station> requestAllStations() {
+    public List<Station> findAllStations() {
+        return stationsToCoreList(stationRepository.findAll());
+    }
+
+    @Override
+    public Station findStation(long stationId) {
+        return stationRepository.findBySchemaPropertyValue(DatabaseConstants.STATION_ID, stationId).toCoreStation();
+    }
+
+    @Override
+    public Station findStationByName(String name) {
+        return stationRepository.findByName(name).toCoreStation();
+    }
+
+    @Override
+    public List<Station> getStationDestinations(long startStationId) {
+        se.kth.csc.moderndb.cbexplorer.graph.core.domain.Station station = stationRepository.findBySchemaPropertyValue(DatabaseConstants.STATION_ID, startStationId);
+        if (station == null) {
+            return null;
+        }
+        return stationsToCoreList(stationRepository.getDestinations(station.getId()));
+    }
+
+    private List<Station> stationsToCoreList(Iterable<se.kth.csc.moderndb.cbexplorer.graph.core.domain.Station> result) {
         final List<Station> stations = new ArrayList<Station>();
-        stationRepository.findAll().forEach(new Consumer<se.kth.csc.moderndb.cbexplorer.graph.core.domain.Station>() {
+        result.forEach(new Consumer<se.kth.csc.moderndb.cbexplorer.graph.core.domain.Station>() {
             @Override
             public void accept(se.kth.csc.moderndb.cbexplorer.graph.core.domain.Station station) {
                 stations.add(station.toCoreStation());
             }
         });
         return stations;
-    }
-
-    @Override
-    public Station requestStation(long stationId) {
-        return stationRepository.findBySchemaPropertyValue(DatabaseConstants.STATION_ID, stationId).toCoreStation();
     }
 }

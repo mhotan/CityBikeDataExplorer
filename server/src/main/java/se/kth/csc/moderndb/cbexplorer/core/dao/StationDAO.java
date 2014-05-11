@@ -96,35 +96,39 @@ public class StationDAO implements StationDAOi {
                         );
                     }
                 }
-        );
-        return results;
+            }
+        }
     }
 
     @Override
-    public List<List<Station>> findStationPairsWithDistance(double distance) {
-        String sql = "SELECT DISTINCT a." + PostgreSQLDatabaseConnection.STATIONID + " as start,JD." + PostgreSQLDatabaseConnection.STATIONID +
-                " as end FROM " + PostgreSQLDatabaseConnection.STATION + " a, (SELECT " + PostgreSQLDatabaseConnection.POINT + ", " + PostgreSQLDatabaseConnection.STATIONID +
-                " FROM " + PostgreSQLDatabaseConnection.STATION + ")JD WHERE ST_DWITHIN(a." + PostgreSQLDatabaseConnection.POINT + " ,JD." + PostgreSQLDatabaseConnection.POINT + ", ?) = true AND JD." +
-                PostgreSQLDatabaseConnection.STATIONID + "< a." + PostgreSQLDatabaseConnection.STATIONID;
-        List<List<Station>> results = jdbcTemplate.query(
-                sql, new Object[]{distance},
-                new RowMapper<List<Station>>() {
-                    @Override
-                    public List<Station> mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        List<Station> pair = new ArrayList<Station>();
-                        try {
-                            List<Station> start = findStationByID(rs.getLong(1));
-                            List<Station> end = findStationByID(rs.getLong(2));
-                            pair.addAll(start);
-                            pair.addAll(end);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        return pair;
-                    }
+    public Double findDistanceBtwStations(long station_id1,long station_id2){
+        String sql = "SELECT ST_DISTANCE(JD.end_point,point)from "
+                + PostgreSQLDatabaseConnection.STATION +
+                ",(Select " + GET_X_FROM_POINT + "," + GET_Y_FROM_POINT + "as end_point from "
+                +PostgreSQLDatabaseConnection.STATION+
+                "where ?= +" + PostgreSQLDatabaseConnection.STATIONID + ")JD where ?= "
+                + PostgreSQLDatabaseConnection.STATIONID+";";
+        Connection conn= null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setLong(1, station_id1);
+            ps.setLong(2,station_id2);
+            ResultSet rs = ps.executeQuery();
+            rs.close();
+            ps.close();
+            return rs.getDouble(1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
                 }
-        );
-        return results;
+            }
+        }
+
     }
 
 }
