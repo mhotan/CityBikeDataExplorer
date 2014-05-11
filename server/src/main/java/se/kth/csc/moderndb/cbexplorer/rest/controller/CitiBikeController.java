@@ -7,6 +7,7 @@ import se.kth.csc.moderndb.cbexplorer.Greeting;
 import se.kth.csc.moderndb.cbexplorer.core.dao.StationDAOi;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
+import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
 import se.kth.csc.moderndb.cbexplorer.core.services.GraphService;
 import se.kth.csc.moderndb.cbexplorer.rest.RestConstants;
 
@@ -50,6 +51,12 @@ public class CitiBikeController {
     public @ResponseBody
     String getBikeTripCount(@PathVariable long bikeId) {
         return graphService.getBikeTripCount(bikeId).toString();
+    }
+
+    @RequestMapping(RestConstants.BIKES_URI_PATH + "/{bikeId}/trips/{startTime}/{endTime}")
+    public @ResponseBody
+    List<Trip> getBikeTrips(@PathVariable long bikeId, @PathVariable long startTime, @PathVariable long endTime) {
+        return graphService.getBikeTrips(bikeId, startTime, endTime);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = RestConstants.STATIONS_URI_PATH)

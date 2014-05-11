@@ -3,6 +3,7 @@ package se.kth.csc.moderndb.cbexplorer.core.services;
 import se.kth.csc.moderndb.cbexplorer.DatabaseConstants;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
+import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
 import se.kth.csc.moderndb.cbexplorer.core.repository.BikeRepository;
 import se.kth.csc.moderndb.cbexplorer.core.repository.StationRepository;
 import se.kth.csc.moderndb.cbexplorer.core.repository.TripRepository;
@@ -66,6 +67,15 @@ public class GraphServiceImpl implements GraphService {
     }
 
     @Override
+    public List<Trip> getBikeTrips(long bikeID, long startTime, long endTime) {
+        se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike bike = bikeRepository.findBySchemaPropertyValue(DatabaseConstants.BIKE_ID, bikeID);
+        if (bike == null) {
+            return null;
+        }
+        return tripsToCoreList(bikeRepository.getTrips(bike.getId(), startTime, endTime));
+    }
+
+    @Override
     public List<Station> findAllStations() {
         return stationsToCoreList(stationRepository.findAll());
     }
@@ -105,5 +115,16 @@ public class GraphServiceImpl implements GraphService {
             }
         });
         return stations;
+    }
+
+    private List<Trip> tripsToCoreList(Iterable<se.kth.csc.moderndb.cbexplorer.graph.core.domain.Trip> result) {
+        final List<Trip> trips = new ArrayList<Trip>();
+        result.forEach(new Consumer<se.kth.csc.moderndb.cbexplorer.graph.core.domain.Trip>() {
+            @Override
+            public void accept(se.kth.csc.moderndb.cbexplorer.graph.core.domain.Trip trip) {
+                trips.add(trip.toCoreTrip());
+            }
+        });
+        return trips;
     }
 }

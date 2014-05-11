@@ -3,6 +3,7 @@ package se.kth.csc.moderndb.cbexplorer.core.services;
 import org.springframework.transaction.annotation.Transactional;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
+import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
 
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,9 @@ public interface GraphService {
 
     @Transactional
     public Long getBikeTripCount(long bikeID);
+
+    @Transactional
+    public List<Trip> getBikeTrips(long bikeID, long startTime, long endTime);
 
     // TODO Place the base requirements for any graph related request.
     // Be sure to add @Transactional.
