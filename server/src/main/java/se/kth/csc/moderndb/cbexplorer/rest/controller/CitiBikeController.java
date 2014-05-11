@@ -61,6 +61,12 @@ public class CitiBikeController {
         return graphService.findStationByName(name);
     }
 
+    @RequestMapping(RestConstants.STATIONS_URI_PATH + "/pairsWithDistance/{distance}")
+    public @ResponseBody
+    List<List<Station>> findStationPairsWithDistance(@PathVariable double distance) {
+        return stationDAO.findStationPairsWithDistance(distance);
+    }
+
     @RequestMapping(RestConstants.STATIONS_URI_PATH + "/{stationId}/destinations")
     public @ResponseBody
     List<Station> getStationDestinations(@PathVariable long stationId) {
