@@ -5,6 +5,7 @@ import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Basic service that handles Graph like queries.
@@ -44,5 +45,5 @@ public interface GraphService {
     public Station findStationByName(String name);
 
     @Transactional
-    public List<Station> getStationDestinations(long startStationId);
+    public Map<Long, Long> getStationDestinations(long startStationId);
 }

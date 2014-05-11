@@ -11,6 +11,7 @@ import se.kth.csc.moderndb.cbexplorer.core.services.GraphService;
 import se.kth.csc.moderndb.cbexplorer.rest.RestConstants;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Citibike REST Endpoint class that is implemented using Spring MVC Framework.  Controller manages
@@ -61,16 +62,15 @@ public class CitiBikeController {
         return graphService.findStationByName(name);
     }
 
+    @RequestMapping(RestConstants.STATIONS_URI_PATH + "/pairsWithDistance/{distance}")
+    public @ResponseBody
+    List<List<Station>> findStationPairsWithDistance(@PathVariable double distance) {
+        return stationDAO.findStationPairsWithDistance(distance);
+    }
+
     @RequestMapping(RestConstants.STATIONS_URI_PATH + "/{stationId}/destinations")
     public @ResponseBody
-    List<Station> getStationDestinations(@PathVariable long stationId) {
+    Map<Long, Long> getStationDestinations(@PathVariable long stationId) {
         return graphService.getStationDestinations(stationId);
     }
-
-    @RequestMapping(RestConstants.STATIONS_URI_PATH + "/distance/{station1}/{station2}")
-    public @ResponseBody
-    String getDistanceBetweenStations(@PathVariable long station1, @PathVariable long station2) {
-        return stationDAO.findDistanceBtwStations(station1, station2).toString();
-    }
-
 }
