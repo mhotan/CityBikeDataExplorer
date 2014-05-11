@@ -31,6 +31,8 @@ public class Trip extends AbstractEntity {
 
     Long endTime;
 
+    int duration;
+
     // TODO later figure ways to incorporate Enums with Spring framework.
     // TODO Have to figure out how to ensure that the startTime + startedFrom + bike is the primary key.
 
@@ -97,6 +99,14 @@ public class Trip extends AbstractEntity {
         this.endedAt = endedAt;
     }
 
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
     public Long getStartTime() {
         return startTime;
     }
@@ -131,8 +141,15 @@ public class Trip extends AbstractEntity {
 
     public se.kth.csc.moderndb.cbexplorer.core.domain.Trip toCoreTrip() {
         return new se.kth.csc.moderndb.cbexplorer.core.domain.Trip(
-                getStartTime(), getEndTime(), getUserType(), getUserBirthYear(), getUserGender(),
-                getStartedFrom().toCoreStation(), getEndedAt().toCoreStation(), getBike().toCoreBike()
+                new Date(getStartTime()),
+                new Date(getEndTime()),
+                getDuration(),
+                getUserType(),
+                getUserBirthYear(),
+                getUserGender(),
+                getStartedFrom().toCoreStation(),
+                getEndedAt().toCoreStation(),
+                getBike().toCoreBike()
         );
     }
 
