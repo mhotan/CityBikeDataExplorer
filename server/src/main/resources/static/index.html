@@ -3,11 +3,10 @@
 <head>
     <meta charset="utf-8">
     <title>Citi Bike Data Explorer</title>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="css/tap-order.css">
-
-
 
     <!-- Load the base Style conditions for the Map -->
     <link rel="stylesheet" href="css/base-map.css"/>
@@ -36,31 +35,30 @@
 
 <div id="controller-pane">
     <!--TODO Remove the place holder text with a controller pane.-->
-    <div id="tabs">
-        <ul>
-            <li><a href="#tabs-1">Station</a></li>
-            <li><a href="#tabs-2">Bike</a></li>
-        </ul>
-
-    </div>
-    <div id='tabs-1'>
+    <ul class='tabs'>
+        <li><a href='#tab1'>Station</a></li>
+        <li><a href='#tab2'>Bike</a></li>
+    </ul>
+    <div id="tab1">
         <div id = "searchSection">
-        <form name="searchBarForm" action="">
-            <input type="text" name="searchBar" value="Search Station" onfocus="this.value==this.defaultValue?this.value='':null">
-            <input type="button" value="Search" onclick="exec(document.Test.query.value)">
-        </form>
-        <form action="select.htm">
-            <p>
-                <select name="results" size="10">
-                    <option>A</option>
-                    <option>B</option>
-                    <option>C</option>
-                    <option>D</option>
-                    <option>E</option>
-                </select>
-            </p>
-        </form>
+            <form name="searchBarForm" action="">
+                <input type="text" name="searchBar" value="Search Station" onfocus="this.value==this.defaultValue?this.value='':null">
+                <input type="button" value="Search" onclick="exec(document.Test.query.value)">
+            </form>
+            <form action="select.htm">
+                <p>
+                    <select name="results" size="10">
+                        <option>A</option>
+                        <option>B</option>
+                        <option>C</option>
+                        <option>D</option>
+                        <option>E</option>
+                    </select>
+                </p>
+            </form>
         </div>
+
+        <h3>Time Range</h3>
         <div id="slider-range"></div>
         <script type="text/javascript">
             $("#slider-range").slider({
@@ -72,11 +70,10 @@
             });
         </script>
     </div>
-    <div id='tabs-2'>
-        <p>This is the 2nd tab.</p>
+    <div id="tab2">
+        <p>Morbi </p>
     </div>
 
-    <h3>Time Range</h3>
 
 </div>
 
