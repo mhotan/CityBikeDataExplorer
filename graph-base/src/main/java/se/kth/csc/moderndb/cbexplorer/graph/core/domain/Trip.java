@@ -147,8 +147,8 @@ public class Trip extends AbstractEntity {
                 getUserType(),
                 getUserBirthYear(),
                 getUserGender(),
-                getStartedFrom().toCoreStation(),
-                getEndedAt().toCoreStation(),
+                null, // getStartedFrom().toCoreStation(), TODO retrieve the stations too?
+                null, // getEndedAt().toCoreStation(),
                 getBike().toCoreBike()
         );
     }
