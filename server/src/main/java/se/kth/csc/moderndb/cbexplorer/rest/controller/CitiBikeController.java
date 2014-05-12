@@ -2,16 +2,20 @@ package se.kth.csc.moderndb.cbexplorer.rest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import se.kth.csc.moderndb.cbexplorer.Greeting;
-import se.kth.csc.moderndb.cbexplorer.core.dao.BikeDAOi;
-import se.kth.csc.moderndb.cbexplorer.core.dao.StationDAOi;
-import se.kth.csc.moderndb.cbexplorer.core.dao.TripDAOi;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
-import se.kth.csc.moderndb.cbexplorer.core.domain.TimeRange;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
+import se.kth.csc.moderndb.cbexplorer.core.domain.params.DefaultParameterSettings;
+import se.kth.csc.moderndb.cbexplorer.core.domain.params.TemporalParameters;
+import se.kth.csc.moderndb.cbexplorer.core.domain.range.ShortRange;
+import se.kth.csc.moderndb.cbexplorer.core.domain.range.TimeRange;
+import se.kth.csc.moderndb.cbexplorer.core.domain.stats.StationUsageStatistics;
 import se.kth.csc.moderndb.cbexplorer.core.services.GraphService;
+import se.kth.csc.moderndb.cbexplorer.core.services.RelationalService;
 import se.kth.csc.moderndb.cbexplorer.rest.RestConstants;
 
 import java.util.List;
@@ -35,29 +39,41 @@ public class CitiBikeController {
 
     // TODO The DAOs should not be directly expose at this layer.
     // It reveals to much about the underlying structure of the PSQL database.
-    // Refactor the
+    // Refactor the DAO into a service that connects to relation database.
+    // Potential name RelationService
 
     @Autowired
-    StationDAOi stationDAO;
+    RelationalService relationalService;
+//
+//    @Autowired
+//    StationDAOi stationDAO;
+//
+//    @Autowired
+//    TripDAOi tripDAO;
+//
+//    @Autowired
+//    BikeDAOi bikeDAO;
 
-    @Autowired
-    TripDAOi tripDAO;
-
-    @Autowired
-    BikeDAOi bikeDAO;
-
-    @RequestMapping(method= RequestMethod.GET, value = "/hello")
+    /**
+     * @return The default parameter settings for all the possible queries.
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/parameters/default")
     public @ResponseBody
-    Greeting sayHello(@RequestParam(value="name", required=false, defaultValue="Stranger") String name) {
-        return new Greeting(String.format(template, name));
+    DefaultParameterSettings getDefaultParameters() {
+        // Extract the default Bike Parameters
+        List<Bike> bikes = relationalService.getAllBikes();
+        List<Station> stations = relationalService.getAllStations();
+        TemporalParameters temporalParameters = new TemporalParameters(
+                relationalService.getTimeRange(),
+                relationalService.getDurationLimits());
+        ShortRange birthRange = relationalService.getBirthYearLimits();
+        return new DefaultParameterSettings(bikes, stations, temporalParameters, birthRange);
     }
-
-    // TODO Add more RESTful Spring method calls.
 
     @RequestMapping(method = RequestMethod.GET, value = RestConstants.BIKES_URI_PATH)
     public @ResponseBody
     List<Bike> findAllBikes() {
-        return bikeDAO.findAllBikes();
+        return relationalService.getAllBikes();
     }
 
     @RequestMapping(RestConstants.BIKES_URI_PATH + "/{bikeId}/tripCount")
@@ -82,11 +98,11 @@ public class CitiBikeController {
         return graphService.findStationByName(name);
     }
 
-    @RequestMapping(RestConstants.STATIONS_URI_PATH + "/pairsWithDistance/{distance}")
-    public @ResponseBody
-    List<List<Station>> findStationPairsWithDistance(@PathVariable double distance) {
-        return stationDAO.findStationPairsWithDistance(distance);
-    }
+//    @RequestMapping(RestConstants.STATIONS_URI_PATH + "/pairsWithDistance/{distance}")
+//    public @ResponseBody
+//    List<List<Station>> findStationPairsWithDistance(@PathVariable double distance) {
+//        return stationDAO.findStationPairsWithDistance(distance);
+//    }
 
     @RequestMapping(RestConstants.STATIONS_URI_PATH + "/{stationId}/destinations")
     public @ResponseBody
@@ -97,6 +113,20 @@ public class CitiBikeController {
     @RequestMapping(RestConstants.TRIPS_URI_PATH + "/timeRange")
     public @ResponseBody
     TimeRange getTimeRange() {
-        return tripDAO.getTimeRange();
+        return relationalService.getTimeRange();
     }
+
+    @RequestMapping(RestConstants.STATIONS_URI_PATH + "/statistics")
+    public @ResponseBody
+    Map<Long, StationUsageStatistics> getAllStationStatistics() {
+        return graphService.findAllStationStatistics();
+    }
+
+    @RequestMapping(RestConstants.STATIONS_URI_PATH + "/{stationId}/statistics")
+    public @ResponseBody
+    StationUsageStatistics getStationStatistic(@PathVariable long stationId) {
+        return graphService.findStationStatistics(stationId);
+    }
+
+
 }

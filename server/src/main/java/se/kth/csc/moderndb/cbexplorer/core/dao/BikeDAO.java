@@ -3,7 +3,7 @@ package se.kth.csc.moderndb.cbexplorer.core.dao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
-import se.kth.csc.moderndb.cbexplorer.domain.PostgreSQLDatabaseConnection;
+import se.kth.csc.moderndb.cbexplorer.domain.PSQLConnection;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -25,7 +25,7 @@ public class BikeDAO implements BikeDAOi {
 
     @Override
     public List<Bike> findAllBikes() {
-        String sql = "SELECT DISTINCT " + PostgreSQLDatabaseConnection.BIKEID +" FROM " + PostgreSQLDatabaseConnection.TRIP;
+        String sql = "SELECT DISTINCT " + PSQLConnection.BIKEID + " FROM " + PSQLConnection.TRIP;
         return jdbcTemplate.query(sql, new Object[]{}, BikeMapper.getInstance());
     }
 

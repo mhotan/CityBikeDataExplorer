@@ -15,4 +15,12 @@ public interface StationRepositoryCustom {
      */
     Map<Long, Long> getDestinationCounts(Long graphId);
 
+    /**
+     * Returns the number of trips from all other stations to argument station.
+     *
+     * @param graphId Graph Id of the Node
+     * @return Mapping of source station id's to the number of trips.
+     */
+    Map<Long, Long> getArrivaleCounts(Long graphId);
+
 }

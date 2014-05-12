@@ -19,10 +19,11 @@ import se.kth.csc.moderndb.cbexplorer.core.repository.StationRepository;
 import se.kth.csc.moderndb.cbexplorer.core.repository.TripRepository;
 import se.kth.csc.moderndb.cbexplorer.core.services.GraphService;
 import se.kth.csc.moderndb.cbexplorer.core.services.GraphServiceImpl;
-import se.kth.csc.moderndb.cbexplorer.domain.PostgreSQLDatabaseConnection;
+import se.kth.csc.moderndb.cbexplorer.core.services.RelationalService;
+import se.kth.csc.moderndb.cbexplorer.core.services.RelationalServiceImpl;
+import se.kth.csc.moderndb.cbexplorer.domain.PSQLConnection;
 
 import javax.sql.DataSource;
-import java.util.Arrays;
 
 /**
  * Main class that the spring framework will find and run.  Spring will automatically
@@ -55,16 +56,8 @@ public class Application extends Neo4jConfiguration {
      * @param args Ignored Program arguments.
      */
     public static void main(String[] args) {
-
         //  Create an application context.
         ApplicationContext ctx = SpringApplication.run(Application.class, args);
-
-        // Print out all the bean names to be used.
-        String[] beanNames = ctx.getBeanDefinitionNames();
-        Arrays.sort(beanNames);
-        for (String beanName : beanNames) {
-            System.out.println(beanName);
-        }
     }
 
     /**
@@ -95,11 +88,17 @@ public class Application extends Neo4jConfiguration {
     @Bean
     public DataSource getDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(PostgreSQLDatabaseConnection.DRIVER_FULL_NAME);
-        dataSource.setUrl(PostgreSQLDatabaseConnection.URL + PostgreSQLDatabaseConnection.DATABASE_NAME);
-        dataSource.setUsername(PostgreSQLDatabaseConnection.USERNAME);
-        dataSource.setPassword(PostgreSQLDatabaseConnection.PASSWORD);
+        dataSource.setDriverClassName(PSQLConnection.DRIVER_FULL_NAME);
+        dataSource.setUrl(PSQLConnection.URL + PSQLConnection.DATABASE_NAME);
+        dataSource.setUsername(PSQLConnection.USERNAME);
+        dataSource.setPassword(PSQLConnection.PASSWORD);
         return dataSource;
+    }
+
+    @Bean
+    @Autowired
+    public BikeDAOi getBikeDAO(DataSource dataSource) {
+        return new BikeDAO(dataSource);
     }
 
     @Bean
@@ -110,14 +109,14 @@ public class Application extends Neo4jConfiguration {
 
     @Bean
     @Autowired
-    public TripDAOi getTripDAO(DataSource dataSource) {
-        return new TripDAO(dataSource);
+    public TripDAOi getTripDAO(DataSource dataSource, StationDAOi stationDAO) {
+        return new TripDAO(dataSource, stationDAO);
     }
 
     @Bean
     @Autowired
-    public BikeDAOi getBikeDAO(DataSource dataSource) {
-        return new BikeDAO(dataSource);
+    public RelationalService getRelationService(TripDAOi tripDAO, StationDAOi stationDAO, BikeDAOi bikeDAO) {
+        return new RelationalServiceImpl(tripDAO, stationDAO, bikeDAO);
     }
 
     // TODO Declare more Spring Beans here.

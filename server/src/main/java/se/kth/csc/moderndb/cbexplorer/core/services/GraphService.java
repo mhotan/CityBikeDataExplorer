@@ -3,6 +3,7 @@ package se.kth.csc.moderndb.cbexplorer.core.services;
 import org.springframework.transaction.annotation.Transactional;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
+import se.kth.csc.moderndb.cbexplorer.core.domain.stats.StationUsageStatistics;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
 
 import java.util.List;
@@ -50,4 +51,14 @@ public interface GraphService {
 
     @Transactional
     public Map<Long, Long> getStationDestinations(long startStationId);
+
+    @Transactional
+    public StationUsageStatistics findStationStatistics(long stationId);
+
+    /**
+     * @return A mapping of Station IDs to Station Usage statistics.
+     */
+    @Transactional
+    public Map<Long, StationUsageStatistics> findAllStationStatistics();
+
 }

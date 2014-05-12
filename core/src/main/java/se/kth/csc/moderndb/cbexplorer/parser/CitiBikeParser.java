@@ -125,14 +125,20 @@ public class CitiBikeParser {
                     Double.valueOf(row[END_STATION_LONGITUDE_INDEX]), Double.valueOf(row[END_STATION_LATITUDE_INDEX]));
 
             // Parse birth year, which may be a numeric string or "\N".
-            Short birthYear;
-            int duration;
+            short birthYear;
             try {
                 birthYear = Short.valueOf(row[BIRTH_YEAR_INDEX]);
-                duration = Integer.valueOf(row[TRIP_DURATION_INDEX]);
             } catch (NumberFormatException e) {
                 birthYear = 0;
-                duration = 0;
+
+            }
+
+            // Parse the duration.
+            int duration;
+            try {
+                duration = Integer.valueOf(row[TRIP_DURATION_INDEX]);
+            } catch (NumberFormatException e) {
+                throw new RuntimeException("Duration must be an integer not " + row[TRIP_DURATION_INDEX]);
             }
 
             // Parse the data objects.

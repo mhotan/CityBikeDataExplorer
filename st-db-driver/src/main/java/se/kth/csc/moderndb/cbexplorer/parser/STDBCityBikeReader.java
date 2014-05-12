@@ -1,6 +1,6 @@
 package se.kth.csc.moderndb.cbexplorer.parser;
 
-import se.kth.csc.moderndb.cbexplorer.domain.PostgreSQLDatabaseConnection;
+import se.kth.csc.moderndb.cbexplorer.domain.PSQLConnection;
 import se.kth.csc.moderndb.cbexplorer.parser.data.StationData;
 import se.kth.csc.moderndb.cbexplorer.parser.data.TripData;
 
@@ -21,7 +21,7 @@ public class STDBCityBikeReader implements CitiBikeReader {
     // longitude and latitude of the stations will be multiplied with this constant to get the correspondent decimal places for building the STATION_ID in the STATION table {@link #PostgreSQLDatabaseConnection.createSTATIONTable()}.
     private final int DECIMAL_PLACE_FOR_ID = 100000;
 
-    private PostgreSQLDatabaseConnection postgreSQLDatabaseConnection;
+    private PSQLConnection PSQLConnection;
     private Connection c;
     private int tripCount = 0;
     // TODO: database creation via code!?
@@ -32,9 +32,9 @@ public class STDBCityBikeReader implements CitiBikeReader {
      */
     public STDBCityBikeReader() {
         // init database connection
-        this.postgreSQLDatabaseConnection = new PostgreSQLDatabaseConnection();
-        c = this.postgreSQLDatabaseConnection.openDB();
-        this.postgreSQLDatabaseConnection.createAllNecessaryTables(c);
+        this.PSQLConnection = new PSQLConnection();
+        c = this.PSQLConnection.openDB();
+        this.PSQLConnection.createAllNecessaryTables(c);
         // after creating the tables close the connection
     }
 
@@ -63,13 +63,17 @@ public class STDBCityBikeReader implements CitiBikeReader {
     private void addTripsToSTATION(Collection<TripData> trips) {
         HashSet<StationData> stations = new HashSet<StationData>();
         for (TripData trip : trips) {
-            StationData startStation = new StationData(trip.getStartStationData().getStationId(), trip.getStartStationData().getName(), trip.getStartStationData().getLongitude(), trip.getStartStationData().getLatitude());
-            StationData endStation = new StationData(trip.getEndStationData().getStationId(), trip.getEndStationData().getName(), trip.getEndStationData().getLongitude(), trip.getEndStationData().getLatitude());
+            StationData startStation = new StationData(trip.getStartStationData().getStationId(),
+                    trip.getStartStationData().getName(), trip.getStartStationData().getLongitude(),
+                    trip.getStartStationData().getLatitude());
+            StationData endStation = new StationData(trip.getEndStationData().getStationId(),
+                    trip.getEndStationData().getName(), trip.getEndStationData().getLongitude(),
+                    trip.getEndStationData().getLatitude());
 
             stations.add(startStation);
             stations.add(endStation);
         }
-        this.postgreSQLDatabaseConnection.insertIntoSTATION(this.c, stations);
+        this.PSQLConnection.insertIntoSTATION(this.c, stations);
     }
 
 
@@ -79,10 +83,7 @@ public class STDBCityBikeReader implements CitiBikeReader {
      * @param trips parsed trip data
      */
     private void addTripsToTRIP(Collection<TripData> trips) {
-        this.postgreSQLDatabaseConnection.insertIntoTRIP(this.c, trips);
+        this.PSQLConnection.insertIntoTRIP(this.c, trips);
     }
-
-
-
-    }
+}
 

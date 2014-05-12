@@ -14,6 +14,7 @@ import static se.kth.csc.moderndb.cbexplorer.DatabaseConstants.STARTS_AT_RELATIO
  * Created by corey on 5/9/14.
  */
 public class StationRepositoryImpl implements StationRepositoryCustom {
+
     @Autowired
     private Neo4jTemplate template;
 
@@ -29,6 +30,22 @@ public class StationRepositoryImpl implements StationRepositoryCustom {
         for (Map<String, Object> row : queryResult) {
             System.out.println(row);
             result.put((Long) row.get("end.stationId"), (Long) row.get("count(*)"));
+        }
+        return result;
+    }
+
+    @Override
+    public Map<Long, Long> getArrivaleCounts(Long graphId) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("station", graphId);
+        Result<Map<String, Object>> queryResult =
+                template.query("START end=node({station}) MATCH start<-[:" + STARTS_AT_RELATION + "]-" +
+                        "trip-[:" + ENDS_AT_RELATION + "]->end RETURN start.stationId, count(*)", params);
+
+        Map<Long, Long> result = new HashMap<Long, Long>();
+        for (Map<String, Object> row : queryResult) {
+            System.out.println(row);
+            result.put((Long) row.get("start.stationId"), (Long) row.get("count(*)"));
         }
         return result;
     }

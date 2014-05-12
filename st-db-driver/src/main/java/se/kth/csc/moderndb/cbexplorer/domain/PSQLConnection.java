@@ -13,7 +13,7 @@ import java.util.HashSet;
  * <p/>
  * Created by Jeannine on 14.04.14.
  */
-public class PostgreSQLDatabaseConnection {
+public class PSQLConnection {
 
     // names of the tables that will be created
     public static final String STATION = "station";
@@ -50,8 +50,7 @@ public class PostgreSQLDatabaseConnection {
         Statement stmt = null;
         try {
             Class.forName(DRIVER_FULL_NAME).newInstance();
-            c = DriverManager
-                    .getConnection(URL + DATABASE_NAME, USERNAME, PASSWORD);
+            c = DriverManager.getConnection(URL + DATABASE_NAME, USERNAME, PASSWORD);
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -59,7 +58,6 @@ public class PostgreSQLDatabaseConnection {
         }
         System.out.println("Opened database successfully");
         return c;
-
     }
 
     /**
@@ -113,9 +111,9 @@ public class PostgreSQLDatabaseConnection {
                     " " + ENDTIME + " TIMESTAMP  NOT NULL," +
                     " " + DURATION + " BIGINT NOT NULL," +
                     " " + STARTSTATION + " BIGINT  NOT NULL, " +
-                    " " + ENDSTATION + " BIGINT    NOT NULL," +
+                    " " + ENDSTATION + " BIGINT    NOT NULL, " +
                     " " + USERTYPE + " TEXT NOT NULL, " +
-                    " " + BIRTHYEAR + " INT NOT NULL, " +
+                    " " + BIRTHYEAR + " INT, " +
                     " " + GENDER + " INT    NOT NULL," +
                     " PRIMARY KEY(" + BIKEID + "," + STARTTIME + "));";
             stmt.executeUpdate(sql);
@@ -201,7 +199,11 @@ public class PostgreSQLDatabaseConnection {
                 preparedStatement.setLong(5, tripDataObject.getStartStationData().getStationId());
                 preparedStatement.setLong(6, tripDataObject.getEndStationData().getStationId());
                 preparedStatement.setString(7, tripDataObject.getUserType());
-                preparedStatement.setInt(8, tripDataObject.getUserBirthYear());
+                short birthYear = tripDataObject.getUserBirthYear();
+                if (birthYear == 0)
+                    preparedStatement.setNull(8, Types.INTEGER);
+                else
+                    preparedStatement.setInt(8, birthYear);
                 preparedStatement.setInt(9, tripDataObject.getUserGender());
                 preparedStatement.addBatch();
             }
