@@ -1,6 +1,7 @@
 package se.kth.csc.moderndb.cbexplorer.core.dao;
 
 import org.springframework.transaction.annotation.Transactional;
+import se.kth.csc.moderndb.cbexplorer.core.domain.TimeRange;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
 import se.kth.csc.moderndb.cbexplorer.core.domain.TripParameters;
 import se.kth.csc.moderndb.cbexplorer.core.domain.UserParameters;
@@ -38,4 +39,7 @@ public interface TripDAOi {
 
     @Transactional
     public List<Trip> findTripWithEndStations(TripParameters tripParameters);
+
+    @Transactional
+    public TimeRange getTimeRange();
 }

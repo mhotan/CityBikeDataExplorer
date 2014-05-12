@@ -19,7 +19,25 @@ var CitiBikeMapView = function(map, model) {
     // Keep track of all the marker click handlers
     var markerClickHandlers = [];
 
-    // Calls on the model
+    // Show all
+    var trips = [];
+
+    // The Path symbol for drawing a trip.
+    var getLineSymbol = function() {
+        return { path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW };
+    };
+
+    // Show the weighted trip for the stations
+    var showTrip = function(trip) {
+
+    };
+
+    // Show the trips
+    this.showTrips = function(trips) {
+
+    };
+
+    // Creates a Info View for a given station
     var createInfoWindow = function(station) {
         // Use the model to
         var contentString = '<h3>' + station.name + '</h3>';
@@ -28,7 +46,7 @@ var CitiBikeMapView = function(map, model) {
             maxWidth: 200
         });
         return infoView;
-    }
+    };
 
     // Show the station on the map.
     var showStation = function(station) {
@@ -43,7 +61,7 @@ var CitiBikeMapView = function(map, model) {
             infoWindow.open(map, marker);
         });
         markerClickHandlers.push(handler);
-    }
+    };
 
     // Initially populate the
     this.showStations = function(stations) {
@@ -52,6 +70,7 @@ var CitiBikeMapView = function(map, model) {
         }
     }
 
+    // Sets the map for all the Markers
     var setAllMap = function(map) {
         for (var i = 0; i < markers.length; i++) {
             markers[i].setMap(map);

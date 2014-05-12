@@ -15,10 +15,17 @@ $(document).ready(function() {
         center: new google.maps.LatLng(40.7192,-73.95)
     });
 
+    // Set the current layer to be the bicycle layer.
+    var bikeLayer = new google.maps.BicyclingLayer();
+    bikeLayer.setMap(map);
+
     // The Map view.
     var mapView = new CitiBikeMapView(map, model);
     var mapController = new MapController(mapView, model);
     mapController.addListener(this);
 
+    CitiBikeApi.getTimeRange(function(result) {
+        console.log(result);
+    });
 
 });

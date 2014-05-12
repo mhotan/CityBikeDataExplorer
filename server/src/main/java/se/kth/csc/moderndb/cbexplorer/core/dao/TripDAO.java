@@ -24,13 +24,8 @@ public class TripDAO implements TripDAOi {
 
     private JdbcTemplate jdbcTemplate;
 
+    //
     public TripDAO(DataSource source) {
-//        SimpleDriverDataSource driverDataSource = new SimpleDriverDataSource() {{
-//            setDriverClass(org.postgresql.Driver.class);
-//            setUsername(PostgreSQLDatabaseConnection.USERNAME);
-//            setUrl(PostgreSQLDatabaseConnection.URL + PostgreSQLDatabaseConnection.DATABASE_NAME);
-//            setPassword(PostgreSQLDatabaseConnection.PASSWORD);
-//        }};
         this.jdbcTemplate = new JdbcTemplate(source);
     }
 
@@ -507,7 +502,7 @@ public class TripDAO implements TripDAOi {
         int ageStart = userParameters.getStartRangeAge();
         int ageEnd = userParameters.getEndRangeAge();
         String userType = userParameters.getUserType();
-        if (gender == new Character('M') || gender == new Character('F')) {
+        if (gender == 'M' || gender == 'F') {
             sql.concat(" " + PostgreSQLDatabaseConnection.GENDER + " = ?");
             alreadyAdded = true;
             arguments.put(PostgreSQLDatabaseConnection.GENDER, gender);
@@ -547,4 +542,19 @@ public class TripDAO implements TripDAOi {
         return arguments;
     }
 
+    @Override
+    public TimeRange getTimeRange() {
+        String sql = "SELECT MIN(" + PostgreSQLDatabaseConnection.STARTTIME + "), " +
+                "MAX(" + PostgreSQLDatabaseConnection.ENDTIME + ") from "
+                + PostgreSQLDatabaseConnection.TRIP;
+
+        // Build the
+        List<TimeRange> ranges = jdbcTemplate.query(sql, new Object[]{}, new RowMapper<TimeRange>() {
+            @Override
+            public TimeRange mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new TimeRange(new Date(rs.getDate(1).getTime()), new Date(rs.getDate(2).getTime()));
+            }
+        });
+        return ranges.get(0);
+    }
 }

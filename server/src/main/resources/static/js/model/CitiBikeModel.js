@@ -19,6 +19,9 @@ var CitiBikeModel = function() {
 
     var model = this;
 
+    // The complete time range between two
+    var timeRange = {};
+
     // Returns all the current bikes
     this.getAllBikes = function(callback) {
 
@@ -52,6 +55,7 @@ var CitiBikeModel = function() {
         }
     }
 
+    // Return the selected stations.
     this.getSelectedStations = function(callback) {
 
         // If there are no stations then we need to request it from the server
@@ -65,6 +69,7 @@ var CitiBikeModel = function() {
         }
     }
 
+    // Adds a station to the selected.
     this.addSelectedStation = function(station) {
         for (var i = 0; i < selectedStations.length; i++) {
             if (selectedStations[i].stationId == station.stationId) return;
@@ -91,6 +96,8 @@ var CitiBikeModel = function() {
         selectedStations = [];
         notifyObservers();
     }
+
+
 
     /*****************************************
      Observable implementation

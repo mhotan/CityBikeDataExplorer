@@ -5,8 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import se.kth.csc.moderndb.cbexplorer.Greeting;
 import se.kth.csc.moderndb.cbexplorer.core.dao.StationDAOi;
+import se.kth.csc.moderndb.cbexplorer.core.dao.TripDAOi;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
+import se.kth.csc.moderndb.cbexplorer.core.domain.TimeRange;
 import se.kth.csc.moderndb.cbexplorer.core.services.GraphService;
 import se.kth.csc.moderndb.cbexplorer.rest.RestConstants;
 
@@ -29,8 +31,15 @@ public class CitiBikeController {
     @Autowired
     GraphService graphService;
 
+    // TODO The DAOs should not be directly expose at this layer.
+    // It reveals to much about the underlying structure of the PSQL database.
+    // Refactor the
+
     @Autowired
     StationDAOi stationDAO;
+
+    @Autowired
+    TripDAOi tripDAO;
 
     @RequestMapping(method= RequestMethod.GET, value = "/hello")
     public @ResponseBody
@@ -72,5 +81,11 @@ public class CitiBikeController {
     public @ResponseBody
     Map<Long, Long> getStationDestinations(@PathVariable long stationId) {
         return graphService.getStationDestinations(stationId);
+    }
+
+    @RequestMapping(RestConstants.TRIPS_URI_PATH + "/timeRange")
+    public @ResponseBody
+    TimeRange getTimeRange() {
+        return tripDAO.getTimeRange();
     }
 }

@@ -58,7 +58,8 @@ public class GraphServiceImpl implements GraphService {
 
     @Override
     public Long getBikeTripCount(long bikeID) {
-        se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike bike = bikeRepository.findBySchemaPropertyValue(DatabaseConstants.BIKE_ID, bikeID);
+        se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike bike = bikeRepository.findBySchemaPropertyValue(
+                DatabaseConstants.BIKE_ID, bikeID);
         if (bike == null) {
             return null;
         }
