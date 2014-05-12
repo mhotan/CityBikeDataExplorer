@@ -18,11 +18,6 @@ import java.util.Date;
 @TypeAlias(DatabaseConstants.TRIP_LABEL)
 public class Trip extends AbstractEntity {
 
-    // Relation types
-    public static final String STARTED_FROM_TYPE = "STARTED_FROM";
-    public static final String ENDED_AT_TYPE = "ENDED_AT";
-    public static final String USES_TYPE = "USES";
-
     // Attributes
 
     // I could not find a time representation in Neo4j
@@ -34,7 +29,7 @@ public class Trip extends AbstractEntity {
     int duration;
 
     // TODO later figure ways to incorporate Enums with Spring framework.
-    // TODO Have to figure out how to ensure that the startTime + startedFrom + bike is the primary key.
+    // TODO Have to figure out how to ensure that the startTime + startsAt + bike is the primary key.
 
     String userType;
     Short userBirthYear;
@@ -43,15 +38,15 @@ public class Trip extends AbstractEntity {
     // Relations
 
     @Fetch
-    @RelatedTo(type = STARTED_FROM_TYPE, direction = Direction.OUTGOING)
-    Station startedFrom;
+    @RelatedTo(type = DatabaseConstants.STARTS_AT_RELATION, direction = Direction.OUTGOING)
+    Station startsAt;
 
     @Fetch
-    @RelatedTo(type = ENDED_AT_TYPE, direction = Direction.OUTGOING)
-    Station endedAt;
+    @RelatedTo(type = DatabaseConstants.ENDS_AT_RELATION, direction = Direction.OUTGOING)
+    Station endsAt;
 
     @Fetch
-    @RelatedTo(type = USES_TYPE, direction = Direction.OUTGOING)
+    @RelatedTo(type = DatabaseConstants.USES_RELATION, direction = Direction.OUTGOING)
     se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike bike;
 
     /**
@@ -64,17 +59,17 @@ public class Trip extends AbstractEntity {
      *
      * @param startTime The time the trip began
      * @param bike Bike used on the trip
-     * @param startedFrom Station where the bike started from.
+     * @param startsAt Station where the bike started from.
      */
-    public Trip(Station startedFrom, Bike bike, Date startTime) {
-        if (startedFrom == null)
-            throw new NullPointerException(getClass().getSimpleName() + "() startedFrom cannot be null");
+    public Trip(Station startsAt, Bike bike, Date startTime) {
+        if (startsAt == null)
+            throw new NullPointerException(getClass().getSimpleName() + "() startsAt cannot be null");
         if (bike == null)
             throw new NullPointerException(getClass().getSimpleName() + "() bike cannot be null");
         if (startTime == null)
             throw new NullPointerException(getClass().getSimpleName() + "() startTime cannot be null");
 
-        this.startedFrom = startedFrom;
+        this.startsAt = startsAt;
         this.bike = bike;
         this.startTime = startTime.getTime();
     }
@@ -95,8 +90,12 @@ public class Trip extends AbstractEntity {
         this.userGender = userGender;
     }
 
-    public void setEndedAt(Station endedAt) {
-        this.endedAt = endedAt;
+    public void setStartsAt(Station startsAt) {
+        this.startsAt = startsAt;
+    }
+
+    public void setEndsAt(Station endsAt) {
+        this.endsAt = endsAt;
     }
 
     public int getDuration() {
@@ -127,12 +126,12 @@ public class Trip extends AbstractEntity {
         return userGender;
     }
 
-    public Station getStartedFrom() {
-        return startedFrom;
+    public Station getStartsAt() {
+        return startsAt;
     }
 
-    public Station getEndedAt() {
-        return endedAt;
+    public Station getEndsAt() {
+        return endsAt;
     }
 
     public se.kth.csc.moderndb.cbexplorer.graph.core.domain.Bike getBike() {
@@ -147,8 +146,8 @@ public class Trip extends AbstractEntity {
                 getUserType(),
                 getUserBirthYear(),
                 getUserGender(),
-                null, // getStartedFrom().toCoreStation(), TODO retrieve the stations too?
-                null, // getEndedAt().toCoreStation(),
+                getStartsAt().toCoreStation(),
+                getEndsAt().toCoreStation(),
                 getBike().toCoreBike()
         );
     }
@@ -158,7 +157,7 @@ public class Trip extends AbstractEntity {
         return "Trip{" +
                 "startTime=" + startTime +
                 ", bike=" + bike +
-                ", startedFrom=" + startedFrom +
+                ", startsAt=" + startsAt +
                 '}';
     }
 }

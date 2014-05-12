@@ -24,7 +24,7 @@ public class Trip {
     /**
      * Trip start and end
      */
-    private Station startedFrom, endedAt;
+    private Station startsAt, endsAt;
 
     /**
      * Bike used for the Trip
@@ -47,12 +47,12 @@ public class Trip {
      * @param userType type of user that makes the trip
      * @param userBirthYear birth date of user that makes the trip
      * @param userGender gender of user that makes the trip
-     * @param startedFrom station where the trip starts from
-     * @param endedAt station where the trip is ending
+     * @param startsAt station where the trip starts from
+     * @param endsAt station where the trip is ending
      * @param bike bike that is used for the trip
      */
     public Trip(Date startTime, Date endTime, int duration, String userType,
-                short userBirthYear, short userGender, Station startedFrom, Station endedAt, Bike bike) {
+                short userBirthYear, short userGender, Station startsAt, Station endsAt, Bike bike) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.duration = duration;
@@ -60,8 +60,8 @@ public class Trip {
         this.userType = userType;
         this.userBirthYear = userBirthYear;
         this.userGender = userGender;
-        this.startedFrom = startedFrom;
-        this.endedAt = endedAt;
+        this.startsAt = startsAt;
+        this.endsAt = endsAt;
         this.bike = bike;
     }
 
@@ -85,12 +85,12 @@ public class Trip {
         return userGender;
     }
 
-    public Station getStartedFrom() {
-        return startedFrom;
+    public Station getStartsAt() {
+        return startsAt;
     }
 
-    public Station getEndedAt() {
-        return endedAt;
+    public Station getEndsAt() {
+        return endsAt;
     }
 
     public Bike getBike() {
