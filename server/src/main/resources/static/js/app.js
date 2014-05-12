@@ -24,7 +24,14 @@ $(document).ready(function() {
     var mapController = new MapController(mapView, model);
     mapController.addListener(this);
 
-    CitiBikeApi.getTimeRange(function(result) {
+    // Preload all the base data from the server.
+    model.getAllStations(function(result) {
+        console.log(result);
+    });
+    model.getAllBikes(function(result) {
+        console.log(result);
+    });
+    model.getTimeRange(function(result) {
         console.log(result);
     });
 

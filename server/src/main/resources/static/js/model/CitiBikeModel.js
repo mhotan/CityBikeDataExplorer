@@ -20,7 +20,7 @@ var CitiBikeModel = function() {
     var model = this;
 
     // The complete time range between two
-    var timeRange = {};
+    var timeRange = null;
 
     // Returns all the current bikes
     this.getAllBikes = function(callback) {
@@ -38,7 +38,7 @@ var CitiBikeModel = function() {
         } else {
             callback(bikes)
         }
-    }
+    };
 
     // Returns all the selected bikes potentially
     this.getSelectedBikes = function(callback) {
@@ -50,7 +50,7 @@ var CitiBikeModel = function() {
         } else {
             callback(selectedBikes);
         }
-    }
+    };
 
     // Returns the all the current stations
     this.getAllStations = function(callback) {
@@ -68,7 +68,7 @@ var CitiBikeModel = function() {
         } else {
             callback(stations);
         }
-    }
+    };
 
     // Return the selected stations.
     this.getSelectedStations = function(callback) {
@@ -82,7 +82,17 @@ var CitiBikeModel = function() {
             // Otherwise send back the current list of selected stations.
             callback(selectedStations);
         }
-    }
+    };
+
+    this.getTimeRange = function(callback) {
+        if (timeRange != null) return callback(timeRange);
+        CitiBikeApi.getTimeRange(function(result) {
+            timeRange = result;
+            timeRange.minDate = new Date(timeRange.min);
+            timeRange.maxDate = new Date(timeRange.max);
+            callback(timeRange);
+        });
+    };
 
     // Change the state of the current selected stations
 
@@ -93,7 +103,7 @@ var CitiBikeModel = function() {
         }
         selectedBikes.push(bike);
         notifyObservers();
-    }
+    };
 
     // Remove bike from selected
     this.removeSelectedBike = function(bike) {
@@ -108,13 +118,13 @@ var CitiBikeModel = function() {
             selectedBikes.splice(toRemove, 1);
             notifyObservers();
         }
-    }
+    };
 
     this.clearSelectedBikes = function() {
         if (selectedBikes.length == 0) return;
         selectedBikes = [];
         notifyObservers();
-    }
+    };
 
     // Adds a station to the selected.
     this.addSelectedStation = function(station) {
@@ -123,7 +133,7 @@ var CitiBikeModel = function() {
         }
         selectedStations.push(station);
         notifyObservers();
-    }
+    };
 
     this.removeSelectedStation = function(station) {
         var toRemove = -1;
@@ -137,13 +147,13 @@ var CitiBikeModel = function() {
             selectedStations.splice(toRemove, 1);
             notifyObservers();
         }
-    }
+    };
 
     this.clearSelectedStations = function() {
         if (selectedStations.length == 0) return;
         selectedStations = [];
         notifyObservers();
-    }
+    };
 
     /*****************************************
      Observable implementation
