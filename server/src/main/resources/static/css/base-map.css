@@ -8,11 +8,3 @@ html {
 #map_canvas {
     height: 100%
 }
-
-/* The Controller Pane for all the interaction
-This will overlap the controller pane over the map.*/
-#controller-pane {
-    position:fixed;
-    top:100px;
-    right:100px;
-}
