@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import se.kth.csc.moderndb.cbexplorer.Greeting;
+import se.kth.csc.moderndb.cbexplorer.core.dao.BikeDAOi;
 import se.kth.csc.moderndb.cbexplorer.core.dao.StationDAOi;
 import se.kth.csc.moderndb.cbexplorer.core.dao.TripDAOi;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
@@ -41,6 +42,9 @@ public class CitiBikeController {
     @Autowired
     TripDAOi tripDAO;
 
+    @Autowired
+    BikeDAOi bikeDAO;
+
     @RequestMapping(method= RequestMethod.GET, value = "/hello")
     public @ResponseBody
     Greeting sayHello(@RequestParam(value="name", required=false, defaultValue="Stranger") String name) {
@@ -52,7 +56,7 @@ public class CitiBikeController {
     @RequestMapping(method = RequestMethod.GET, value = RestConstants.BIKES_URI_PATH)
     public @ResponseBody
     List<Bike> findAllBikes() {
-        return graphService.findAllBikes();
+        return bikeDAO.findAllBikes();
     }
 
     @RequestMapping(RestConstants.BIKES_URI_PATH + "/{bikeId}/tripCount")

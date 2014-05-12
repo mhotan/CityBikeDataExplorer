@@ -30,12 +30,25 @@ var CitiBikeModel = function() {
         if (bikes.length == 0) {
             CitiBikeApi.findAllBikes(function (result) {
                 bikes = result;
-                selectedBikes = result.slice(0); // Copy by value
-                // After the call is complete notify t
+                for (var i = 0; i < bikes.length; i++) {
+                    selectedBikes.push(bikes[i]);
+                }
                 callback(bikes);
             });
         } else {
             callback(bikes)
+        }
+    }
+
+    // Returns all the selected bikes potentially
+    this.getSelectedBikes = function(callback) {
+        if (stations.length == 0) {
+            model.getAllBikes(function(result) {
+                // Ignore the result because getAllBikes would populate the
+                callback(selectedBikes);
+            });
+        } else {
+            callback(selectedBikes);
         }
     }
 
@@ -47,7 +60,9 @@ var CitiBikeModel = function() {
         if (stations.length == 0) {
             CitiBikeApi.findAllStations(function (result) {
                 stations = result;
-                selectedStations = stations.slice(0); // Copy by value
+                for (var i = 0; i < stations.length; i++) {
+                    selectedStations.push(stations[i]);
+                }
                 callback(stations);
             });
         } else {
@@ -69,6 +84,38 @@ var CitiBikeModel = function() {
         }
     }
 
+    // Change the state of the current selected stations
+
+    // Add a bike to the selected group.
+    this.addSelectedBike = function(bike) {
+        for (var i = 0; i < selectedBikes.length; i++) {
+            if (selectedBikes[i].bikeId == bike.bikeId) return;
+        }
+        selectedBikes.push(bike);
+        notifyObservers();
+    }
+
+    // Remove bike from selected
+    this.removeSelectedBike = function(bike) {
+        var toRemove = -1;
+        for (var i = 0; i < selectedBikes.length; i++) {
+            if (selectedBikes[i].bikeId == bike.bikeId) {
+                toRemove = i;
+                break;
+            }
+        }
+        if (toRemove > -1) {
+            selectedBikes.splice(toRemove, 1);
+            notifyObservers();
+        }
+    }
+
+    this.clearSelectedBikes = function() {
+        if (selectedBikes.length == 0) return;
+        selectedBikes = [];
+        notifyObservers();
+    }
+
     // Adds a station to the selected.
     this.addSelectedStation = function(station) {
         for (var i = 0; i < selectedStations.length; i++) {
@@ -88,16 +135,15 @@ var CitiBikeModel = function() {
         }
         if (toRemove > -1) {
             selectedStations.splice(toRemove, 1);
+            notifyObservers();
         }
-        notifyObservers();
     }
 
     this.clearSelectedStations = function() {
+        if (selectedStations.length == 0) return;
         selectedStations = [];
         notifyObservers();
     }
-
-
 
     /*****************************************
      Observable implementation
