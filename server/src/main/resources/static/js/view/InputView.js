@@ -31,7 +31,7 @@ var InputView = function(container, model) {
         // TODO fill list
     }
 
-    var setTimeRangeForStations(minDate, maxDate){
+    var setTimeRangeForStations = function(minDate, maxDate){
     // Set date option
         $("#slider-range1").dateRangeSlider(
           "bounds":
@@ -41,7 +41,9 @@ var InputView = function(container, model) {
                });
     }
 
-    var setTimeRangeForBikes(minDate, maxDate){
+   var dateValuesStationRange = $("#slider-range1").dateRangeSlider("values");
+
+    var setTimeRangeForBikes = function(minDate, maxDate){
     // Set date option
         $("#slider-range2").dateRangeSlider(
           "bounds":
@@ -51,7 +53,22 @@ var InputView = function(container, model) {
         });
     }
 
+    var dateValuesBikeRange = $("#slider-range2").dateRangeSlider("values");
 
+    var drawChartDiagram = function(title, data){
+        var D=new Diagram();
+        D.SetFrame(80, 60, 520, 260);
+        D.SetBorder(-1, 13, 0, 1000);
+        D.SetText("","",title );
+        D.XScale=0;
+        D.Draw("#0066CC", "#000000", false);
+        var i, j, y;
+        for (var i = 0; i < data.length; i++) {
+             new Bar(data[i][0], ...);
+             //TODO
+         }
+
+    }
     // Register this view as an observer to the model.
     model.addObserver(this);
 
