@@ -43,15 +43,6 @@ public class CitiBikeController {
 
     @Autowired
     RelationalService relationalService;
-//
-//    @Autowired
-//    StationDAOi stationDAO;
-//
-//    @Autowired
-//    TripDAOi tripDAO;
-//
-//    @Autowired
-//    BikeDAOi bikeDAO;
 
     /**
      * @return The default parameter settings for all the possible queries.

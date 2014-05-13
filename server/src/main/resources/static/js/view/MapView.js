@@ -21,6 +21,7 @@ var CitiBikeMapView = function(map, model) {
 
     // Show all
     var trips = [];
+    var intervals = [];
 
     // The Path symbol for drawing a trip.
     var lineSymbol = {
@@ -69,11 +70,21 @@ var CitiBikeMapView = function(map, model) {
 
         var infoWindow = createInfoWindow(station);
         var internalStation = station;
-        var handler = google.maps.event.addListener(marker, 'click', function() {
+
+        google.maps.event.addListener(marker, 'mouseover', function() {
             infoWindow.open(map, marker);
+        });
+
+// assuming you also want to hide the infowindow when user mouses-out
+        google.maps.event.addListener(marker, 'mouseout', function() {
+            infoWindow.close();
+        });
+
+        var handler = google.maps.event.addListener(marker, 'click', function() {
+//            infoWindow.open(map, marker);
             model.setSelectedStation(internalStation);
         });
-        markerClickHandlers.push(handler);
+//        markerClickHandlers.push(handler);
     };
 
     // Initially populate the
@@ -84,9 +95,9 @@ var CitiBikeMapView = function(map, model) {
     }
 
     // Sets the map for all the Markers
-    var setAllMap = function(map) {
-        for (var i = 0; i < markers.length; i++) {
-            markers[i].setMap(map);
+    var setAllMap = function(collection, map) {
+        for (var i = 0; i < collection.length; i++) {
+            collection[i].setMap(map);
         }
     }
 
@@ -97,7 +108,7 @@ var CitiBikeMapView = function(map, model) {
         }
         markerClickHandlers = []; // Clear the list of click handlers.
 
-        setAllMap(null);
+        setAllMap(markers, null);
         markers = [];
     };
 
@@ -137,9 +148,16 @@ var CitiBikeMapView = function(map, model) {
                     trips.push(line);
 
                     var interval = animateArrowFn(line, numTrips)();
-                    // TODO load
+                    // TODO Register the interval with
+                    intervals.push(interval);
                 }
             });
+        } else if (selectedStation != null) {
+            // No desinations currently.
+            setAllMap(trips, null);
+            for (var i = 0; i < intervals.length; i++) {
+                clearInterval(intervals[i]);
+            }
         }
     }
 }

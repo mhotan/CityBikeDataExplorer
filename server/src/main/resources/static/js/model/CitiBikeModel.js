@@ -20,7 +20,7 @@ var CitiBikeModel = function() {
     // Single selected station
     var singleSelectedStation = null;
     // Map of all the trips
-    var currentDestination = null;
+    var currentDestinations = null;
 
     var model = this;
 
@@ -178,18 +178,18 @@ var CitiBikeModel = function() {
     };
 
     this.getCurrentDestinations = function() {
-        return currentDestination;
+        return currentDestinations;
     };
 
     this.setSelectedStation = function(station) {
         // refresh the screen.
         singleSelectedStation = station;
-        currentDestination = null;
+        currentDestinations = null;
         notifyObservers();
 
         // Make the API call.
         CitiBikeApi.getStationDestinations(station['stationId'], function(result) {
-            currentDestination = result;
+            currentDestinations = result;
             notifyObservers();
         });
     };

@@ -28,7 +28,7 @@ public class StationRepositoryImpl implements StationRepositoryCustom {
 
         Map<Long, Long> result = new HashMap<Long, Long>();
         for (Map<String, Object> row : queryResult) {
-            System.out.println(row);
+//            System.out.println(row);
             result.put((Long) row.get("end.stationId"), (Long) row.get("count(*)"));
         }
         return result;
@@ -44,7 +44,7 @@ public class StationRepositoryImpl implements StationRepositoryCustom {
 
         Map<Long, Long> result = new HashMap<Long, Long>();
         for (Map<String, Object> row : queryResult) {
-            System.out.println(row);
+//            System.out.println(row);
             result.put((Long) row.get("start.stationId"), (Long) row.get("count(*)"));
         }
         return result;
