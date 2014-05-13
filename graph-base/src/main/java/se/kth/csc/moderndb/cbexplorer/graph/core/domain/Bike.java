@@ -28,7 +28,7 @@ public class Bike extends AbstractEntity {
     }
 
     public se.kth.csc.moderndb.cbexplorer.core.domain.Bike toCoreBike() {
-        return new se.kth.csc.moderndb.cbexplorer.core.domain.Bike();
+        return new se.kth.csc.moderndb.cbexplorer.core.domain.Bike(bikeId);
     }
 
 }

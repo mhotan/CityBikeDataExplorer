@@ -1,4 +1,6 @@
-package se.kth.csc.moderndb.cbexplorer.core.domain;
+package se.kth.csc.moderndb.cbexplorer.core.domain.params;
+
+import se.kth.csc.moderndb.cbexplorer.core.domain.range.ShortRange;
 
 /**
  * POJO UserParameters class.
@@ -12,14 +14,12 @@ public class UserParameters {
      * "M" is for male, "F" for female, anything else does not have a meaning
      */
     private char gender;
+
     /**
-     * The starting point of the age range
+     * Range of birth year.
      */
-    private int startRangeAge;
-    /**
-     * The end point of the age range
-     */
-    private int endRangeAge;
+    private ShortRange birthYearRange;
+
     /**
      * Description of the user type
      */
@@ -34,14 +34,12 @@ public class UserParameters {
     /**
      * Creates a new POJO UserParameters object.
      * @param gender user's gender
-     * @param startRangeAge start of user's age range
-     * @param endRangeAge end of user's age range
+     * @param birthYearRange Range of birth years.
      * @param userType user's type description
      */
-    public UserParameters(char gender, int startRangeAge, int endRangeAge, String userType) {
+    public UserParameters(char gender, ShortRange birthYearRange, String userType) {
         this.gender = gender;
-        this.startRangeAge = startRangeAge;
-        this.endRangeAge = endRangeAge;
+        this.birthYearRange = birthYearRange;
         this.userType = userType;
     }
 
@@ -49,12 +47,8 @@ public class UserParameters {
         return gender;
     }
 
-    public int getStartRangeAge() {
-        return startRangeAge;
-    }
-
-    public int getEndRangeAge() {
-        return endRangeAge;
+    public ShortRange getBirthYearRange() {
+        return birthYearRange;
     }
 
     public String getUserType() {

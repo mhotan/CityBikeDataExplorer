@@ -1,7 +1,8 @@
-package se.kth.csc.moderndb.cbexplorer.core.domain;
+package se.kth.csc.moderndb.cbexplorer.core.domain.params;
+
+import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * POJO TripParameters class.

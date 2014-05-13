@@ -2,18 +2,23 @@ package se.kth.csc.moderndb.cbexplorer.rest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import se.kth.csc.moderndb.cbexplorer.Greeting;
-import se.kth.csc.moderndb.cbexplorer.core.dao.StationDAOi;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
+import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
+import se.kth.csc.moderndb.cbexplorer.core.domain.params.DefaultParameterSettings;
+import se.kth.csc.moderndb.cbexplorer.core.domain.params.TemporalParameters;
+import se.kth.csc.moderndb.cbexplorer.core.domain.range.ShortRange;
+import se.kth.csc.moderndb.cbexplorer.core.domain.range.TimeRange;
 import se.kth.csc.moderndb.cbexplorer.core.services.GraphService;
-import se.kth.csc.moderndb.cbexplorer.rest.RestContants;
+import se.kth.csc.moderndb.cbexplorer.core.services.RelationalService;
+import se.kth.csc.moderndb.cbexplorer.rest.RestConstants;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Citibike REST Endpoint class that is implemented using Spring MVC Framework.  Controller manages
@@ -23,7 +28,7 @@ import java.util.List;
  * Created by mhotan on 5/9/14.
  */
 @Controller
-@RequestMapping(RestContants.AGGREGATORS_URI_PATH)
+@RequestMapping(RestConstants.API_URI_PATH)
 public class CitiBikeController {
 
     private static final String template = "Hello, %s!";
@@ -31,25 +36,87 @@ public class CitiBikeController {
     @Autowired
     GraphService graphService;
 
+    // TODO The DAOs should not be directly expose at this layer.
+    // It reveals to much about the underlying structure of the PSQL database.
+    // Refactor the DAO into a service that connects to relation database.
+    // Potential name RelationService
+
     @Autowired
-    StationDAOi stationDAO;
+    RelationalService relationalService;
 
-    @RequestMapping(method= RequestMethod.GET, value = "/hello")
+    /**
+     * @return The default parameter settings for all the possible queries.
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/parameters/default")
     public @ResponseBody
-    Greeting sayHello(@RequestParam(value="name", required=false, defaultValue="Stranger") String name) {
-        return new Greeting(String.format(template, name));
+    DefaultParameterSettings getDefaultParameters() {
+        // Extract the default Bike Parameters
+//        List<Bike> bikes = relationalService.getAllBikes();
+//        List<Station> stations = relationalService.getAllStations();
+        TemporalParameters temporalParameters = new TemporalParameters(
+                relationalService.getTimeRange(),
+                relationalService.getDurationLimits());
+        ShortRange birthRange = relationalService.getBirthYearLimits();
+        return new DefaultParameterSettings(temporalParameters, birthRange);
     }
 
-    // TODO Add more RESTful Spring method calls.
-
-    @RequestMapping(method = RequestMethod.GET, value = RestContants.BIKES_URI_PATH)
+    @RequestMapping(method = RequestMethod.GET, value = RestConstants.BIKES_URI_PATH)
     public @ResponseBody
-    List<Bike> getAllBikes() {
-        return graphService.requestAllBikes();
+    List<Bike> findAllBikes() {
+        return relationalService.getAllBikes();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = RestContants.STATIONS_URI_PATH)
+    @RequestMapping(RestConstants.BIKES_URI_PATH + "/{bikeId}/tripCount")
     public @ResponseBody
-    List<Station> getAllStations() {return  graphService.requestAllStations(); }
+    String getBikeTripCount(@PathVariable long bikeId) {
+        return graphService.getBikeTripCount(bikeId).toString();
+    }
+
+    @RequestMapping(RestConstants.BIKES_URI_PATH + "/{bikeId}/trips/{startTime}/{endTime}")
+    public @ResponseBody
+    List<Trip> getBikeTrips(@PathVariable long bikeId, @PathVariable long startTime, @PathVariable long endTime) {
+        return graphService.getBikeTrips(bikeId, startTime, endTime);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = RestConstants.STATIONS_URI_PATH)
+    public @ResponseBody
+    List<Station> findAllStations() {return  relationalService.getAllStations(); }
+
+    @RequestMapping(RestConstants.STATIONS_URI_PATH + "/byName/{name}")
+    public @ResponseBody
+    Station findStationByName(@PathVariable String name) {
+        return graphService.findStationByName(name);
+    }
+
+//    @RequestMapping(RestConstants.STATIONS_URI_PATH + "/pairsWithDistance/{distance}")
+//    public @ResponseBody
+//    List<List<Station>> findStationPairsWithDistance(@PathVariable double distance) {
+//        return stationDAO.findStationPairsWithDistance(distance);
+//    }
+
+    @RequestMapping(RestConstants.STATIONS_URI_PATH + "/{stationId}/destinations")
+    public @ResponseBody
+    Map<Long, Long> getStationDestinations(@PathVariable long stationId) {
+        return graphService.getStationDestinations(stationId);
+    }
+
+    @RequestMapping(RestConstants.TRIPS_URI_PATH + "/timeRange")
+    public @ResponseBody
+    TimeRange getTimeRange() {
+        return relationalService.getTimeRange();
+    }
+
+//    @RequestMapping(RestConstants.STATIONS_URI_PATH + "/statistics")
+//    public @ResponseBody
+//    Map<Long, StationUsageStatistics> getAllStationStatistics() {
+//        return graphService.findAllStationStatistics();
+//    }
+
+//    @RequestMapping(RestConstants.STATIONS_URI_PATH + "/{stationId}/statistics")
+//    public @ResponseBody
+//    StationUsageStatistics getStationStatistic(@PathVariable long stationId) {
+//        return graphService.findStationStatistics(stationId);
+//    }
+
 
 }

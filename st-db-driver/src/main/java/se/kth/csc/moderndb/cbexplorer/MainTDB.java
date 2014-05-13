@@ -28,8 +28,6 @@ public class MainTDB {
         STDBCityBikeReader reader = new STDBCityBikeReader();
         CitiBikeParser parser = new CitiBikeParser(reader);
 
-        //File file = new File("/home/yeliz/workspace/ModernData/CityBikeDataExplorer.git/data/2014-02 - Citi Bike trip data.csv");
-
         try {
             parser.parse(data);
         } catch (Exception e) {

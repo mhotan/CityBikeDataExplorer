@@ -1,0 +1,21 @@
+
+/* The Controller Pane for all the interaction
+This will overlap the controller pane over the map.*/
+#controller-pane {
+    position: absolute;
+    top: 30px;
+    right: 5px;
+    background-color: white;
+    padding: 1em;
+    box-shadow: 2px 2px 10px;
+}
+
+#controller-pane h1 {
+    margin-top: 0;
+    text-align: center;
+    font-size: 20px;
+}
+
+#controller-pane h3 {
+    font-size: 18px;
+}
