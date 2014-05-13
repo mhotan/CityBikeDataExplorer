@@ -26,6 +26,10 @@ var CitiBikeApi = (function ($) {
         },
         getTimeRange: function(callback) {
             $.getJSON(api_path + "/trips/timeRange", callback);
+        },
+        // Pull the default parameters from
+        getDefaultParameters: function(callback) {
+            $.getJSON(api_path + "/parameters/default", callback);
         }
     };
 })(jQuery);

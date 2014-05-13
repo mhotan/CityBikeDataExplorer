@@ -22,6 +22,8 @@ public class Station {
      */
     private double longitude, latitude;
 
+    private int tripsDeparted, tripsArrived;
+
     /**
      * Creates base POJO object for a Station.
      */
@@ -56,6 +58,22 @@ public class Station {
 
     public double getLatitude() {
         return latitude;
+    }
+
+    public int getTripsDeparted() {
+        return tripsDeparted;
+    }
+
+    public void setTripsDeparted(int tripsDeparted) {
+        this.tripsDeparted = tripsDeparted;
+    }
+
+    public int getTripsArrived() {
+        return tripsArrived;
+    }
+
+    public void setTripsArrived(int tripsArrived) {
+        this.tripsArrived = tripsArrived;
     }
 
     @Override

@@ -6,10 +6,10 @@
 var CitiBikeModel = function() {
 
     // Cache all the stations locally
-    var stations = [];
+    var stations = {};
 
     // Cache all the bikes locally
-    var bikes = [];
+    var bikes = {};
 
     // Current group of selected stations
     var selectedStations = [];
@@ -17,22 +17,32 @@ var CitiBikeModel = function() {
     // Current group of selected bikes.
     var selectedBikes = [];
 
+    // Single selected station
+    var singleSelectedStation = null;
+    // Map of all the trips
+    var currentDestination = null;
+
     var model = this;
 
     // The complete time range between two
     var timeRange = null;
+
+    // Default Parameters
+    var defaultParams = null;
 
     // Returns all the current bikes
     this.getAllBikes = function(callback) {
 
         // Check the runtime memory
         // Minimize unecesary REST calls
-        if (bikes.length == 0) {
+        if ($.isEmptyObject(bikes)) {
             CitiBikeApi.findAllBikes(function (result) {
-                bikes = result;
-                for (var i = 0; i < bikes.length; i++) {
-                    selectedBikes.push(bikes[i]);
+                for (var i = 0; i < result.length; i++) {
+                    // Map the Bike Id to the bike itself
+                    bikes[result[i]['bikeId']] = result[i];
                 }
+                // Populate the select stations.
+
                 callback(bikes);
             });
         } else {
@@ -42,7 +52,7 @@ var CitiBikeModel = function() {
 
     // Returns all the selected bikes potentially
     this.getSelectedBikes = function(callback) {
-        if (stations.length == 0) {
+        if ($.isEmptyObject(bikes)) {
             model.getAllBikes(function(result) {
                 // Ignore the result because getAllBikes would populate the
                 callback(selectedBikes);
@@ -57,11 +67,10 @@ var CitiBikeModel = function() {
 
         // Check the runtime memory
         // Minimize unecesary REST calls
-        if (stations.length == 0) {
+        if ($.isEmptyObject(stations)) {
             CitiBikeApi.findAllStations(function (result) {
-                stations = result;
-                for (var i = 0; i < stations.length; i++) {
-                    selectedStations.push(stations[i]);
+                for (var i = 0; i < result.length; i++) {
+                    stations[result[i]['stationId']] = result[i];
                 }
                 callback(stations);
             });
@@ -74,7 +83,7 @@ var CitiBikeModel = function() {
     this.getSelectedStations = function(callback) {
 
         // If there are no stations then we need to request it from the server
-        if (stations.length == 0) {
+        if ($.isEmptyObject(stations)) {
             model.getAllStations(function (result) {
                 callback(selectedStations);
             });
@@ -153,6 +162,36 @@ var CitiBikeModel = function() {
         if (selectedStations.length == 0) return;
         selectedStations = [];
         notifyObservers();
+    };
+
+    this.getDefaultParameters = function(callback) {
+        if (defaultParams != null)
+            callback(defaultParams);
+        CitiBikeApi.getDefaultParameters(function(result) {
+            defaultParams = result;
+            callback(result);
+        });
+    };
+
+    this.getSingleSelectedStation = function() {
+        return singleSelectedStation;
+    };
+
+    this.getCurrentDestinations = function() {
+        return currentDestination;
+    };
+
+    this.setSelectedStation = function(station) {
+        // refresh the screen.
+        singleSelectedStation = station;
+        currentDestination = null;
+        notifyObservers();
+
+        // Make the API call.
+        CitiBikeApi.getStationDestinations(station['stationId'], function(result) {
+            currentDestination = result;
+            notifyObservers();
+        });
     };
 
     /*****************************************

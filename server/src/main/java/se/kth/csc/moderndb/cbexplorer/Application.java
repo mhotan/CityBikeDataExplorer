@@ -115,8 +115,8 @@ public class Application extends Neo4jConfiguration {
 
     @Bean
     @Autowired
-    public RelationalService getRelationService(TripDAOi tripDAO, StationDAOi stationDAO, BikeDAOi bikeDAO) {
-        return new RelationalServiceImpl(tripDAO, stationDAO, bikeDAO);
+    public RelationalService getRelationService(TripDAOi tripDAO, StationDAOi stationDAO) {
+        return new RelationalServiceImpl(tripDAO, stationDAO);
     }
 
     // TODO Declare more Spring Beans here.

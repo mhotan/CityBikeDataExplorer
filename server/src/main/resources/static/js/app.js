@@ -9,7 +9,7 @@ $(document).ready(function() {
     // Citibike Model.
     var model = new CitiBikeModel();
 
-    // Initialize
+    // Initialize Google Maps first
     var map = new google.maps.Map(document.getElementById('map_canvas'), {
         zoom: 13,
         center: new google.maps.LatLng(40.7192,-73.95)
@@ -24,15 +24,10 @@ $(document).ready(function() {
     var mapController = new MapController(mapView, model);
     mapController.addListener(this);
 
-    // Preload all the base data from the server.
-    model.getAllStations(function(result) {
-        console.log(result);
-    });
-    model.getAllBikes(function(result) {
-        console.log(result);
-    });
-    model.getTimeRange(function(result) {
-        console.log(result);
-    });
+    // Input View.
+    var inputView = new InputView($('#controller-pane'), model);
+    var inputController = new InputController(inputView, model);
+    inputController.addListener(this);
+
 
 });

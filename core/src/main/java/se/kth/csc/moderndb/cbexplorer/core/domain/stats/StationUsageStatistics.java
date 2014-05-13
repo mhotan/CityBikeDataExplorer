@@ -1,9 +1,5 @@
 package se.kth.csc.moderndb.cbexplorer.core.domain.stats;
 
-import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
-
-import java.util.List;
-
 /**
  * Created by mhotan on 5/12/14.
  */
@@ -27,11 +23,11 @@ public class StationUsageStatistics {
      * @param arrivingTripCounts Arriving trip data.
      */
     public StationUsageStatistics(long stationId,
-                                  List<Trip> departingTripCounts,
-                                  List<Trip> arrivingTripCounts) {
+                                  int departingTripCounts,
+                                  int arrivingTripCounts) {
         this.stationId = stationId;
-        this.departingTripCount = departingTripCounts.size();
-        this.arrivingTripCount = arrivingTripCounts.size();
+        this.departingTripCount = departingTripCounts;
+        this.arrivingTripCount = arrivingTripCounts;
 
     }
 

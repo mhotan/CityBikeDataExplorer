@@ -13,7 +13,6 @@ import se.kth.csc.moderndb.cbexplorer.core.domain.params.DefaultParameterSetting
 import se.kth.csc.moderndb.cbexplorer.core.domain.params.TemporalParameters;
 import se.kth.csc.moderndb.cbexplorer.core.domain.range.ShortRange;
 import se.kth.csc.moderndb.cbexplorer.core.domain.range.TimeRange;
-import se.kth.csc.moderndb.cbexplorer.core.domain.stats.StationUsageStatistics;
 import se.kth.csc.moderndb.cbexplorer.core.services.GraphService;
 import se.kth.csc.moderndb.cbexplorer.core.services.RelationalService;
 import se.kth.csc.moderndb.cbexplorer.rest.RestConstants;
@@ -61,13 +60,13 @@ public class CitiBikeController {
     public @ResponseBody
     DefaultParameterSettings getDefaultParameters() {
         // Extract the default Bike Parameters
-        List<Bike> bikes = relationalService.getAllBikes();
-        List<Station> stations = relationalService.getAllStations();
+//        List<Bike> bikes = relationalService.getAllBikes();
+//        List<Station> stations = relationalService.getAllStations();
         TemporalParameters temporalParameters = new TemporalParameters(
                 relationalService.getTimeRange(),
                 relationalService.getDurationLimits());
         ShortRange birthRange = relationalService.getBirthYearLimits();
-        return new DefaultParameterSettings(bikes, stations, temporalParameters, birthRange);
+        return new DefaultParameterSettings(temporalParameters, birthRange);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = RestConstants.BIKES_URI_PATH)
@@ -90,7 +89,7 @@ public class CitiBikeController {
 
     @RequestMapping(method = RequestMethod.GET, value = RestConstants.STATIONS_URI_PATH)
     public @ResponseBody
-    List<Station> findAllStations() {return  graphService.findAllStations(); }
+    List<Station> findAllStations() {return  relationalService.getAllStations(); }
 
     @RequestMapping(RestConstants.STATIONS_URI_PATH + "/byName/{name}")
     public @ResponseBody
@@ -116,17 +115,17 @@ public class CitiBikeController {
         return relationalService.getTimeRange();
     }
 
-    @RequestMapping(RestConstants.STATIONS_URI_PATH + "/statistics")
-    public @ResponseBody
-    Map<Long, StationUsageStatistics> getAllStationStatistics() {
-        return graphService.findAllStationStatistics();
-    }
+//    @RequestMapping(RestConstants.STATIONS_URI_PATH + "/statistics")
+//    public @ResponseBody
+//    Map<Long, StationUsageStatistics> getAllStationStatistics() {
+//        return graphService.findAllStationStatistics();
+//    }
 
-    @RequestMapping(RestConstants.STATIONS_URI_PATH + "/{stationId}/statistics")
-    public @ResponseBody
-    StationUsageStatistics getStationStatistic(@PathVariable long stationId) {
-        return graphService.findStationStatistics(stationId);
-    }
+//    @RequestMapping(RestConstants.STATIONS_URI_PATH + "/{stationId}/statistics")
+//    public @ResponseBody
+//    StationUsageStatistics getStationStatistic(@PathVariable long stationId) {
+//        return graphService.findStationStatistics(stationId);
+//    }
 
 
 }

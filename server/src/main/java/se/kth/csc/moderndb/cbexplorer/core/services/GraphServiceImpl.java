@@ -1,10 +1,8 @@
 package se.kth.csc.moderndb.cbexplorer.core.services;
 
-import org.springframework.transaction.annotation.Transactional;
 import se.kth.csc.moderndb.cbexplorer.DatabaseConstants;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
-import se.kth.csc.moderndb.cbexplorer.core.domain.stats.StationUsageStatistics;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
 import se.kth.csc.moderndb.cbexplorer.core.repository.BikeRepository;
 import se.kth.csc.moderndb.cbexplorer.core.repository.StationRepository;
@@ -34,7 +32,7 @@ public class GraphServiceImpl implements GraphService {
     /**
      * Mapping to station id to its corresponding statistics.
      */
-    private Map<Station, StationUsageStatistics> stationStatistics;
+//    private Map<Station, StationUsageStatistics> stationStatistics;
 
     public GraphServiceImpl(BikeRepository bikeRepository,
                             TripRepository tripRepository,
@@ -47,23 +45,23 @@ public class GraphServiceImpl implements GraphService {
 
     }
 
-    /**
-     * @return The station statistics for all the stations.
-     */
-    @Transactional
-    private Map<Station, StationUsageStatistics> getStationStats() {
-        final Map<Station, StationUsageStatistics> stats = new HashMap<Station, StationUsageStatistics>();
-        stationRepository.findAll().forEach(new Consumer<se.kth.csc.moderndb.cbexplorer.graph.core.domain.Station>() {
-            @Override
-            public void accept(se.kth.csc.moderndb.cbexplorer.graph.core.domain.Station station) {
-                Map<Long, Long> departingCounts = stationRepository.getDestinationCounts(station.getId());
-                Map<Long, Long> arrivalCounts = stationRepository.getArrivaleCounts(station.getId());
-                stats.put(station.toCoreStation(), new StationUsageStatistics(
-                        station.getStationId(), departingCounts, arrivalCounts));
-            }
-        });
-        return stats;
-    }
+//    /**
+//     * @return The station statistics for all the stations.
+//     */
+//    @Transactional
+//    private Map<Station, StationUsageStatistics> getStationStats() {
+//        final Map<Station, StationUsageStatistics> stats = new HashMap<Station, StationUsageStatistics>();
+//        DstationRepository.findAll().forEach(new Consumer<se.kth.csc.moderndb.cbexplorer.graph.core.domain.Station>() {
+//            @Override
+//            public void accept(se.kth.csc.moderndb.cbexplorer.graph.core.domain.Station station) {
+//                Map<Long, Long> departingCounts = stationRepository.getDestinationCounts(station.getId());
+//                Map<Long, Long> arrivalCounts = stationRepository.getArrivaleCounts(station.getId());
+//                stats.put(station.toCoreStation(), new StationUsageStatistics(
+//                        station.getStationId(), departingCounts, arrivalCounts));
+//            }
+//        });
+//        return stats;
+//    }
 
     @Override
     public List<Bike> findAllBikes() {
@@ -103,9 +101,7 @@ public class GraphServiceImpl implements GraphService {
 
     @Override
     public List<Station> findAllStations() {
-        if (stationStatistics == null)
-            stationStatistics = getStationStats();
-        return new ArrayList<Station>(stationStatistics.keySet());
+        return stationsToCoreList(stationRepository.findAll());
     }
 
     @Override
@@ -156,31 +152,32 @@ public class GraphServiceImpl implements GraphService {
         return trips;
     }
 
-    @Override
-    public StationUsageStatistics findStationStatistics(long stationId) {
-        for (Station station: stationStatistics.keySet()) {
-            if (station.getStationId() == stationId)
-                return stationStatistics.get(station);
-        }
-        return null;
-    }
-
-    @Override
-    public Map<Long, StationUsageStatistics> findAllStationStatistics() {
-        // Make sure we have the stations
-        if (stationStatistics == null) {
-            stationStatistics = getStationStats();
-        }
-
-        // Populate the stats.
-        final Map<Long, StationUsageStatistics> stats = new HashMap<Long, StationUsageStatistics>();
-        stationStatistics.keySet().forEach(new Consumer<Station>() {
-            @Override
-            public void accept(Station station) {
-                stats.put(station.getStationId(), stationStatistics.get(station));
-            }
-        });
-        return stats;
-
-    }
+//    @Override
+//    public StationUsageStatistics findStationStatistics(long stationId) {
+////        for (Station station: stationStatistics.keySet()) {
+////            if (station.getStationId() == stationId)
+////                return stationStatistics.get(station);
+////        }
+////        TODO
+//        return null;
+//    }
+//
+//    @Override
+//    public Map<Long, StationUsageStatistics> findAllStationStatistics() {
+//        // Make sure we have the stations
+//        if (stationStatistics == null) {
+//            stationStatistics = getStationStats();
+//        }
+//
+//        // Populate the stats.
+//        final Map<Long, StationUsageStatistics> stats = new HashMap<Long, StationUsageStatistics>();
+//        stationStatistics.keySet().forEach(new Consumer<Station>() {
+//            @Override
+//            public void accept(Station station) {
+//                stats.put(station.getStationId(), stationStatistics.get(station));
+//            }
+//        });
+//        return stats;
+//
+//    }
 }

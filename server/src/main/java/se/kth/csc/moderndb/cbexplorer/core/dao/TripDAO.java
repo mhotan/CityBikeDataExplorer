@@ -2,7 +2,9 @@ package se.kth.csc.moderndb.cbexplorer.core.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import se.kth.csc.moderndb.cbexplorer.core.domain.*;
+import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
+import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
+import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
 import se.kth.csc.moderndb.cbexplorer.core.domain.params.TripParameters;
 import se.kth.csc.moderndb.cbexplorer.core.domain.params.UserParameters;
 import se.kth.csc.moderndb.cbexplorer.core.domain.range.IntegerRange;
@@ -282,36 +284,43 @@ public class TripDAO implements TripDAOi {
     }
 
     @Override
-    public List<Trip> findTripWithStartStations(TripParameters tripParameters) {
+    public List<Trip> findTripWithStartStations(long stationId) {
         String sql = "SELECT * FROM " + PSQLConnection.TRIP +
                 " WHERE " + PSQLConnection.STARTSTATION + " = ?";
-
-        if (tripParameters.getStartStation() == null || tripParameters.getStartStation().size() == 0) {
-            throw new IllegalArgumentException("No start station(s) selected");
-        }
-        ArrayList<Station> stations = tripParameters.getStartStation();
-        for (Station station : stations) {
-            List<Trip> results = jdbcTemplate.query(sql, new Object[] {station}, tripRowMapper);
-            return results;
-        }
-        return null;
+        return jdbcTemplate.query(sql, new Object[] {stationId}, tripRowMapper);
     }
 
     @Override
-    public List<Trip> findTripWithEndStations(TripParameters tripParameters) {
+    public List<Trip> findTripWithEndStations(long stationId) {
         String sql = "SELECT * FROM " + PSQLConnection.TRIP +
                 " WHERE " + PSQLConnection.ENDSTATION + " = ?";
-
-        if (tripParameters.getStartStation() == null || tripParameters.getStartStation().size() == 0) {
-            throw new IllegalArgumentException("No end station(s) selected");
-        }
-        ArrayList<Station> stations = tripParameters.getEndStation();
-        for (Station station : stations) {
-            return jdbcTemplate.query(sql, new Object[] {station}, tripRowMapper);
-        }
-        return null;
+        return jdbcTemplate.query(sql, new Object[] {stationId}, tripRowMapper);
     }
 
+
+    @Override
+    public Integer countTripDeparting(long stationId) {
+        String sql = "SELECT COUNT(*) FROM " + PSQLConnection.TRIP +
+                " WHERE " + PSQLConnection.STARTSTATION + " = ?";
+        return jdbcTemplate.query(sql, new Object[] {stationId}, new RowMapper<Integer>() {
+            @Override
+            public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getInt(1);
+            }
+        }).get(0);
+    }
+
+    @Override
+    public Integer countTripArriving(long stationId) {
+        String sql = "SELECT COUNT(*) FROM " + PSQLConnection.TRIP +
+                " WHERE " + PSQLConnection.ENDSTATION + " = ?";
+        return jdbcTemplate.query(sql, new Object[] {stationId}, new RowMapper<Integer>() {
+            @Override
+            public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getInt(1);
+            }
+        }).get(0);
+    }
 
     private HashMap<String, Object> addUserParametersToQuery(String sql, UserParameters userParameters) {
         HashMap<String, Object> arguments = new HashMap<String, Object>();

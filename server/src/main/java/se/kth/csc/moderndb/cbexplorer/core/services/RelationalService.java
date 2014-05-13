@@ -6,10 +6,8 @@ import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
 import se.kth.csc.moderndb.cbexplorer.core.domain.range.IntegerRange;
 import se.kth.csc.moderndb.cbexplorer.core.domain.range.ShortRange;
 import se.kth.csc.moderndb.cbexplorer.core.domain.range.TimeRange;
-import se.kth.csc.moderndb.cbexplorer.core.domain.stats.StationUsageStatistics;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Service level abstractions for making the underlying table structure transparent.
@@ -23,9 +21,6 @@ public interface RelationalService {
      */
     @Transactional
     public TimeRange getTimeRange();
-
-    @Transactional
-    public Map<Long, StationUsageStatistics> getStationStatistics(long stationId);
 
     /**
      * @return all the bikes available

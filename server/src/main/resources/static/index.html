@@ -19,7 +19,7 @@
             src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=visualization">
     </script>
 
-    <!-- Set up the Google Map and create all the callbacks. -->
+
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
@@ -33,37 +33,55 @@
     <h1>Citi Bike Data Explorer</h1>
 
     <div class="tab_wrap">
-    <div class="tabs">
-        <ul class="tabs">
-            <li><a href="#tab1">Station</a></li>
-            <li><a href="#tab2">Bike</a></li>
-        </ul>
-
-    </div>
-    <div id="tab1">
-        <div id="searchSection">
-
-            <h3>Station Selection</h3>
+        <div class="tabs">
+            <ul class="tabs">
+                <li><a href="#stationTab">Station</a></li>
+                <li><a href="#bikeTab">Bike</a></li>
+            </ul>
+        </div>
+        <div id="stationTab">
+            <!-- Selection mode. -->
+            <h4>Station Selection</h4>
             <div class="btn-group btn-group-sm">
-                <button type="button" class="btn btn-default">Select All Stations</button>
-                <button type="button" class="btn btn-default">Deselect All Stations</button>
                 <button type="button" class="btn btn-default">Single Mode</button>
                 <button type="button" class="btn btn-default">Multi Mode</button>
+                <button type="button" class="btn btn-default">Deselect All</button>
             </div>
 
-            <form name="searchBarForm" action="">
-                <input type="text" name="searchBar" value="Search Station"
-                       onfocus="this.value==this.defaultValue?this.value='':null">
-                <input type="button" value="Search" onclick="searchStation(document.searchBarForm.searchBar.value)">
+            <!-- Search Bar -->
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
             </form>
+
+            <!-- Present the list of the all the stations  -->
             <form action="select.htm">
                 <p>
-                    <select name="stationResults" class="listContents" size="6" multiple>
-                        <option>A</option>
-                        <option>B</option>
-                        <option>C</option>
-                        <option>D</option>
-                        <option>E</option>
+                    <select id="station-list" name="stationResults" class="listContents" size="6" multiple>
+                        <!--<option>A</option>-->
+                    </select>
+                </p>
+            </form>
+        </div>
+
+        <!--  -->
+        <div id="bikeTab">
+
+            <!-- Search Bar for  -->
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+
+            <!--  -->
+            <form action="select.htm">
+                <p>
+                    <select id="bike-list" name="stationResults" class="listContents" size="6" multiple>
+                        <!--<option>A</option>-->
                     </select>
                 </p>
             </form>
@@ -71,17 +89,15 @@
 
         <div id="timeRangeSection1">
             <h3>Time Range</h3>
-
-            <div id="slider-range1"></div>
+            <div id="slider-range"></div>
             <script type="text/javascript">
-            $("#slider-range1").slider({
-                range: true,
-                min: 0,
-                max: 1439,
-                values: [540, 1020],
-                step:5
-            });
-
+                $("#slider-range").slider({
+                    range: true,
+                    min: 0,
+                    max: 1439,
+                    values: [540, 1020],
+                    step:5
+                });
             </script>
         </div>
 
@@ -94,59 +110,13 @@
             <h3>Statistics</h3>
         </div>
     </div>
-    <div id="tab2">
-        <div id="searchSection2">
-            <form name="searchBarForm" action="">
-                <input type="text" name="searchBar" value="Search Bike"
-                       onfocus="this.value==this.defaultValue?this.value='':null">
-                <input type="button" value="Search" onclick="searchBike(document.searchBarForm.searchBar.value)">
-            </form>
-            <form action="select.htm">
-                <p>
-                    <select name="bikeResults" class="listContents" size="6" multiple>
-                        <option>A</option>
-                        <option>B</option>
-                        <option>C</option>
-                        <option>D</option>
-                        <option>E</option>
-                    </select>
-                </p>
-            </form>
-        </div>
-
-        <div id="timeRangeSection2">
-            <h3>Time Range</h3>
-
-            <div id="slider-range2"></div>
-            <script type="text/javascript">
-            $("#slider-range2").slider({
-                range: true,
-                min: 0,
-                max: 1439,
-                values: [540, 1020],
-                step:5
-            });
-
-            </script>
-        </div>
-
-        <div id="widgetSection2">
-            <h3>Widget Extras</h3>
-        </div>
-
-
-        <div id="statisticSection2">
-            <h3>Statistics</h3>
-        </div>
-    </div>
-    </div>
-
-
 </div>
 
 <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/Tabs.js"></script>
+<!-- Slider Control -->
+<script type="text/javascript" src="js/bootstrap-slider.js"></script>
 
 <!-- Reference our Model scripts. -->
 <script type="text/javascript" src="js/model/CitiBikeApi.js"></script>
@@ -158,6 +128,7 @@
 
 <!-- Reference our Controller classes. -->
 <script type="text/javascript" src="js/controller/MapController.js"></script>
+<script type="text/javascript" src="js/controller/InputController.js"></script>
 
 <!-- The application javascript class that starts the entire user interface -->
 <script type="text/javascript" src="js/app.js"></script>

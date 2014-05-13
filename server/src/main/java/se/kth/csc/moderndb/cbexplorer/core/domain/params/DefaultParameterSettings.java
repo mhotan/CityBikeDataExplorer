@@ -1,10 +1,6 @@
 package se.kth.csc.moderndb.cbexplorer.core.domain.params;
 
-import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
 import se.kth.csc.moderndb.cbexplorer.core.domain.range.ShortRange;
-
-import java.util.List;
 
 /**
  * Class just used to send the default parameter settings.
@@ -13,33 +9,30 @@ import java.util.List;
  */
 public class DefaultParameterSettings {
 
-    private List<Bike> bikes;
+//    private List<Bike> bikes;
 
     private TemporalParameters temporalParameters;
 
     private ShortRange birthRange;
 
-    private List<Station> stations;
+//    private List<Station> stations;
 
     public DefaultParameterSettings() {
     }
 
-    public DefaultParameterSettings(List<Bike> bikes,
-                                    List<Station> stations,
-                                    TemporalParameters temporalParameters,
+    public DefaultParameterSettings(TemporalParameters temporalParameters,
                                     ShortRange birthRange) {
-        if (bikes == null || temporalParameters == null || birthRange == null
-                || stations == null)
+        if (temporalParameters == null || birthRange == null)
             throw new NullPointerException("Can't have null Default Parameters");
-        this.bikes = bikes;
+//        this.bikes = bikes;
         this.temporalParameters = temporalParameters;
         this.birthRange = birthRange;
-        this.stations = stations;
+//        this.stations = stations;
     }
 
-    public List<Bike> getBikes() {
-        return bikes;
-    }
+//    public List<Bike> getBikes() {
+//        return bikes;
+//    }
 
     public TemporalParameters getTemporalParameters() {
         return temporalParameters;
@@ -49,7 +42,7 @@ public class DefaultParameterSettings {
         return birthRange;
     }
 
-    public List<Station> getStations() {
-        return stations;
-    }
+//    public List<Station> getStations() {
+//        return stations;
+//    }
 }

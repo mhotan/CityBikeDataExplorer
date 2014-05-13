@@ -2,12 +2,12 @@ package se.kth.csc.moderndb.cbexplorer.core.dao;
 
 import org.springframework.transaction.annotation.Transactional;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
-import se.kth.csc.moderndb.cbexplorer.core.domain.range.IntegerRange;
-import se.kth.csc.moderndb.cbexplorer.core.domain.range.ShortRange;
-import se.kth.csc.moderndb.cbexplorer.core.domain.range.TimeRange;
 import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
 import se.kth.csc.moderndb.cbexplorer.core.domain.params.TripParameters;
 import se.kth.csc.moderndb.cbexplorer.core.domain.params.UserParameters;
+import se.kth.csc.moderndb.cbexplorer.core.domain.range.IntegerRange;
+import se.kth.csc.moderndb.cbexplorer.core.domain.range.ShortRange;
+import se.kth.csc.moderndb.cbexplorer.core.domain.range.TimeRange;
 
 import java.util.Date;
 import java.util.List;
@@ -41,10 +41,17 @@ public interface TripDAOi {
     public List<Trip> findTripWithBikes(TripParameters tripParameters);
 
     @Transactional
-    public List<Trip> findTripWithStartStations(TripParameters tripParameters);
+    public List<Trip> findTripWithStartStations(long stationId);
 
     @Transactional
-    public List<Trip> findTripWithEndStations(TripParameters tripParameters);
+    public List<Trip> findTripWithEndStations(long stationId);
+
+    @Transactional
+    public Integer countTripDeparting(long stationId);
+
+    @Transactional
+    public Integer countTripArriving(long stationId);
+
 
     /**
      * @return The time range from earliest to latest trips.
