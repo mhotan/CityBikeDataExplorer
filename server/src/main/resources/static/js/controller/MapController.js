@@ -20,7 +20,7 @@ var MapController = function (view, model) {
     }
 
     // Notify the application listeners some kind of interaction occured
-    var notifyListeners = function(dish) {
+    var notifyListeners = function(map) {
         // TODO iterate through all the listeners.
     }
 

@@ -20,8 +20,9 @@ public interface BikeRepository extends GraphRepository<Bike> {
     @Query("START bike=node({bike}) MATCH bike<-[:" + USES_RELATION + "]-trip RETURN count(*)")
     Long getTripCount(@Param("bike") Long graphId);
 
-    @Query("start n=node({bike}) match n<-[:USES]-trip, trip-[:STARTS_AT]->strt, trip-[:ENDS_AT]->end " +
-           "where trip.startTime > {startTime} and trip.endTime < {endTime} return trip, strt, end;")
+    @Query("start n=node({bike}) match n<-[:" + USES_RELATION + "]-trip, " +
+           "trip-[:" + STARTS_AT_RELATION + "]->s, trip-[:" + ENDS_AT_RELATION +"]->e " +
+           "where trip.startTime > {startTime} and trip.endTime < {endTime} return trip;")
     List<Trip> getTrips(@Param("bike") Long graphId, @Param("startTime") Long startTime, @Param("endTime") Long endTime);
 
 }

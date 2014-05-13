@@ -54,11 +54,11 @@
             <form name="searchBarForm" action="">
                 <input type="text" name="searchBar" value="Search Station"
                        onfocus="this.value==this.defaultValue?this.value='':null">
-                <input type="button" value="Search" onclick="exec(document.Test.query.value)">
+                <input type="button" value="Search" onclick="searchStation(document.searchBarForm.searchBar.value)">
             </form>
             <form action="select.htm">
                 <p>
-                    <select name="results" class="listContents" size="6" multiple>
+                    <select name="stationResults" class="listContents" size="6" multiple>
                         <option>A</option>
                         <option>B</option>
                         <option>C</option>
@@ -69,7 +69,7 @@
             </form>
         </div>
 
-        <div id="timeRangeSection">
+        <div id="timeRangeSection1">
             <h3>Time Range</h3>
 
             <div id="slider-range1"></div>
@@ -85,25 +85,25 @@
             </script>
         </div>
 
-        <div id="widgetSection">
+        <div id="widgetSection1">
             <h3>Widget Extras</h3>
         </div>
 
 
-        <div id="statisticSection">
+        <div id="statisticSection1">
             <h3>Statistics</h3>
         </div>
     </div>
     <div id="tab2">
-        <div id="searchSection">
+        <div id="searchSection2">
             <form name="searchBarForm" action="">
                 <input type="text" name="searchBar" value="Search Bike"
                        onfocus="this.value==this.defaultValue?this.value='':null">
-                <input type="button" value="Search" onclick="exec(document.Test.query.value)">
+                <input type="button" value="Search" onclick="searchBike(document.searchBarForm.searchBar.value)">
             </form>
             <form action="select.htm">
                 <p>
-                    <select name="results" class="listContents" size="6" multiple>
+                    <select name="bikeResults" class="listContents" size="6" multiple>
                         <option>A</option>
                         <option>B</option>
                         <option>C</option>
@@ -114,7 +114,7 @@
             </form>
         </div>
 
-        <div id="timeRangeSection">
+        <div id="timeRangeSection2">
             <h3>Time Range</h3>
 
             <div id="slider-range2"></div>
@@ -130,12 +130,12 @@
             </script>
         </div>
 
-        <div id="widgetSection">
+        <div id="widgetSection2">
             <h3>Widget Extras</h3>
         </div>
 
 
-        <div id="statisticSection">
+        <div id="statisticSection2">
             <h3>Statistics</h3>
         </div>
     </div>
@@ -154,6 +154,7 @@
 
 <!-- Reference our View classes. -->
 <script type="text/javascript" src="js/view/MapView.js"></script>
+<script type="text/javascript" src="js/view/InputView.js"></script>
 
 <!-- Reference our Controller classes. -->
 <script type="text/javascript" src="js/controller/MapController.js"></script>

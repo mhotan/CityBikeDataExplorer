@@ -7,6 +7,11 @@ var CitiBikeApi = (function ($) {
         getBikeTripCount: function (bike, callback) {
             $.getJSON(api_path + "/bikes/" + bike + "/tripCount", callback);
         },
+        getBikeTrips: function (bike, startTime, endTime, callback) {
+            if (startTime instanceof Date) startTime = startTime.getTime();
+            if (endTime instanceof Date) endTime = endTime.getTime();
+            $.getJSON(api_path + "/bikes/" + bike + "/trips/" + startTime + "/" + endTime, callback);
+        },
         findAllStations: function (callback) {
             $.getJSON(api_path + "/stations", callback);
         },
