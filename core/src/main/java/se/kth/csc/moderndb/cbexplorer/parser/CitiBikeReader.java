@@ -1,6 +1,6 @@
 package se.kth.csc.moderndb.cbexplorer.parser;
 
-import se.kth.csc.moderndb.cbexplorer.parser.data.TripData;
+import se.kth.csc.moderndb.cbexplorer.core.data.Trip;
 
 import java.util.Collection;
 
@@ -14,10 +14,11 @@ import java.util.Collection;
 public interface CitiBikeReader {
 
     /**
-     * Notification of new Trip Data has been found.
+     * Notifies any implementing class that all the trips, stations, and bikes have been
+     *  processed from the data file.  The Trip data object contains the stations and the bikes.
      *
-     * @param trips Trips that were read in.
+     * @param trips All the trips to add.
      */
-    public void addTrips(Collection<TripData> trips);
+    public void addTrips(Collection<Trip> trips);
 
 }

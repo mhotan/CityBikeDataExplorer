@@ -5,10 +5,10 @@ import org.neo4j.graphdb.DynamicRelationshipType;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
+import se.kth.csc.moderndb.cbexplorer.core.data.Bike;
+import se.kth.csc.moderndb.cbexplorer.core.data.Station;
+import se.kth.csc.moderndb.cbexplorer.core.data.Trip;
 import se.kth.csc.moderndb.cbexplorer.parser.CitiBikeReader;
-import se.kth.csc.moderndb.cbexplorer.parser.data.BikeData;
-import se.kth.csc.moderndb.cbexplorer.parser.data.StationData;
-import se.kth.csc.moderndb.cbexplorer.parser.data.TripData;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -68,19 +68,19 @@ public class CitiBikeBatchReader implements CitiBikeReader {
     }
 
     @Override
-    public void addTrips(Collection<TripData> trips) {
+    public void addTrips(Collection<Trip> trips) {
 
         // Extract the bike and Station data.
-        for (TripData tripData: trips) {
-            BikeData bikeData = tripData.getBikeData();
-            StationData startStationData = tripData.getStartStationData();
-            StationData endStationData = tripData.getEndStationData();
+        for (Trip trip : trips) {
+            Bike bike = trip.getBike();
+            Station startStation = trip.getStartsAt();
+            Station endStation = trip.getEndsAt();
 
             // Add all the elements to the database
-            long bikeGraphID = addBike(bikeData);
-            long startStationGraphID = addStation(startStationData);
-            long endStationGraphID = addStation(endStationData);
-            long tripId = addTrip(tripData);
+            long bikeGraphID = addBike(bike);
+            long startStationGraphID = addStation(startStation);
+            long endStationGraphID = addStation(endStation);
+            long tripId = addTrip(trip);
 
             // Add all the relations.
             inserter.createRelationship(tripId, startStationGraphID, startedFrom, null);
@@ -97,7 +97,7 @@ public class CitiBikeBatchReader implements CitiBikeReader {
      * @param data
      * @return The Neo4J Graph ID of the newly added Trip
      */
-    private long addTrip(TripData data) {
+    private long addTrip(Trip data) {
         Map<String, Object> properties = new HashMap<String, Object>();
         properties.put(DatabaseConstants.TRIP_START_TIME, data.getStartTime().getTime());
         properties.put(DatabaseConstants.TRIP_END_TIME, data.getEndTime().getTime());
@@ -110,12 +110,12 @@ public class CitiBikeBatchReader implements CitiBikeReader {
     /**
      * Adds a Bike to the database if it does not exists already.
      *
-     * @param data The Bike data to add to the Database
+     * @param bike The Bike data to add to the Database
      * @return The Neo4J Graph ID of the newly added  Bike
      */
-    private long addBike(BikeData data) {
+    private long addBike(Bike bike) {
         // Check if the bike exists in the database
-        long citiBikeID = data.getId();
+        long citiBikeID = bike.getBikeId();
         if (!bikeIDs.containsKey(citiBikeID)) {
 
             // Populate the properties
@@ -139,7 +139,7 @@ public class CitiBikeBatchReader implements CitiBikeReader {
      * @param data Station data to add to the graph.
      * @return The Neo4J Graph ID of the newly added Station
      */
-    private long addStation(StationData data) {
+    private long addStation(Station data) {
         assert inserter != null: "Inserter is null";
         // Add the start station if it does not exists already.
         long stationID = data.getStationId();

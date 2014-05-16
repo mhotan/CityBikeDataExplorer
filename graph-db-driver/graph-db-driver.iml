@@ -7,7 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
-      <excludeFolder url="file://$MODULE_DIR$/../graph-base/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -26,7 +26,6 @@
     <orderEntry type="library" exported="" name="Gradle: aspectjweaver-1.7.4" level="project" />
     <orderEntry type="library" exported="" name="Gradle: spring-aspects-3.2.8.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: aspectjrt-1.7.4" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: slf4j-api-1.7.6" level="project" />
     <orderEntry type="library" exported="" name="Gradle: spring-data-commons-1.7.2.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: jcl-over-slf4j-1.7.6" level="project" />
     <orderEntry type="library" exported="" name="Gradle: geronimo-jta_1.1_spec-1.1.1" level="project" />
@@ -48,6 +47,7 @@
     <orderEntry type="library" exported="" name="Gradle: neo4j-2.0.1" level="project" />
     <orderEntry type="module" module-name="core" exported="" />
     <orderEntry type="library" exported="" name="Gradle: neo4j-cypher-dsl-2.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: slf4j-api-1.7.7" level="project" />
   </component>
 </module>
 

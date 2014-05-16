@@ -1,9 +1,10 @@
-package se.kth.csc.moderndb.cbexplorer.core.dao;
+package se.kth.csc.moderndb.cbexplorer.core.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
-import se.kth.csc.moderndb.cbexplorer.domain.PSQLConnection;
+import se.kth.csc.moderndb.cbexplorer.core.data.Station;
+import se.kth.csc.moderndb.cbexplorer.PSQLConnection;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -20,29 +21,23 @@ public class StationDAO implements StationDAOi {
 
     private JdbcTemplate jdbcTemplate;
 
-
+    @Autowired
     public StationDAO(DataSource source) {
-//        SimpleDriverDataSource driverDataSource = new SimpleDriverDataSource() {{
-//            setDriverClass(org.postgresql.Driver.class);
-//            setUsername(PostgreSQLDatabaseConnection.USERNAME);
-//            setUrl(PostgreSQLDatabaseConnection.URL + PostgreSQLDatabaseConnection.DATABASE_NAME);
-//            setPassword(PostgreSQLDatabaseConnection.PASSWORD);
-//        }};
         this.jdbcTemplate = new JdbcTemplate(source);
     }
 
     @Override
     public List<Station> findStationByID(long stationId) throws Exception {
-        String sql = "SELECT " + PSQLConnection.STATIONID + ", " + PSQLConnection.NAME + ", " +
+        String sql = "SELECT " + PSQLConnection.STATION_ID + ", " + PSQLConnection.NAME + ", " +
                 GET_X_FROM_POINT + "," + GET_Y_FROM_POINT + " FROM " + PSQLConnection.STATION +
-                " WHERE " + PSQLConnection.STATIONID + " = ?";
+                " WHERE " + PSQLConnection.STATION_ID + " = ?";
         List<Station> results = jdbcTemplate.query(
                 sql, new Object[]{stationId},
                 new RowMapper<Station>() {
                     @Override
                     public Station mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return new Station(
-                                rs.getLong(PSQLConnection.STATIONID),
+                                rs.getLong(PSQLConnection.STATION_ID),
                                 rs.getString(PSQLConnection.NAME),
                                 rs.getDouble(3),
                                 rs.getDouble(4)
@@ -58,7 +53,7 @@ public class StationDAO implements StationDAOi {
 
     @Override
     public List<Station> findAllStations() {
-        String sql = "SELECT " + PSQLConnection.STATIONID + ", " + PSQLConnection.NAME + ", " +
+        String sql = "SELECT " + PSQLConnection.STATION_ID + ", " + PSQLConnection.NAME + ", " +
                 GET_X_FROM_POINT + "," + GET_Y_FROM_POINT + " FROM " + PSQLConnection.STATION;
         List<Station> results = jdbcTemplate.query(
                 sql,
@@ -66,7 +61,7 @@ public class StationDAO implements StationDAOi {
                     @Override
                     public Station mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return new Station(
-                                rs.getLong(PSQLConnection.STATIONID),
+                                rs.getLong(PSQLConnection.STATION_ID),
                                 rs.getString(PSQLConnection.NAME),
                                 rs.getDouble(3),
                                 rs.getDouble(4)
@@ -79,7 +74,7 @@ public class StationDAO implements StationDAOi {
 
     @Override
     public List<Station> findStationByName(String name) {
-        String sql = "SELECT " + PSQLConnection.STATIONID + ", " + PSQLConnection.NAME + ", " +
+        String sql = "SELECT " + PSQLConnection.STATION_ID + ", " + PSQLConnection.NAME + ", " +
                 GET_X_FROM_POINT + "," + GET_Y_FROM_POINT + " FROM " + PSQLConnection.STATION +
                 " WHERE " + PSQLConnection.NAME + " = ?";
         List<Station> results = jdbcTemplate.query(
@@ -88,7 +83,7 @@ public class StationDAO implements StationDAOi {
                     @Override
                     public Station mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return new Station(
-                                rs.getLong(PSQLConnection.STATIONID),
+                                rs.getLong(PSQLConnection.STATION_ID),
                                 rs.getString(PSQLConnection.NAME),
                                 rs.getDouble(3),
                                 rs.getDouble(4)
@@ -114,8 +109,8 @@ public class StationDAO implements StationDAOi {
 //                + PostgreSQLDatabaseConnection.STATION +
 //                ",(Select " + GET_X_FROM_POINT + "," + GET_Y_FROM_POINT + "as end_point from "
 //                +PostgreSQLDatabaseConnection.STATION+
-//                "where ?= +" + PostgreSQLDatabaseConnection.STATIONID + ")JD where ?= "
-//                + PostgreSQLDatabaseConnection.STATIONID+";";
+//                "where ?= +" + PostgreSQLDatabaseConnection.STATION_ID + ")JD where ?= "
+//                + PostgreSQLDatabaseConnection.STATION_ID+";";
 //        Connection conn= null;
 //        try {
 //            conn = dataSource.getConnection();

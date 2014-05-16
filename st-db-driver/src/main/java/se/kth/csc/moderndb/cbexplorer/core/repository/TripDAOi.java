@@ -1,8 +1,8 @@
-package se.kth.csc.moderndb.cbexplorer.core.dao;
+package se.kth.csc.moderndb.cbexplorer.core.repository;
 
 import org.springframework.transaction.annotation.Transactional;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
+import se.kth.csc.moderndb.cbexplorer.core.data.Bike;
+import se.kth.csc.moderndb.cbexplorer.core.data.Trip;
 import se.kth.csc.moderndb.cbexplorer.core.domain.params.TripParameters;
 import se.kth.csc.moderndb.cbexplorer.core.domain.params.UserParameters;
 import se.kth.csc.moderndb.cbexplorer.core.domain.range.IntegerRange;

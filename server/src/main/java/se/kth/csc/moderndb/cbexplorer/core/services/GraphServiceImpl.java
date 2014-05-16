@@ -1,9 +1,9 @@
 package se.kth.csc.moderndb.cbexplorer.core.services;
 
 import se.kth.csc.moderndb.cbexplorer.DatabaseConstants;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
+import se.kth.csc.moderndb.cbexplorer.core.data.Bike;
+import se.kth.csc.moderndb.cbexplorer.core.data.Station;
+import se.kth.csc.moderndb.cbexplorer.core.data.Trip;
 import se.kth.csc.moderndb.cbexplorer.core.repository.BikeRepository;
 import se.kth.csc.moderndb.cbexplorer.core.repository.StationRepository;
 import se.kth.csc.moderndb.cbexplorer.core.repository.TripRepository;
@@ -55,7 +55,7 @@ public class GraphServiceImpl implements GraphService {
 //            @Override
 //            public void accept(se.kth.csc.moderndb.cbexplorer.graph.core.domain.Station station) {
 //                Map<Long, Long> departingCounts = stationRepository.getDestinationCounts(station.getId());
-//                Map<Long, Long> arrivalCounts = stationRepository.getArrivaleCounts(station.getId());
+//                Map<Long, Long> arrivalCounts = stationRepository.getArrivalCounts(station.getId());
 //                stats.put(station.toCoreStation(), new StationUsageStatistics(
 //                        station.getStationId(), departingCounts, arrivalCounts));
 //            }

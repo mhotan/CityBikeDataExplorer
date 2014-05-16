@@ -1,4 +1,4 @@
-package se.kth.csc.moderndb.cbexplorer.core.domain;
+package se.kth.csc.moderndb.cbexplorer.core.data;
 
 
 /**

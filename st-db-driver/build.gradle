@@ -21,7 +21,7 @@ jar {
 
 sourceCompatibility = 1.7
 version = '1.0'
-project.mainClass = "se.kth.csc.moderndb.cbexplorer.MainTDB"
+project.mainClass = "se.kth.csc.moderndb.cbexplorer.PSQLLoader"
 
 repositories {
     mavenCentral()

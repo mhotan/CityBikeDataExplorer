@@ -1,4 +1,4 @@
-package se.kth.csc.moderndb.cbexplorer.core.domain;
+package se.kth.csc.moderndb.cbexplorer.core.data;
 
 /**
  * Station POJO class for REST Service.
@@ -21,6 +21,7 @@ public class Station {
      * Location of the station.
      */
     private double longitude, latitude;
+
 
     private int tripsDeparted, tripsArrived;
 

@@ -35,7 +35,7 @@ public class StationRepositoryImpl implements StationRepositoryCustom {
     }
 
     @Override
-    public Map<Long, Long> getArrivaleCounts(Long graphId) {
+    public Map<Long, Long> getArrivalCounts(Long graphId) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("station", graphId);
         Result<Map<String, Object>> queryResult =

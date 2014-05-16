@@ -2,7 +2,6 @@ package se.kth.csc.moderndb.cbexplorer.parser;
 
 import org.junit.Assert;
 import org.junit.Test;
-import se.kth.csc.moderndb.cbexplorer.parser.data.TripData;
 
 import java.io.File;
 import java.util.Collection;
@@ -41,7 +40,7 @@ public class DefaultCitiBikeParserTest {
         }
 
         @Override
-        public void addTrips(Collection<TripData> trips) {
+        public void addTrips(Collection<Trip> trips) {
             Assert.assertNotNull("Trips cannot be null", trips);
             Assert.assertNotEquals("Trips cannot be empty", 0, trips.size());
             count += trips.size();

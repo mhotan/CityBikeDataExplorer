@@ -1,8 +1,8 @@
 package se.kth.csc.moderndb.cbexplorer.core.services;
 
 import org.springframework.transaction.annotation.Transactional;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
+import se.kth.csc.moderndb.cbexplorer.core.data.Bike;
+import se.kth.csc.moderndb.cbexplorer.core.data.Station;
 import se.kth.csc.moderndb.cbexplorer.core.domain.range.IntegerRange;
 import se.kth.csc.moderndb.cbexplorer.core.domain.range.ShortRange;
 import se.kth.csc.moderndb.cbexplorer.core.domain.range.TimeRange;

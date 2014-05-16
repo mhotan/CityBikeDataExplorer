@@ -1,4 +1,4 @@
-package se.kth.csc.moderndb.cbexplorer.core.domain;
+package se.kth.csc.moderndb.cbexplorer.core.data;
 
 import java.util.Date;
 
@@ -13,12 +13,20 @@ public class Trip {
      * Trip time
      */
     private Date startTime, endTime;
+
+    /**
+     * Duration of the trip.
+     */
     private int duration;
 
     /**
      * User information
      */
     private String userType;
+
+    /**
+     * s
+     */
     private short userBirthYear, userGender;
 
     /**
@@ -34,13 +42,10 @@ public class Trip {
     /**
      * Empty Constructor for POJO reasons
      */
-    public Trip() {
-    }
-
+    public Trip() {}
 
     /**
-     *
-     * Creates a POJO Trip entity     *
+     * Creates a POJO Trip entity.
      *
      * @param startTime says when the trip starts
      * @param endTime says when the trip ends
@@ -98,4 +103,6 @@ public class Trip {
     }
 
     public int getDuration() {  return duration;  }
+
+
 }

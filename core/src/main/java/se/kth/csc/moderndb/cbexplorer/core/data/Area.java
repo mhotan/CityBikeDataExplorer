@@ -1,7 +1,8 @@
-package se.kth.csc.moderndb.cbexplorer.core.domain;
+package se.kth.csc.moderndb.cbexplorer.core.data;
+
+import org.postgis.Point;
 
 import java.util.ArrayList;
-import org.postgis.Point;
 
 /**
  * POJO Area class.

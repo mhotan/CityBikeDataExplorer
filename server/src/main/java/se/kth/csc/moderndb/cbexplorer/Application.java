@@ -12,16 +12,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.neo4j.config.EnableNeo4jRepositories;
 import org.springframework.data.neo4j.config.Neo4jConfiguration;
 import org.springframework.data.neo4j.support.Neo4jTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import se.kth.csc.moderndb.cbexplorer.core.dao.*;
-import se.kth.csc.moderndb.cbexplorer.core.repository.BikeRepository;
-import se.kth.csc.moderndb.cbexplorer.core.repository.StationRepository;
-import se.kth.csc.moderndb.cbexplorer.core.repository.TripRepository;
+import se.kth.csc.moderndb.cbexplorer.core.repository.*;
 import se.kth.csc.moderndb.cbexplorer.core.services.GraphService;
 import se.kth.csc.moderndb.cbexplorer.core.services.GraphServiceImpl;
 import se.kth.csc.moderndb.cbexplorer.core.services.RelationalService;
 import se.kth.csc.moderndb.cbexplorer.core.services.RelationalServiceImpl;
-import se.kth.csc.moderndb.cbexplorer.domain.PSQLConnection;
 
 import javax.sql.DataSource;
 
@@ -83,16 +78,6 @@ public class Application extends Neo4jConfiguration {
                                         TripRepository tripRepository,
                                         StationRepository stationRepository) {
         return new GraphServiceImpl(bikeRepository, tripRepository, stationRepository);
-    }
-
-    @Bean
-    public DataSource getDataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(PSQLConnection.DRIVER_FULL_NAME);
-        dataSource.setUrl(PSQLConnection.URL + PSQLConnection.DATABASE_NAME);
-        dataSource.setUsername(PSQLConnection.USERNAME);
-        dataSource.setPassword(PSQLConnection.PASSWORD);
-        return dataSource;
     }
 
     @Bean

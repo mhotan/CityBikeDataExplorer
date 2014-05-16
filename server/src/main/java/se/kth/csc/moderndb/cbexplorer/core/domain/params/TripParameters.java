@@ -1,6 +1,6 @@
 package se.kth.csc.moderndb.cbexplorer.core.domain.params;
 
-import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
+import se.kth.csc.moderndb.cbexplorer.core.data.Station;
 
 import java.util.ArrayList;
 

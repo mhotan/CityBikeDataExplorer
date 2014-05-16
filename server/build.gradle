@@ -35,7 +35,7 @@ dependencies {
     testCompile ("org.springframework:spring-test")
 
     compile project(":st-db-driver")
-    compile project(":graph-base")
+    compile project(":graph-db-driver")
 }
 
 task wrapper(type: Wrapper) {

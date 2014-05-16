@@ -1,9 +1,9 @@
 package se.kth.csc.moderndb.cbexplorer.core.services;
 
-import se.kth.csc.moderndb.cbexplorer.core.dao.StationDAOi;
-import se.kth.csc.moderndb.cbexplorer.core.dao.TripDAOi;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
+import se.kth.csc.moderndb.cbexplorer.core.repository.StationDAOi;
+import se.kth.csc.moderndb.cbexplorer.core.repository.TripDAOi;
+import se.kth.csc.moderndb.cbexplorer.core.data.Bike;
+import se.kth.csc.moderndb.cbexplorer.core.data.Station;
 import se.kth.csc.moderndb.cbexplorer.core.domain.range.IntegerRange;
 import se.kth.csc.moderndb.cbexplorer.core.domain.range.ShortRange;
 import se.kth.csc.moderndb.cbexplorer.core.domain.range.TimeRange;

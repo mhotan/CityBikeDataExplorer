@@ -1,7 +1,7 @@
-package se.kth.csc.moderndb.cbexplorer.core.dao;
+package se.kth.csc.moderndb.cbexplorer.core.repository;
 
 import org.springframework.transaction.annotation.Transactional;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
+import se.kth.csc.moderndb.cbexplorer.core.data.Bike;
 
 import java.util.List;
 

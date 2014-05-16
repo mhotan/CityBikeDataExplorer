@@ -2,8 +2,7 @@ package se.kth.csc.moderndb.cbexplorer.queries;
 
 import org.postgis.Point;
 import org.springframework.jdbc.core.RowMapper;
-import se.kth.csc.moderndb.cbexplorer.domain.PSQLConnection;
-import se.kth.csc.moderndb.cbexplorer.parser.data.StationData;
+import se.kth.csc.moderndb.cbexplorer.PSQLConnection;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,8 +41,8 @@ public class StationQuery extends BikeQuery{
                 new RowMapper<StationData>() {
                     @Override
                     public StationData mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        Point p = givePointForStationWithID(rs.getLong(PSQLConnection.STATIONID));
-                        return new StationData(rs.getLong(PSQLConnection.STATIONID), rs.getString(PSQLConnection.NAME),
+                        Point p = givePointForStationWithID(rs.getLong(PSQLConnection.STATION_ID));
+                        return new StationData(rs.getLong(PSQLConnection.STATION_ID), rs.getString(PSQLConnection.NAME),
                                 p.getX(), p.getY());
                     }
                 }
@@ -58,12 +57,12 @@ public class StationQuery extends BikeQuery{
 
     public static List<StationData> giveFullStationInformationAboutStationNamed(final String name) {
         System.out.println("Querying for station named" + name);
-        List<StationData> result = jdbcTemplate.query("select " + PSQLConnection.STATIONID + ", " + getXFromPoint + ", " + getYFromPoint + "from " + PSQLConnection.STATION + " where " + PSQLConnection.NAME + " = ?",
+        List<StationData> result = jdbcTemplate.query("select " + PSQLConnection.STATION_ID + ", " + getXFromPoint + ", " + getYFromPoint + "from " + PSQLConnection.STATION + " where " + PSQLConnection.NAME + " = ?",
                 new Object[]{name},
                 new RowMapper<StationData>() {
                     @Override
                     public StationData mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return new StationData(rs.getLong(PSQLConnection.STATIONID), name, rs.getDouble(2), rs.getDouble(3));
+                        return new StationData(rs.getLong(PSQLConnection.STATION_ID), name, rs.getDouble(2), rs.getDouble(3));
                     }
                 }
         );
@@ -75,7 +74,7 @@ public class StationQuery extends BikeQuery{
 
     public static List<StationData> giveFullStationInformationAboutStationWithID(final Long id) {
         System.out.println("Querying for station with id" + id);
-        List<StationData> result = jdbcTemplate.query("select " + PSQLConnection.NAME + ", " + getXFromPoint + ", " + getYFromPoint + "from " + PSQLConnection.STATION + " where " + PSQLConnection.STATIONID + " = ?",
+        List<StationData> result = jdbcTemplate.query("select " + PSQLConnection.NAME + ", " + getXFromPoint + ", " + getYFromPoint + "from " + PSQLConnection.STATION + " where " + PSQLConnection.STATION_ID + " = ?",
                 new Object[]{id},
                 new RowMapper<StationData>() {
                     @Override
@@ -90,7 +89,7 @@ public class StationQuery extends BikeQuery{
     public static Point givePointForStationWithID(long id) {
         System.out.println("Querying for point with id");
         List<Point> result = jdbcTemplate.query(
-                "select " + getXFromPoint + ", " + getYFromPoint + " from " + PSQLConnection.STATION + " where " + PSQLConnection.STATIONID + " = ?", new Object[]{id},
+                "select " + getXFromPoint + ", " + getYFromPoint + " from " + PSQLConnection.STATION + " where " + PSQLConnection.STATION_ID + " = ?", new Object[]{id},
                 new RowMapper<Point>() {
                     @Override
                     public Point mapRow(ResultSet rs, int rowNum) throws SQLException {

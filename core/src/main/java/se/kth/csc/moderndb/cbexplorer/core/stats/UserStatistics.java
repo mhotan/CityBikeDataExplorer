@@ -1,4 +1,4 @@
-package se.kth.csc.moderndb.cbexplorer.core.domain.stats;
+package se.kth.csc.moderndb.cbexplorer.core.stats;
 
 /**
  * POJO UserStatistics class

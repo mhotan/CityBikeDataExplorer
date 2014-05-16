@@ -138,8 +138,8 @@ public class Trip extends AbstractEntity {
         return bike;
     }
 
-    public se.kth.csc.moderndb.cbexplorer.core.domain.Trip toCoreTrip() {
-        return new se.kth.csc.moderndb.cbexplorer.core.domain.Trip(
+    public se.kth.csc.moderndb.cbexplorer.core.data.Trip toCoreTrip() {
+        return new se.kth.csc.moderndb.cbexplorer.core.data.Trip(
                 new Date(getStartTime()),
                 new Date(getEndTime()),
                 getDuration(),

@@ -42,8 +42,8 @@ public class Station extends AbstractEntity {
         setLocation(longitude, latitude);
     }
 
-    public se.kth.csc.moderndb.cbexplorer.core.domain.Station toCoreStation() {
-        return new se.kth.csc.moderndb.cbexplorer.core.domain.Station(stationId, name, longitude, latitude);
+    public se.kth.csc.moderndb.cbexplorer.core.data.Station toCoreStation() {
+        return new se.kth.csc.moderndb.cbexplorer.core.data.Station(stationId, name, longitude, latitude);
     }
 
     /**

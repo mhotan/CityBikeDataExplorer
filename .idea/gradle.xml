@@ -10,7 +10,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/core" />
-            <option value="$PROJECT_DIR$/graph-base" />
             <option value="$PROJECT_DIR$/graph-db-driver" />
             <option value="$PROJECT_DIR$/server" />
             <option value="$PROJECT_DIR$/st-db-driver" />

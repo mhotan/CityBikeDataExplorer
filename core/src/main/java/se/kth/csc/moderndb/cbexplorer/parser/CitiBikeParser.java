@@ -2,9 +2,11 @@ package se.kth.csc.moderndb.cbexplorer.parser;
 
 import au.com.bytecode.opencsv.CSVReader;
 import org.apache.commons.lang3.StringUtils;
-import se.kth.csc.moderndb.cbexplorer.parser.data.BikeData;
-import se.kth.csc.moderndb.cbexplorer.parser.data.StationData;
-import se.kth.csc.moderndb.cbexplorer.parser.data.TripData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.kth.csc.moderndb.cbexplorer.core.data.Bike;
+import se.kth.csc.moderndb.cbexplorer.core.data.Station;
+import se.kth.csc.moderndb.cbexplorer.core.data.Trip;
 
 import java.io.*;
 import java.text.DateFormat;
@@ -24,7 +26,9 @@ import java.util.zip.ZipFile;
  */
 public class CitiBikeParser {
 
-    // Indexes for each line within the csv file
+    private static final Logger LOG = LoggerFactory.getLogger(CitiBikeParser.class);
+
+            // Indexes for each line within the csv file
     private static final int TRIP_DURATION_INDEX = 0;
     private static final int START_TIME_INDEX = 1;
     private static final int END_TIME_INDEX = 2;
@@ -101,7 +105,7 @@ public class CitiBikeParser {
     private long parse(Reader reader) throws IOException, ParseException {
 
         // The buffer to store the number of trips
-        List<TripData> tripBuffer = new ArrayList<TripData>(maxNumberOfTrips);
+        List<Trip> tripBuffer = new ArrayList<Trip>(maxNumberOfTrips);
         long numberOfSuccesses = 0;
 
         // Date formatter for converting String to appropiate date.
@@ -117,11 +121,11 @@ public class CitiBikeParser {
             if (!StringUtils.isNumeric(bikeIDString)) continue;
 
             // Extract the nest data items.
-            BikeData bikeData = new BikeData(Long.valueOf(bikeIDString));
-            StationData startData = new StationData(Long.valueOf(row[START_STATION_ID_INDEX]),
+            Bike bikeData = new Bike(Long.valueOf(bikeIDString));
+            Station startData = new Station(Long.valueOf(row[START_STATION_ID_INDEX]),
                     row[START_STATION_NAME_INDEX], Double.valueOf(row[START_STATION_LONGITUDE_INDEX]),
                     Double.valueOf(row[START_STATION_LATITUDE_INDEX]));
-            StationData endData = new StationData(Long.valueOf(row[END_STATION_ID_INDEX]), row[END_STATION_NAME_INDEX],
+            Station endData = new Station(Long.valueOf(row[END_STATION_ID_INDEX]), row[END_STATION_NAME_INDEX],
                     Double.valueOf(row[END_STATION_LONGITUDE_INDEX]), Double.valueOf(row[END_STATION_LATITUDE_INDEX]));
 
             // Parse birth year, which may be a numeric string or "\N".
@@ -145,17 +149,18 @@ public class CitiBikeParser {
             Date startTime = format.parse(row[START_TIME_INDEX]);
             Date endTime = format.parse(row[END_TIME_INDEX]);
 
-            TripData tripData = new TripData(
-                    bikeData,
-                    startData,
-                    endData,
-                    duration,
+            Trip trip = new Trip(
                     startTime,
                     endTime,
+                    duration,
                     row[USER_TYPE_INDEX],
                     birthYear,
-                    Short.valueOf(row[GENDER_INDEX]));
-            tripBuffer.add(tripData);
+                    Short.valueOf(row[GENDER_INDEX]),
+                    startData,
+                    endData,
+                    bikeData
+            );
+            tripBuffer.add(trip);
 
             // Check if the buffer is full
             // If so notify the cbexplorer reader
@@ -163,6 +168,7 @@ public class CitiBikeParser {
                 numberOfSuccesses += tripBuffer.size();
                 this.reader.addTrips(tripBuffer);
                 tripBuffer.clear();
+                LOG.debug(numberOfSuccesses + " total trips processed \r");
             }
         }
 
@@ -170,7 +176,9 @@ public class CitiBikeParser {
         if (!tripBuffer.isEmpty()) {
             numberOfSuccesses += tripBuffer.size();
             this.reader.addTrips(tripBuffer);
+            LOG.debug(numberOfSuccesses + " total trips processed \r");
         }
+        LOG.debug("Data Loaded!");
 
         // Close teh CSV reader.
         csvReader.close();
@@ -221,7 +229,6 @@ public class CitiBikeParser {
             fileReader = new BufferedReader(new InputStreamReader(
                     new GZIPInputStream(new FileInputStream(file))));
         } else if (file.getPath().endsWith(".zip")) {
-            // TODO Current not working with zip files.
 
             ZipFile zipFile = new ZipFile(file);
             Enumeration<? extends ZipEntry> entries = zipFile.entries();

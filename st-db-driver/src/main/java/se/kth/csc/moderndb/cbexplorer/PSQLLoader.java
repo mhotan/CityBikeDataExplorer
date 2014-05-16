@@ -1,19 +1,24 @@
 package se.kth.csc.moderndb.cbexplorer;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import se.kth.csc.moderndb.cbexplorer.parser.CitiBikeParser;
-import se.kth.csc.moderndb.cbexplorer.parser.STDBCityBikeReader;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
 /**
+ * Class that provides a main method that loads data from a specific
+ *  uri path.
+ *
  * Created by Jeannine on 28.04.14.
  */
-public class MainTDB {
+public class PSQLLoader {
 
     public static void main(String [] args) throws FileNotFoundException, SQLException {
-       if (args.length != 1) {
+        if (args.length != 1) {
             String error =  "Illegal argument signature";
             System.err.println(error);
             System.err.println("Correct argument signature: <path to citibike data>");
@@ -25,7 +30,12 @@ public class MainTDB {
             throw new FileNotFoundException("File does not exists at " + args[0]);
         }
 
-        STDBCityBikeReader reader = new STDBCityBikeReader();
+        // Extract the Spring Configuration and data source..
+        ApplicationContext ctx = new AnnotationConfigApplicationContext(JDBCConfiguration.class);
+        DataSource dataSource = ctx.getBean(DataSource.class);
+
+        // Use the data source to read in the data.
+        STDBCityBikeReader reader = new STDBCityBikeReader(dataSource);
         CitiBikeParser parser = new CitiBikeParser(reader);
 
         try {
@@ -33,7 +43,6 @@ public class MainTDB {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            // TODO Refactor connection handling.
             reader.close();
         }
     }

@@ -1,16 +1,17 @@
-package se.kth.csc.moderndb.cbexplorer.core.dao;
+package se.kth.csc.moderndb.cbexplorer.core.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
+import se.kth.csc.moderndb.cbexplorer.core.data.Bike;
+import se.kth.csc.moderndb.cbexplorer.core.data.Station;
+import se.kth.csc.moderndb.cbexplorer.core.data.Trip;
 import se.kth.csc.moderndb.cbexplorer.core.domain.params.TripParameters;
 import se.kth.csc.moderndb.cbexplorer.core.domain.params.UserParameters;
 import se.kth.csc.moderndb.cbexplorer.core.domain.range.IntegerRange;
 import se.kth.csc.moderndb.cbexplorer.core.domain.range.ShortRange;
 import se.kth.csc.moderndb.cbexplorer.core.domain.range.TimeRange;
-import se.kth.csc.moderndb.cbexplorer.domain.PSQLConnection;
+import se.kth.csc.moderndb.cbexplorer.PSQLConnection;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -41,6 +42,7 @@ public class TripDAO implements TripDAOi {
      * @param source Data source
      * @param stationDAO Station DAO for accessing Stations.
      */
+    @Autowired
     public TripDAO(DataSource source, StationDAOi stationDAO) {
         if (source == null || stationDAO == null)
             throw new NullPointerException("Can't have null DataSource or StationDAOi");
@@ -51,15 +53,15 @@ public class TripDAO implements TripDAOi {
 
     @Override
     public List<Bike> findAllBikes() {
-        String sql = "SELECT DISTINCT " + PSQLConnection.BIKEID + " FROM " + PSQLConnection.TRIP;
+        String sql = "SELECT DISTINCT " + PSQLConnection.BIKE_ID + " FROM " + PSQLConnection.TRIP;
         return jdbcTemplate.query(sql, new Object[]{}, new BikeMapper());
     }
 
     @Override
     public List<Trip> findTripByID(long bikeID, Date startDate) {
         String sql = "SELECT * FROM " + PSQLConnection.TRIP +
-                " WHERE " + PSQLConnection.BIKEID + " = ? AND "
-                + PSQLConnection.STARTTIME + " = ?";
+                " WHERE " + PSQLConnection.BIKE_ID + " = ? AND "
+                + PSQLConnection.START_TIME + " = ?";
         return jdbcTemplate.query(sql, new Object[]{bikeID, startDate}, tripRowMapper);
     }
 
@@ -81,16 +83,16 @@ public class TripDAO implements TripDAOi {
             int gender = ((Integer) argument.get(PSQLConnection.GENDER)).intValue();
             args.add(0, gender);
         }
-        if (argument.containsKey(PSQLConnection.BIRTHYEAR + START_RANGE)) {
-            int birthyearStart = ((Integer) argument.get(PSQLConnection.BIRTHYEAR + START_RANGE)).intValue();
+        if (argument.containsKey(PSQLConnection.BIRTH_YEAR + START_RANGE)) {
+            int birthyearStart = ((Integer) argument.get(PSQLConnection.BIRTH_YEAR + START_RANGE)).intValue();
             args.add(1, birthyearStart);
         }
-        if (argument.containsKey(PSQLConnection.BIRTHYEAR + END_RANGE)) {
-            int birthyearEnd = ((Integer) argument.get(PSQLConnection.BIRTHYEAR + END_RANGE)).intValue();
+        if (argument.containsKey(PSQLConnection.BIRTH_YEAR + END_RANGE)) {
+            int birthyearEnd = ((Integer) argument.get(PSQLConnection.BIRTH_YEAR + END_RANGE)).intValue();
             args.add(2, birthyearEnd);
         }
-        if (argument.containsKey(PSQLConnection.USERTYPE)) {
-            String userType = ((String) argument.get(PSQLConnection.USERTYPE));
+        if (argument.containsKey(PSQLConnection.USER_TYPE)) {
+            String userType = ((String) argument.get(PSQLConnection.USER_TYPE));
             args.add(4, userType);
         }
         // filter out all the arrays that are not null
@@ -118,8 +120,8 @@ public class TripDAO implements TripDAOi {
                 "(Select ST_Distance(JD.end_point,point)" +
                 "from station,(Select point as end_point" +
                 "from station" +
-                "where " + PSQLConnection.TRIP + "." + PSQLConnection.STARTSTATION + " = station_id)JD" +
-                "where " + PSQLConnection.TRIP + "." + PSQLConnection.ENDSTATION + " = station_id)";
+                "where " + PSQLConnection.TRIP + "." + PSQLConnection.START_STATION + " = station_id)JD" +
+                "where " + PSQLConnection.TRIP + "." + PSQLConnection.END_STATION + " = station_id)";
         long start = tripParameters.getStartOfTripDistanceRange();
         long end = tripParameters.getEndOfTripDistanceRange();
         ArrayList<Object> args = new ArrayList<Object>();
@@ -203,7 +205,7 @@ public class TripDAO implements TripDAOi {
         ArrayList<Object> args = new ArrayList<Object>();
         // conditions for start time
         if (start > 0) {
-            sql.concat(" " + PSQLConnection.STARTTIME);
+            sql.concat(" " + PSQLConnection.START_TIME);
             this.alreadyAdded = true;
             if (end > 0) {
                 if (start < end) {
@@ -238,7 +240,7 @@ public class TripDAO implements TripDAOi {
             if(this.alreadyAdded){
                 sql.concat(" AND ");
             }
-            sql.concat(" " + PSQLConnection.ENDTIME);
+            sql.concat(" " + PSQLConnection.END_TIME);
             this.alreadyAdded = true;
             if (end > 0) {
                 if (start < end) {
@@ -271,7 +273,7 @@ public class TripDAO implements TripDAOi {
     @Override
     public List<Trip> findTripWithBikes(TripParameters tripParameters) throws IllegalArgumentException {
         String sql = "SELECT * FROM " + PSQLConnection.TRIP +
-                " WHERE " + PSQLConnection.BIKEID + " = ?";
+                " WHERE " + PSQLConnection.BIKE_ID + " = ?";
         if (tripParameters.getBikeIDs() == null || tripParameters.getBikeIDs().size() == 0) {
             throw new IllegalArgumentException("No bike id(s) selected");
         }
@@ -286,14 +288,14 @@ public class TripDAO implements TripDAOi {
     @Override
     public List<Trip> findTripWithStartStations(long stationId) {
         String sql = "SELECT * FROM " + PSQLConnection.TRIP +
-                " WHERE " + PSQLConnection.STARTSTATION + " = ?";
+                " WHERE " + PSQLConnection.START_STATION + " = ?";
         return jdbcTemplate.query(sql, new Object[] {stationId}, tripRowMapper);
     }
 
     @Override
     public List<Trip> findTripWithEndStations(long stationId) {
         String sql = "SELECT * FROM " + PSQLConnection.TRIP +
-                " WHERE " + PSQLConnection.ENDSTATION + " = ?";
+                " WHERE " + PSQLConnection.END_STATION + " = ?";
         return jdbcTemplate.query(sql, new Object[] {stationId}, tripRowMapper);
     }
 
@@ -301,7 +303,7 @@ public class TripDAO implements TripDAOi {
     @Override
     public Integer countTripDeparting(long stationId) {
         String sql = "SELECT COUNT(*) FROM " + PSQLConnection.TRIP +
-                " WHERE " + PSQLConnection.STARTSTATION + " = ?";
+                " WHERE " + PSQLConnection.START_STATION + " = ?";
         return jdbcTemplate.query(sql, new Object[] {stationId}, new RowMapper<Integer>() {
             @Override
             public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -313,7 +315,7 @@ public class TripDAO implements TripDAOi {
     @Override
     public Integer countTripArriving(long stationId) {
         String sql = "SELECT COUNT(*) FROM " + PSQLConnection.TRIP +
-                " WHERE " + PSQLConnection.ENDSTATION + " = ?";
+                " WHERE " + PSQLConnection.END_STATION + " = ?";
         return jdbcTemplate.query(sql, new Object[] {stationId}, new RowMapper<Integer>() {
             @Override
             public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -342,8 +344,8 @@ public class TripDAO implements TripDAOi {
             }
             int year = Calendar.getInstance().get(Calendar.YEAR);
             int birthyearStartRange = year - ageStart;
-            sql.concat(" " + PSQLConnection.BIRTHYEAR + " >= ?");
-            arguments.put(PSQLConnection.BIRTHYEAR + START_RANGE, birthyearStartRange);
+            sql.concat(" " + PSQLConnection.BIRTH_YEAR + " >= ?");
+            arguments.put(PSQLConnection.BIRTH_YEAR + START_RANGE, birthyearStartRange);
         }
         if (ageEnd > 0) {
             if (alreadyAdded) {
@@ -353,8 +355,8 @@ public class TripDAO implements TripDAOi {
             }
             int year = Calendar.getInstance().get(Calendar.YEAR);
             int birthyearEndRange = year - ageEnd;
-            sql.concat(" " + PSQLConnection.BIRTHYEAR + " <= ?");
-            arguments.put(PSQLConnection.BIRTHYEAR + END_RANGE, birthyearEndRange);
+            sql.concat(" " + PSQLConnection.BIRTH_YEAR + " <= ?");
+            arguments.put(PSQLConnection.BIRTH_YEAR + END_RANGE, birthyearEndRange);
         }
         if (userType != null) {
             if (alreadyAdded) {
@@ -362,8 +364,8 @@ public class TripDAO implements TripDAOi {
             } else {
                 alreadyAdded = true;
             }
-            sql.concat(" " + PSQLConnection.USERTYPE + " = ?");
-            arguments.put(PSQLConnection.USERTYPE, userType);
+            sql.concat(" " + PSQLConnection.USER_TYPE + " = ?");
+            arguments.put(PSQLConnection.USER_TYPE, userType);
         }
 
         return arguments;
@@ -371,8 +373,8 @@ public class TripDAO implements TripDAOi {
 
     @Override
     public TimeRange getTripTimeLimits() {
-        String sql = "SELECT MIN(" + PSQLConnection.STARTTIME + "), " +
-                "MAX(" + PSQLConnection.ENDTIME + ") from "
+        String sql = "SELECT MIN(" + PSQLConnection.START_TIME + "), " +
+                "MAX(" + PSQLConnection.END_TIME + ") from "
                 + PSQLConnection.TRIP;
 
         // There should only be one result.
@@ -389,8 +391,8 @@ public class TripDAO implements TripDAOi {
 
     @Override
     public ShortRange getUserBirthYearLimits() {
-        String sql = "SELECT MIN(" + PSQLConnection.BIRTHYEAR + "), " +
-                "MAX(" + PSQLConnection.BIRTHYEAR + ") from "
+        String sql = "SELECT MIN(" + PSQLConnection.BIRTH_YEAR + "), " +
+                "MAX(" + PSQLConnection.BIRTH_YEAR + ") from "
                 + PSQLConnection.TRIP;
         return jdbcTemplate.query(sql, new Object[]{}, new ShortRangeMapper()).get(0);
     }
@@ -435,21 +437,21 @@ public class TripDAO implements TripDAOi {
 
         @Override
         public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Bike bike = new Bike(rs.getLong(PSQLConnection.BIKEID));
+            Bike bike = new Bike(rs.getLong(PSQLConnection.BIKE_ID));
             Station startStation = null;
             Station endStation = null;
             try {
-                startStation = stationDAO.findStationByID(rs.getLong(PSQLConnection.STARTSTATION)).get(0);
-                endStation = stationDAO.findStationByID(rs.getLong(PSQLConnection.ENDSTATION)).get(0);
+                startStation = stationDAO.findStationByID(rs.getLong(PSQLConnection.START_STATION)).get(0);
+                endStation = stationDAO.findStationByID(rs.getLong(PSQLConnection.END_STATION)).get(0);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
             return new Trip(
-                    new Date (rs.getDate(PSQLConnection.STARTTIME).getTime()),
-                    new Date (rs.getDate(PSQLConnection.ENDTIME).getTime()),
+                    new Date (rs.getDate(PSQLConnection.START_TIME).getTime()),
+                    new Date (rs.getDate(PSQLConnection.END_TIME).getTime()),
                     rs.getInt(PSQLConnection.DURATION),
-                    rs.getString(PSQLConnection.USERTYPE),
-                    rs.getShort(PSQLConnection.BIRTHYEAR),
+                    rs.getString(PSQLConnection.USER_TYPE),
+                    rs.getShort(PSQLConnection.BIRTH_YEAR),
                     rs.getShort(PSQLConnection.GENDER),
                     startStation,
                     endStation,

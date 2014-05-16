@@ -4,7 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import se.kth.csc.moderndb.cbexplorer.data.TripRoute;
-import se.kth.csc.moderndb.cbexplorer.domain.PSQLConnection;
+import se.kth.csc.moderndb.cbexplorer.PSQLConnection;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,9 +43,9 @@ public class BikeQuery {
                 new RowMapper<TripRoute>() {
                     @Override
                     public TripRoute mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return new TripRoute(rs.getLong(PSQLConnection.STATIONID),
-                                StationQuery.giveFullStationInformationAboutStationWithID(rs.getLong(PSQLConnection.STARTSTATION)).get(0),
-                                StationQuery.giveFullStationInformationAboutStationWithID(rs.getLong(PSQLConnection.ENDSTATION)).get(0));
+                        return new TripRoute(rs.getLong(PSQLConnection.STATION_ID),
+                                StationQuery.giveFullStationInformationAboutStationWithID(rs.getLong(PSQLConnection.START_STATION)).get(0),
+                                StationQuery.giveFullStationInformationAboutStationWithID(rs.getLong(PSQLConnection.END_STATION)).get(0));
                     }
                 }
         );
@@ -59,14 +59,14 @@ public class BikeQuery {
     public static TripRoute giveTripStationInformationForTripWithID(final long id) {
         System.out.println("Querying for trip station with given trip id");
         List<TripRoute> tripRoute = jdbcTemplate.query(
-                "select " + PSQLConnection.STARTSTATION + ", " + PSQLConnection.ENDSTATION + " from " + PSQLConnection.TRIP + " where " + PSQLConnection.STATIONID + " = ?",
+                "select " + PSQLConnection.START_STATION + ", " + PSQLConnection.END_STATION + " from " + PSQLConnection.TRIP + " where " + PSQLConnection.STATION_ID + " = ?",
                 new Object[]{id},
                 new RowMapper<TripRoute>() {
                     @Override
                     public TripRoute mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return new TripRoute(id,
-                                StationQuery.giveFullStationInformationAboutStationWithID(rs.getLong(PSQLConnection.STARTSTATION)).get(0),
-                                StationQuery.giveFullStationInformationAboutStationWithID(rs.getLong(PSQLConnection.ENDSTATION)).get(0));
+                                StationQuery.giveFullStationInformationAboutStationWithID(rs.getLong(PSQLConnection.START_STATION)).get(0),
+                                StationQuery.giveFullStationInformationAboutStationWithID(rs.getLong(PSQLConnection.END_STATION)).get(0));
                     }
                 }
         );

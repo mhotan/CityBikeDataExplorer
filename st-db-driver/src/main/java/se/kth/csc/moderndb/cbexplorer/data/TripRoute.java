@@ -1,7 +1,5 @@
 package se.kth.csc.moderndb.cbexplorer.data;
 
-import se.kth.csc.moderndb.cbexplorer.parser.data.StationData;
-
 /**
  * Created by Jeannine on 05.05.14.
  */

@@ -1,9 +1,9 @@
 package se.kth.csc.moderndb.cbexplorer.core.services;
 
 import org.springframework.transaction.annotation.Transactional;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Bike;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Station;
-import se.kth.csc.moderndb.cbexplorer.core.domain.Trip;
+import se.kth.csc.moderndb.cbexplorer.core.data.Bike;
+import se.kth.csc.moderndb.cbexplorer.core.data.Station;
+import se.kth.csc.moderndb.cbexplorer.core.data.Trip;
 
 import java.util.List;
 import java.util.Map;
