@@ -42,7 +42,7 @@
           <element id="library" level="project" name="Gradle: slf4j-jdk14-1.7.7" />
           <element id="library" level="project" name="Gradle: jaxb-api-2.2.11" />
           <element id="archive" name="CityBikeDataExplorer-graph-base-1.0.jar">
-            <element id="module-output" name="graph-base" />
+            <element id="module-output" name="graph-db-driver" />
           </element>
           <element id="library" level="project" name="Gradle: spring-data-neo4j-3.0.2.RELEASE" />
           <element id="library" level="project" name="Gradle: aspectjweaver-1.7.4" />
