@@ -1,4 +1,4 @@
-package se.kth.csc.moderndb.cbexplorer.core.domain.range;
+package se.kth.csc.moderndb.cbexplorer.core.range;
 
 import java.util.Date;
 

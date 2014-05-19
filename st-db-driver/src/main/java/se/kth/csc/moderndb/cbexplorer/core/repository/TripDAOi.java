@@ -1,13 +1,13 @@
 package se.kth.csc.moderndb.cbexplorer.core.repository;
 
-import org.springframework.transaction.annotation.Transactional;
 import se.kth.csc.moderndb.cbexplorer.core.data.Bike;
 import se.kth.csc.moderndb.cbexplorer.core.data.Trip;
-import se.kth.csc.moderndb.cbexplorer.core.domain.params.TripParameters;
-import se.kth.csc.moderndb.cbexplorer.core.domain.params.UserParameters;
-import se.kth.csc.moderndb.cbexplorer.core.domain.range.IntegerRange;
-import se.kth.csc.moderndb.cbexplorer.core.domain.range.ShortRange;
-import se.kth.csc.moderndb.cbexplorer.core.domain.range.TimeRange;
+import se.kth.csc.moderndb.cbexplorer.core.params.BikeParameters;
+import se.kth.csc.moderndb.cbexplorer.core.params.TemporalParameters;
+import se.kth.csc.moderndb.cbexplorer.core.params.UserParameters;
+import se.kth.csc.moderndb.cbexplorer.core.range.IntegerRange;
+import se.kth.csc.moderndb.cbexplorer.core.range.ShortRange;
+import se.kth.csc.moderndb.cbexplorer.core.range.TimeRange;
 
 import java.util.Date;
 import java.util.List;
@@ -19,39 +19,43 @@ import java.util.List;
  */
 public interface TripDAOi {
 
-    @Transactional
+    /**
+     * @return All the Bikes that exists
+     */
     public List<Bike> findAllBikes();
 
-    @Transactional
-    public List<Trip> findTripByID(long bikeID, Date startDate);
+    /**
+     * Find a bike with a given id.
+     *
+     * @param bikeID Bike id of bike to find
+     * @return Bike with specific ID
+     */
+    public Bike findBikeByID(long bikeID);
 
-    @Transactional
-    public List<Trip> findTripSpecifiedByUserCharacteristics(UserParameters userParameters);
+    /**
+     * The Bike ID and start time are used as unique keys.
+     *
+     * @param bikeID Id of the bike used
+     * @param startDate Start Date and time of the trip
+     * @return The specific trip from these parameters
+     */
+    public Trip findTripByID(long bikeID, Date startDate);
 
-    @Transactional
-    public List<Trip> findTripWithDistanceBetween(TripParameters tripParameters);
-
-    @Transactional
-    public List<Trip> findTripWithDurationBetween(TripParameters tripParameters);
-
-    @Transactional
-    public List<Trip> findTripWithinTimeRange(TripParameters tripParameters);
-
-    @Transactional
-    public List<Trip> findTripWithBikes(TripParameters tripParameters);
-
-    @Transactional
-    public List<Trip> findTripWithStartStations(long stationId);
-
-    @Transactional
-    public List<Trip> findTripWithEndStations(long stationId);
-
-    @Transactional
-    public Integer countTripDeparting(long stationId);
-
-    @Transactional
-    public Integer countTripArriving(long stationId);
-
+    /**
+     * Finds all the trips based off of the given parameters.  If any of the parameters are null then
+     * it will be ignored when retrieving all the trips.  Currently there is a limit for maximum number
+     * of ships returned.  Therefore general queries where there are many trips being returned will be limited.
+     *
+     * @param startStation The station ID of the trips source station. Can be NULL.
+     * @param endStation The station ID of the trips destination station. Can be NULL.
+     * @param bikeParameters Parameters that define the types of bikes used on the resulting trips. Can be NULL.
+     * @param userParameters Parameters that define the types of users used on the resulting trips. Can be NULL.
+     * @param temporalParameters Parameters that define the time range. Can be NULL.
+     * @return The resulting list of trips, or an empty list if no trip matching the requirements is available.
+     */
+    public List<Trip> findTrips(Long startStation, Long endStation,
+                                BikeParameters bikeParameters, UserParameters userParameters,
+                                TemporalParameters temporalParameters);
 
     /**
      * @return The time range from earliest to latest trips.

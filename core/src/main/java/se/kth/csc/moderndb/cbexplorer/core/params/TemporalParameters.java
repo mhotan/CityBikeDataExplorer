@@ -1,10 +1,11 @@
-package se.kth.csc.moderndb.cbexplorer.core.domain.params;
+package se.kth.csc.moderndb.cbexplorer.core.params;
 
-import se.kth.csc.moderndb.cbexplorer.core.domain.range.TimeRange;
-import se.kth.csc.moderndb.cbexplorer.core.domain.range.IntegerRange;
+import se.kth.csc.moderndb.cbexplorer.core.range.TimeRange;
+import se.kth.csc.moderndb.cbexplorer.core.range.IntegerRange;
 
 /**
- * Parameters that allow the ability to bracket a certain range of time.
+ * Parameters that allow the ability to bracket a certain range of time.  All the members of this
+ *
  *
  * Created by mhotan on 5/12/14.
  */
@@ -37,7 +38,7 @@ public class TemporalParameters {
 
     /**
      *
-     * @return
+     * @return The Duration Range.
      */
     public IntegerRange getDurationRange() {
         return durationRange;

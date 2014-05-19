@@ -15,6 +15,9 @@ dependencies {
 
     // Logger
     compile 'org.slf4j:slf4j-api:1.7.7'
+
+    // Google Core libraries
+    compile 'com.google.guava:guava:17.0'
 }
 
 task wrapper(type: Wrapper) {

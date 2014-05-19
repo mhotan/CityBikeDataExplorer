@@ -2,6 +2,7 @@ package se.kth.csc.moderndb.cbexplorer.parser;
 
 import org.junit.Assert;
 import org.junit.Test;
+import se.kth.csc.moderndb.cbexplorer.core.data.Trip;
 
 import java.io.File;
 import java.util.Collection;

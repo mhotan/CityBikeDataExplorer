@@ -4,9 +4,9 @@ import se.kth.csc.moderndb.cbexplorer.core.repository.StationDAOi;
 import se.kth.csc.moderndb.cbexplorer.core.repository.TripDAOi;
 import se.kth.csc.moderndb.cbexplorer.core.data.Bike;
 import se.kth.csc.moderndb.cbexplorer.core.data.Station;
-import se.kth.csc.moderndb.cbexplorer.core.domain.range.IntegerRange;
-import se.kth.csc.moderndb.cbexplorer.core.domain.range.ShortRange;
-import se.kth.csc.moderndb.cbexplorer.core.domain.range.TimeRange;
+import se.kth.csc.moderndb.cbexplorer.core.range.IntegerRange;
+import se.kth.csc.moderndb.cbexplorer.core.range.ShortRange;
+import se.kth.csc.moderndb.cbexplorer.core.range.TimeRange;
 
 import java.util.List;
 

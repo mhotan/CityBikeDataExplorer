@@ -82,12 +82,6 @@ public class Application extends Neo4jConfiguration {
 
     @Bean
     @Autowired
-    public BikeDAOi getBikeDAO(DataSource dataSource) {
-        return new BikeDAO(dataSource);
-    }
-
-    @Bean
-    @Autowired
     public StationDAOi getStationDAO(DataSource dataSource) {
         return new StationDAO(dataSource);
     }

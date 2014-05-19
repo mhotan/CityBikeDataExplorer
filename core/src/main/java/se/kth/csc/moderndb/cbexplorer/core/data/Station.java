@@ -49,6 +49,21 @@ public class Station {
         return stationId;
     }
 
+    public void setName(String name) {
+        if (this.name.equals(name) || name == null) return;
+        this.name = name;
+    }
+
+    public void setLongitude(double longitude) {
+        if (this.longitude ==  longitude) return;
+        this.longitude = longitude;
+    }
+
+    public void setLatitude(double latitude) {
+        if (this.latitude == latitude) return;
+        this.latitude = latitude;
+    }
+
     public String getName() {
         return name;
     }

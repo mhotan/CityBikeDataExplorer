@@ -1,4 +1,4 @@
-package se.kth.csc.moderndb.cbexplorer.core.domain.params;
+package se.kth.csc.moderndb.cbexplorer.core.params;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +26,20 @@ public class BikeParameters {
         return new ArrayList<Long>(selectedBikes);
     }
 
+    /**
+     * Adds a bike Id to the selected bikes
+     * @param bikeId The bike to be selected.
+     */
     public void addSelectedBike(long bikeId) {
+        if (this.selectedBikes.contains(bikeId)) return;
         selectedBikes.add(bikeId);
     }
 
+    /**
+     *
+     * @param bikeId The id of the bike to be removed
+     * @return
+     */
     public boolean removeSelectedBike(long bikeId) {
         return selectedBikes.remove(bikeId);
     }

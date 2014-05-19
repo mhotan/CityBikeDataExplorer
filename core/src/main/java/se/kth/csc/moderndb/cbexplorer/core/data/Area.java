@@ -3,6 +3,7 @@ package se.kth.csc.moderndb.cbexplorer.core.data;
 import org.postgis.Point;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * POJO Area class.
@@ -14,7 +15,7 @@ public class Area {
     /**
      * Points of the Polygon that borders the Area
      */
-    private ArrayList<Point> polygonPoints;
+    private List<Point> polygonPoints;
 
     /**
      * Empty Constructor for POJO reasons
@@ -31,7 +32,7 @@ public class Area {
         this.polygonPoints = polygonPoints;
     }
 
-    public ArrayList<Point> getPolygonPoints() {
+    public List<Point> getPolygonPoints() {
         return polygonPoints;
     }
 }

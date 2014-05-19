@@ -1,6 +1,6 @@
-package se.kth.csc.moderndb.cbexplorer.core.domain.params;
+package se.kth.csc.moderndb.cbexplorer.core.params;
 
-import se.kth.csc.moderndb.cbexplorer.core.domain.range.ShortRange;
+import se.kth.csc.moderndb.cbexplorer.core.range.ShortRange;
 
 /**
  * POJO UserParameters class.

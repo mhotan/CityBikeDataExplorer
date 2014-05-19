@@ -26,18 +26,20 @@ public class PSQLConnection {
     public static final String BIRTH_YEAR = "birth_year";
     public static final String DURATION = "duration";
 
+
+
     // SQL String statements
     private static final String SRID = "4326";
 
     // Create the tables.
     public static final String CREATE_TRIP_TABLE_QUERY =
             "CREATE TABLE IF NOT EXISTS " + TRIP + " " +
-            "(" + BIKE_ID + " BIGINT      NOT NULL," +
-            " " + START_TIME + " TIMESTAMP  NOT NULL, " +
-            " " + END_TIME + " TIMESTAMP  NOT NULL," +
+            "(" + BIKE_ID + " BIGINT NOT NULL," +
+            " " + START_TIME + " TIMESTAMP NOT NULL, " +
+            " " + END_TIME + " TIMESTAMP NOT NULL," +
             " " + DURATION + " BIGINT NOT NULL," +
-            " " + START_STATION + " BIGINT  NOT NULL, " +
-            " " + END_STATION + " BIGINT    NOT NULL, " +
+            " " + START_STATION + " BIGINT NOT NULL, " +
+            " " + END_STATION + " BIGINT NOT NULL, " +
             " " + USER_TYPE + " TEXT NOT NULL, " +
             " " + BIRTH_YEAR + " INT, " +
             " " + GENDER + " INT    NOT NULL," +

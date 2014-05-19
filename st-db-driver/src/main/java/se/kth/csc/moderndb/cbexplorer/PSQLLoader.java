@@ -7,7 +7,9 @@ import se.kth.csc.moderndb.cbexplorer.parser.CitiBikeParser;
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 /**
  * Class that provides a main method that loads data from a specific
@@ -17,7 +19,8 @@ import java.sql.SQLException;
  */
 public class PSQLLoader {
 
-    public static void main(String [] args) throws FileNotFoundException, SQLException {
+    public static void main(String [] args)
+            throws SQLException, IOException, ParseException {
         if (args.length != 1) {
             String error =  "Illegal argument signature";
             System.err.println(error);
@@ -38,12 +41,12 @@ public class PSQLLoader {
         STDBCityBikeReader reader = new STDBCityBikeReader(dataSource);
         CitiBikeParser parser = new CitiBikeParser(reader);
 
-        try {
-            parser.parse(data);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            reader.close();
-        }
+//        try {
+        parser.parse(data);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            reader.close();
+//        }
     }
 }

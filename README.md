@@ -70,7 +70,7 @@ Provides a consistent virtual machine development environment.
 * Set your JDK.  File -> Configure Project SDK to point to your Java 8 Home directory
 
 #####Might have to refresh 
-* Refresh Gradle Dependencies. View -> Tool Windows -> Gradle.  Select the Refresh button.  The two arrows in a circle.
+* Refresh Dependencies (via Gradle). View -> Tool Windows -> Gradle.  Select the Refresh button.  The two arrows in a circle.
 
 ###Executing
 
@@ -86,8 +86,8 @@ Within intellij right clicking on any class with the Java main function will run
 
 ####Running the RESTful web service
 <p>
-* To run the web server. Execute "./gradlew clean build && java -jar server/build/libs/gs-rest-service-0.1.0.jar" while in the root directory of the project in your terminal.  This will rebuild the project and run an embedded tomcat server.
-* Now the you can connect to http://localhost port: 8080.  Try http://localhost:8080/greeting?name=Your_Name to make a rest call and get a response.
+* To run the web server. Execute "./gradlew clean build && java -jar server/build/libs/citibike-rest-service-0.1.0.jar" while in the root directory of the project in your terminal.  This will rebuild the project and run an embedded tomcat server.
+* Now the you can connect to http://localhost port: 8080.
 
 #### Running under Vagrant
 * To start the VM, run `vagrant up` in the project directory. The first time, this will initialize the VM, which might take 10-30 minutes and ~500MB bandwidth.
@@ -103,8 +103,8 @@ Within intellij right clicking on any class with the Java main function will run
 
 #### Loading Data into PostGis database
 From vagrant command line terminal
-* run "createdb citybike"
-* run "psql citybike"
+* run "createdb citibike"
+* run "psql citibike"
 * From within psql run "create extension postgis;" You should see "CREATE EXTENSION" in the console
 * Exit psql with "\q"
 * Run ./gradlew build

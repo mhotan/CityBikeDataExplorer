@@ -1,4 +1,4 @@
-package se.kth.csc.moderndb.cbexplorer.core.domain.range;
+package se.kth.csc.moderndb.cbexplorer.core.range;
 
 /**
  * Created by mhotan on 5/12/14.
