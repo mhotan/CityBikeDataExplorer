@@ -51,7 +51,7 @@ public class CitiBikeParser {
 
     // The default number of
     // TODO Validate this quantity to work on all systems.
-    private static final int DEFAULT_TRIPDATA_BUFFERSIZE = 10000;
+    private static final int DEFAULT_TRIPDATA_BUFFERSIZE = 100000;
 
     /**
      * Reader that reads and interprets raw data.
@@ -94,6 +94,7 @@ public class CitiBikeParser {
         for (Reader reader : readers) {
             numberRead += parse(reader);
         }
+        LOG.info(numberRead + " Total Trips Loaded!");
         return numberRead;
     }
 
@@ -168,7 +169,7 @@ public class CitiBikeParser {
                 numberOfSuccesses += tripBuffer.size();
                 this.reader.addTrips(tripBuffer);
                 tripBuffer.clear();
-                LOG.debug(numberOfSuccesses + " total trips processed \r");
+                LOG.info(numberOfSuccesses + " total trips processed \r");
             }
         }
 
@@ -176,9 +177,8 @@ public class CitiBikeParser {
         if (!tripBuffer.isEmpty()) {
             numberOfSuccesses += tripBuffer.size();
             this.reader.addTrips(tripBuffer);
-            LOG.debug(numberOfSuccesses + " total trips processed \r");
+            LOG.info(numberOfSuccesses + " total trips processed \r");
         }
-        LOG.debug("Data Loaded!");
 
         // Close teh CSV reader.
         csvReader.close();

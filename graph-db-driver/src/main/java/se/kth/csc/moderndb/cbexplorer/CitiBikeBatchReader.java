@@ -52,7 +52,7 @@ public class CitiBikeBatchReader implements CitiBikeReader {
         this.inserter = inserter;
 
         // TODO Verify runtime index issue.
-//        populateIndexes(inserter);
+        populateIndexes(inserter);
 
         // Initialize the tripCount of objects
         tripCount = 0;
@@ -86,10 +86,7 @@ public class CitiBikeBatchReader implements CitiBikeReader {
             inserter.createRelationship(tripId, startStationGraphID, startedFrom, null);
             inserter.createRelationship(tripId, endStationGraphID, endedAt, null);
             inserter.createRelationship(tripId, bikeGraphID, uses, null);
-
         }
-        tripCount += trips.size();
-        System.out.println(tripCount + " Total trips processed");
     }
 
     /**

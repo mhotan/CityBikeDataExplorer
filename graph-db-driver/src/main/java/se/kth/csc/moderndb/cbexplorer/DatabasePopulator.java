@@ -2,8 +2,8 @@ package se.kth.csc.moderndb.cbexplorer;
 
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import org.neo4j.unsafe.batchinsert.BatchInserters;
+import se.kth.csc.moderndb.cbexplorer.parser.CitiBikeParser;
 import se.kth.csc.moderndb.cbexplorer.parser.CitiBikeReader;
-import se.kth.csc.moderndb.cbexplorer.parser.DefaultCitiBikeParser;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class DatabasePopulator {
 
         BatchInserter inserter = BatchInserters.inserter(DatabaseConstants.DATABASE_PATH);
         CitiBikeReader reader = new CitiBikeBatchReader(inserter);
-        DefaultCitiBikeParser parser = new DefaultCitiBikeParser(reader);
+        CitiBikeParser parser = new CitiBikeParser(reader);
         try {
             parser.parse(f);
         } catch (Exception e) {
