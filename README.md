@@ -103,8 +103,8 @@ Within intellij right clicking on any class with the Java main function will run
 
 #### Loading Data into PostGis database
 From vagrant command line terminal
-* run "createdb citybike"
-* run "psql citybike"
+* run "createdb citibike"
+* run "psql citibike"
 * From within psql run "create extension postgis;" You should see "CREATE EXTENSION" in the console
 * Exit psql with "\q"
 * Run ./gradlew build
