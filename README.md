@@ -99,7 +99,7 @@ Within intellij right clicking on any class with the Java main function will run
 
 #### Loading Data into Embedded Graph Database
 * Build using "./gradlew clean build" from the project root directory (if needed)
-* run "java -jar graph-base/build/libs/graph-base-execjar-1.0.jar <path directory of csv or zip files>"
+* run "java -jar graph-base/build/libs/graph-base-execjar-1.0.jar [path directory of csv or zip files]"
 
 #### Loading Data into PostGis database
 From vagrant command line terminal
@@ -108,4 +108,4 @@ From vagrant command line terminal
 * From within psql run "create extension postgis;" You should see "CREATE EXTENSION" in the console
 * Exit psql with "\q"
 * Run ./gradlew build
-* java -jar st-db-driver/build/libs/st-db-driver-execjar-1.0.jar <path to data zips/csv>
+* Run "java -jar st-db-driver/build/libs/st-db-driver-execjar-1.0.jar [path directory of csv or zip files]"
